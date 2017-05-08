@@ -8,41 +8,85 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   actions,
   mutations,
-
   state: {
-    todos: {
-      // '110ec58a-a0f2-4ac4-8393-c866d813b8d5': {
-      //   name: "buy groceries",
-      //   active: true,
-      //   done: false
-      // },
-      // '110ec58a-a0f2-4ac4-8393-c866d813b8d2': {
-      //   name: "wake up",
-      //   active: true,
-      //   done: true
-      // },
-      // '110ec58a-a0f2-4ac4-8393-c866d813b8d3': {
-      //   name: "wake up",
-      //   active: false,
-      //   done: true
-      // }
-    },
+    todos: [],
+    // todos: [{
+    //   todoTitle: 'EDA基线管理',
+    //   todoId: '001',
+    //   tags: [{
+    //     tagName: 'hard'
+    //   }, {
+    //     tagName: 'EDA'
+    //   }],
+    //   scene: {
+    //     sceneName: '办公'
+    //   },
+    //   expectFinishTime: '17:00',
+    //   spentClock: '0',
+    //   priority: '4',
+    //   isFinished: false
+    // }, {
+    //   todoTitle: 'EDA通知发布-完成',
+    //   todoId: '002',
+    //   tags: [{
+    //     tagName: 'hard'
+    //   }, {
+    //     tagName: 'EDA2'
+    //   }],
+    //   scene: {
+    //     sceneName: '办公'
+    //   },
+    //   expectFinishTime: '2017-05-06 17:00',
+    //   spentClock: '0',
+    //   priority: '4',
+    //   isFinished: true
+    // }, {
+    //   todoTitle: '测试项目-未完成已删除',
+    //   todoId: '003',
+    //   tags: [{
+    //     tagName: 'hard'
+    //   }, {
+    //     tagName: 'EDA3'
+    //   }],
+    //   scene: {
+    //     sceneName: '办公'
+    //   },
+    //   expectFinishTime: '2017-05-07 17:00',
+    //   spentClock: '0',
+    //   priority: '4',
+    //   isFinished: false,
+    //   isDeleted: true
+    // }, {
+    //   todoTitle: '测试项目-未完成未删除',
+    //   todoId: '004',
+    //   tags: [{
+    //     tagName: 'hard'
+    //   }, {
+    //     tagName: 'EDA3'
+    //   }],
+    //   scene: {
+    //     sceneName: '办公'
+    //   },
+    //   expectFinishTime: '2017-05-07 17:00',
+    //   spentClock: '0',
+    //   priority: '2',
+    //   isFinished: false,
+    //   isDeleted: false
+    // }],
     users: {}
   },
 
   getters: {
-    // todos that should be currently displayed.
-    // this Array may not be fully fetched.
-    activeTodos (state, getters) {
+    activeTodos (state) {
       const { todos } = state
-      return Object.keys(todos)
-        .filter(key => {
-          return todos[key].active
-        })
-        .reduce((acc, key) => {
-          acc[key] = todos[key]
-          return acc
-        }, {})
+      return todos.filter(function (todo) {
+        if (todo.isFinished !== true && todo.isDeleted !== true) {
+          return true
+        }
+      })
+    },
+    activeTodosCount (state, getters) {
+      return getters.activeTodos.length
     }
   }
 })

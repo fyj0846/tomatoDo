@@ -1,18 +1,42 @@
 import Vue from 'vue'
-var index = 0
 
-export function SET_TODOS (state, { todos }) {
+// 初始化， 从localStorage加载todo
+export function LOAD_TODOS (state, todos) {
+  console.log('mutation load_todos')
   Vue.set(state, 'todos', todos)
 }
 
-export function TOGGLE_TODO (state, { id, done }) {
-  state.todos[id].done = done
+// 更新， todo状态更新 name-目标属性名  newValue-新的属性值
+export function UPDATE_TODO (state, { id, name, newValue }) {
+  console.log('mutation upadte_todo')
+  for (var i = 0; i < state.todos.length; i++) {
+    if (state.todos[i].todoId === id) {
+      state.todos[i][name] = newValue
+      break
+    }
+  }
 }
 
-export function ADD_TODO (state, { name }) {
-  Vue.set(state.todos, 'newAddID_' + index++, { name, active: true, done: false })
+// 完成， todo状态更新 name-目标属性名  newValue-新的属性值
+export function FINISH_TODO (state, { id, name, newValue }) {
+  console.log('mutation finish_todo')
+  for (var i = 0; i < state.todos.length; i++) {
+    if (state.todos[i].todoId === id) {
+      state.todos[i][name] = newValue
+      state.todos[i]['isFinished'] = true
+      break
+    }
+  }
 }
 
-export function SET_USER (state, { user }) {
-  Vue.set(state.users, user.id, user)
+// 删除， todo状态更新 name-目标属性名  newValue-新的属性值
+export function DELETE_TODO (state, { id, name, newValue }) {
+  console.log('mutation delete_todo')
+  for (var i = 0; i < state.todos.length; i++) {
+    if (state.todos[i].todoId === id) {
+      state.todos[i][name] = newValue
+      state.todos[i]['isDeleted'] = true
+      break
+    }
+  }
 }

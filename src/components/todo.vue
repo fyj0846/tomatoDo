@@ -1,23 +1,73 @@
 <template>
-  <div class="cell-item">
-    <text class="todo-name" ref="name" :style="textStyle">{{todo.name}}</text>
-    <text class="toggle" :style="buttonStyle" @click="toggleDone">{{ isDone }}</text>
+  <div class="card">
+    <div class="todo-header grey lighten-1">
+      <span>{{ todoMeta.todoTitle }}</span>
+      <i @click="getTodoDone" class="material-icons right">done</i>
+      <i @click="getTodoDelete" class="material-icons right">delete</i>
+    </div>
+    <div class="card-content todo-content">
+      <div class="todo-content-left">
+        <div class="todo-flags">
+          <i class="material-icons">bookmark</i>
+          <span class="todo-flag" v-for="tag in todoMeta.tags">
+            {{ tag.tagName }}
+          </span>
+        </div>
+        <div class="todo-situation">
+          <i class="material-icons">place</i>
+          <span class="todo-timeLeft">{{ todoMeta.scene.sceneName }}</span>
+        </div>
+        <div class="todo-timing">
+          <i class="material-icons">schedule</i>
+          <span class="todo-timeLeft">{{ todoMeta.expectFinishTime }}</span>
+        </div>
+        <div class="todo-statis">
+          <i class="material-icons">show_chart</i>
+          <span class="todo-spent">{{ todoMeta.spentClock }}</span>
+        </div>
+      </div>
+      <div class="todo-content-right">
+        <div class="todo-priority red-text">
+          <i v-for="style in priorityStyle " class="material-icons">{{ style }}</i>
+        </div>
+        <div class="todo-inTask"> {{ timerShow }}</div>
+      </div>
+    </div>
+    <div class="card-action todo-action">
+      <i @click="stopTodo" class="material-icons right">stop</i>
+      <i @click="toggleTodo" class="material-icons right"> {{ timerController }}</i>
+      <i @click="editTodo" class="material-icons right">edit</i>
+      <i @click="viewTodo" class="material-icons right">description</i>
+      <i @click="alertTodo" class="material-icons right">alarm</i>
+      <!--<a class="" @click="watchTodo"><i class="material-icons right">visibility</i></a>-->
+
+    </div>
+    <div class="card-reveal">
+      <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+      <p>Here is some more information about this product that is only revealed once clicked on.</p>
+    </div>
   </div>
 </template>
 
 <script>
   export default {
+    data: function () {
+      return {
+        timerHandle: -1,
+        timer: '',
+        timerShow: '',
+        timerController: ''
+      }
+    },
     props: {
-      todo: {
+      // todoView 传递的参数
+      todoMeta: {
         type: Object,
-        required: true
-      },
-      todoId: {
-        type: String,
         required: true
       }
     },
     computed: {
+      /*
       isDone () {
         return this.todo.done ? 'undo...' : 'done!'
       },
@@ -53,69 +103,206 @@
           }
         }
       }
+      */
 
+      // 优先级转换为星星样式数组（icon）
+      priorityStyle () {
+        var styleList = []
+        for (var i = 0; i < this.todoMeta.priority && i < 5; i++) {
+          styleList.push('star')
+        }
+        for (var j = this.todoMeta.priority; j < 5; j++) {
+          styleList.push('star_border')
+        }
+        return styleList
+      }
+    },
+    mounted () {
+      this.resetTimer()
     },
     methods: {
-      toggleDone () {
-        this.done = !this.done
-        this.$store.dispatch('TOGGLE_TODO', {id: this.todoId, done: this.done})
+      // todo 完成
+      getTodoDone () {
+        console.log('todo done!')
+        this.clearTimer()
+        this.resetTimerController()
+        var spClock = this.todoMeta.spentClock || 0
+        // 优化spentClock计算规则
+        this.$store.dispatch('FINISH_TODO', {id: this.todoMeta.todoId, name: 'spentClock', newValue: spClock - 0 + 1})
+      },
+
+      // todo 删除
+      getTodoDelete () {
+        console.log('todo delete!')
+        this.clearTimer()
+        this.resetTimerController()
+        var spClock = this.todoMeta.spentClock || 0
+        // 优化spentClock计算规则
+        this.$store.dispatch('DELETE_TODO', {id: this.todoMeta.todoId, name: 'spentClock', newValue: spClock - 0 + 1})
+      },
+
+      // todo 开始或启动，根据timerHandler来判断
+      toggleTodo () {
+        if (this.timerHandle > 0) {
+          // 启动状态 -> 暂停
+          this.pauseTodo()
+        } else {
+          // 暂停状态 -> 启动
+          this.startTodo()
+        }
+      },
+
+      // todo 启动
+      startTodo () {
+        console.log('start todo task')
+        // 计时器逻辑
+        var THAT = this
+        clearInterval(this.timerHandle)
+        this.timerHandle = setInterval(function () {
+          var minute = 0
+          var second = 0  // 时间默认值
+          if (THAT.timer >= 1) {
+            THAT.timer--
+            minute = Math.floor(THAT.timer / 60)
+            second = Math.floor(THAT.timer) - (minute * 60)
+          } else if (THAT.timer === 0) {
+            THAT.stopTodo()
+            return
+          }
+          if (minute <= 9) minute = '0' + minute
+          if (second <= 9) second = '0' + second
+          THAT.timerShow = minute + ':' + second
+        }, 1000)
+        this.toggleTimerController()
+      },
+
+      // todo 暂停
+      pauseTodo () {
+        console.log('pause todo task!')
+        this.clearTimer()
+        // 中途遭受干扰，任务暂停
+        // 统计中断次数
+        this.toggleTimerController()
+      },
+
+      // todo 停止
+      stopTodo () {
+        this.clearTimer()
+        this.resetTimerController()
+        // update spent clock
+        if (this.timer === 0) {
+          // 完整完成一个 clock
+          // 更新统计信息
+          var spClock = this.todoMeta.spentClock || 0
+          this.$store.dispatch('UPDATE_TODO', {id: this.todoMeta.todoId, name: 'spentClock', newValue: spClock - 0 + 1})
+        } else {
+          // 中途干扰，任务停止
+          // 统计中断次数
+          var ipt = this.todoMeta.interupt || 0
+          this.$store.dispatch('UPDATE_TODO', {id: this.todoMeta.todoId, name: 'interupt', newValue: ipt - 0 + 1})
+        }
+        this.resetTimer()
+      },
+
+      // 刷新 todo 启动/暂停按钮
+      toggleTimerController () {
+        if (this.timerController === 'play_arrow') {
+          this.timerController = 'pause'
+        } else {
+          this.timerController = 'play_arrow'
+        }
+      },
+
+      // 重置 todo 恢复到准备启动状态
+      resetTimerController () {
+        this.timerController = 'play_arrow'
+      },
+
+      // 清理 todo 定时器
+      clearTimer () {
+        clearInterval(this.timerHandle)
+        this.timerHandle = -1
+      },
+
+      // 重置  todo 定时器
+      resetTimer () {
+        this.timerShow = '01:00'
+        this.timer = 60
+        this.timerHandle = -1
+        this.timerController = 'play_arrow'
+      },
+
+      // todo 编辑
+      editTodo () {
+        console.log('edit todo task')
+      },
+
+      // todo 查看
+      viewTodo () {
+        console.log('view todo task')
+      },
+
+      // todo 告警
+      alertTodo () {
+        console.log('alert todo task')
       }
     }
   }
 </script>
 
 <style scoped>
-  .cell-item {
+  /*自定义卡片样式*/
+  .card {
+    margin: 0.5rem;
+  }
+
+  /*todo卡片头部样式*/
+  .todo-header {
+    font-size: 1.5rem;
+    padding: 5px 15px  5px 8px;
+  }
+
+  .todo-header a:nth-child(1) {
+    margin-right: 10px;
+  }
+
+  /*todo卡片体样式*/
+  .todo-content {
+    padding: 24px 12px;
+    min-height: 120px;
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
     justify-content: space-between;
-    position: relative;
-    padding-top: 20px;
-    padding-bottom: 25px;
-    padding-left: 50px;
-    padding-right: 40px;
+    align-items: center;
   }
-  .todo-name {
-    font-size: 33px;
-    color: #404040;
-    line-height: 62px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    display: block;
-    overflow: hidden;
-    margin-right: 20px;
+
+  .todo-content-left {
+    display: flex;
+    flex: 3;
+    flex-direction: column;
+    align-self: flex-start;
   }
-  .todo-name.done {
-    text-decoration: line-through;
-    font-style: italic;
-    color: #a0a0a0;
+
+  .todo-content-left div {
+    line-height: 36px;
   }
-  /*  .toggle-wrapper {
-      min-width: 110px;
-      right: 0px;
-    }*/
-  .toggle {
-    border-width: 2px;
-    border-style: solid;
-    border-color: #2c3e50;
-    background-color: #35495e;
-    height: 70px;
-    width: 170px;
-    line-height: 70px;
-    padding: 0 20px;
-    border-radius: 15px;
-    line-height: 60px;
-    color: white;
-    text-align: center;
-    right: 0px;
-    font-family: Verdana, Geneva, sans-serif;
-    font-size: 32px;
+  .todo-content-right {
+    display: flex;
+    flex: 2;
+    flex-direction: column;
+    align-self: center;
   }
-  .toggle.done {
-    color: #a0a0a0;
-    background-color: white;
-    border: none;
-    text-decoration: underline;
+
+  .todo-content-right .todo-inTask {
+    font-size: 2.6rem;
   }
+
+  .todo-action {
+    height: 41px;
+    padding: 10px 15px;
+  }
+
+  .todo-header i, .todo-action i {
+    margin: 0 7px;
+  }
+
 </style>
