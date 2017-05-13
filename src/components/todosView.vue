@@ -15,7 +15,7 @@
   import AppHeader from '../components/app-header.vue'
   import Todo from '../components/todo.vue'
   import SideNav from '../components/sideNav.vue'
-
+  import $ from 'jquery'
   export default {
     components: { AppHeader, Todo, SideNav },
 //    data: function () {
@@ -29,6 +29,8 @@
       }
     },
     mounted: function () {
+      console.log('todosView mounted')
+      $('.button-collapse').sideNav()
       // reset test data
       window.localStorage.clear()
       window.localStorage.setItem('todos',

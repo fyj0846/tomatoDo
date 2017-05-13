@@ -7,11 +7,11 @@
           <i class="material-icons ">view_headline</i>
         </a>
       </div>
-      <div class="header-title white-text" @click="jump('/')">
+      <div class="header-title white-text">
         <span class="title">tomatoDo</span>
       </div>
       <div class="header-add-btn white-text">
-        <i class="material-icons" @click="openAddTodo()">add</i>
+        <i class="material-icons" @click="addTodoHandler">add</i>
       </div>
     </div>
   </div>
@@ -20,10 +20,11 @@
 <script>
   export default {
     methods: {
-      openAddTodo (event) {
-        console.log('message', 'add touched')
+      addTodoHandler (event) {
+        console.log('message', 'add todo touched')
+        this.$router.push({ path: 'addTodoView' })
       },
-      handleLoginOrRegistry (event) {
+      loginOrRegistryHandler (event) {
         console.log('message', 'please login or registry')
       }
     }

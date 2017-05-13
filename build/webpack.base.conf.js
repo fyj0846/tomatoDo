@@ -2,6 +2,7 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
+var webpack = require("webpack")
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -21,8 +22,12 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src')
+      'vue$': 'vue/dist/vue.js',
+      '@': resolve('src'),
+      // webpack 使用 jQuery，如果是自行下载的
+      'jquery': path.resolve(__dirname, '../static/js/jquery.min'),
+      // 如果使用NPM安装的jQuery
+      // 'jquery': 'jquery'
     }
   },
   module: {
@@ -63,5 +68,13 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin('common.js'),
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery",
+      "window.jQuery": "jquery",
+    })
+  ],
 }
