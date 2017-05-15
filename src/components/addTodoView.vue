@@ -32,10 +32,11 @@
           </div>
         </div>
         <div class="row">
-          <div class="input-field col s12">
+          <div class="input-field col s6">
             <input id="expectFinishTime" type="date" class="datepicker">
-            <label for="expectFinishTime">期望完成时间</label>
+            <label for="expectFinishTime">期望完成日期</label>
           </div>
+          <TimePicker></TimePicker>
         </div>
         <div class="row">
           <div class="input-field col s12">
@@ -74,8 +75,10 @@
 
 <script>
   import $ from 'jquery'
+  import TimePicker from './common/time-picker'
+
   export default {
-//    components: {  },
+    components: { TimePicker },
 //    data: function () {
 //      return {
 //      }
@@ -111,9 +114,13 @@
     height: 100%;
   }
 
-  .header {
+  .add-todo-view-header {
+    position: fixed;
+    top: 0;
     font-size: 16px;
+    width: 100%;
     height: 80px;
+    z-index: 2;
     margin-bottom: 3px;
     display: flex;
     flex-flow: nowrap;
@@ -127,6 +134,9 @@
     border-bottom-color: #35495e;
   }
 
+  .add-todo-view-content {
+    margin-top: 80px;
+  }
   .add-todo-view .cancle {
     flex: 0 0 80%;
     padding-left: 15px;

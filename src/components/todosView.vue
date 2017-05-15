@@ -1,9 +1,9 @@
 <template>
   <div class="todo-view" append="tree">
-    <app-header>
+    <app-header class="todo-view-header">
       <side-nav slot="sideNav"></side-nav>
     </app-header>
-    <div class="row">
+    <div class="row todo-view-content">
       <div v-for="todo in todoList" class="col s12 m6">
         <todo :todoMeta="todo"></todo>
       </div>
@@ -44,5 +44,18 @@
 <style scoped>
   .todo-view {
     height: 100%;
+  }
+
+  .todo-view-header {
+    position: fixed;
+    top: 0;
+    font-size: 16px;
+    width: 100%;
+    height: 80px;
+    z-index: 5;
+  }
+
+  .todo-view-content {
+    margin-top: 80px;
   }
 </style>

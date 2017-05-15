@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import todosView from '@/components/todosView'
 import addTodoView from '@/components/addTodoView'
-import world from '../components/World'
+import timePicker from '../components/common/time-picker'
 
 Vue.use(Router)
 
@@ -26,9 +26,9 @@ export default new Router({
       component: addTodoView
     }, {
       // 测试组件
-      path: '/world',
-      name: 'world',
-      component: world
+      path: '/test',
+      name: 'time-picker',
+      component: timePicker
     }
   ]
 })
