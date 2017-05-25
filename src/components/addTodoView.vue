@@ -10,17 +10,17 @@
       <form class="col s12">
         <div class="row">
           <div class="input-field col s12">
-            <input placeholder="标题" id="todoTitle" type="text" class="validate">
+            <input placeholder="标题" id="todoTitle" type="text" class="validate" v-model="todoTitle">
             <label for="todoTitle"></label>
           </div>
           <div class="input-field col s12">
-            <textarea id="comment" class="materialize-textarea"></textarea>
+            <textarea id="comment" class="materialize-textarea" v-model="todoDesc"></textarea>
             <label for="comment">描述</label>
           </div>
         </div>
         <div class="row">
           <div class="input-field col s12">
-            <select>
+            <select v-select="priority">
               <option value="" disabled selected>请选择优先级</option>
               <option value="1">1星</option>
               <option value="2">2星</option>
@@ -32,15 +32,13 @@
           </div>
         </div>
         <div class="row">
-          <div class="input-field col s6">
-            <input id="expectFinishTime" type="date" class="datepicker">
-            <label for="expectFinishTime">期望完成日期</label>
-          </div>
-          <TimePicker></TimePicker>
+          <DatePicker title="传递的titile" v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
+          <!--  通过自定义事件，完成父子组件的通信 -->
+          <TimePicker v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
         </div>
         <div class="row">
           <div class="input-field col s12">
-            <select>
+            <select v-select="projectId">
               <option value="" disabled selected>请选择项目</option>
               <option value="project001">EDA</option>
               <option value="project002">鹰眼</option>
@@ -51,7 +49,7 @@
         </div>
         <div class="row">
           <div class="input-field col s12">
-            <select multiple>
+            <select v-select="sceneId">
               <option value="" disabled selected>请选择场景</option>
               <option value="scene001">study</option>
               <option value="scene002">work</option>
@@ -76,21 +74,49 @@
 <script>
   import $ from 'jquery'
   import TimePicker from './common/time-picker'
+  import DatePicker from './common/date-picker'
 
   export default {
-    components: { TimePicker },
-//    data: function () {
-//      return {
-//      }
-//    },
-    computed: {},
+    components: { TimePicker, DatePicker },
+    data: function () {
+      return {
+        todoTitle: '',
+        todoId: '',
+        todoDesc: '',
+        tags: [
+//            {
+//            tagName: 'hard'
+//            },
+//            {
+//            tagName: 'EDA'
+//            }
+        ],
+        scene: {
+//            sceneId: '',
+//            sceneName: '办公'
+        },
+        sceneId: '',
+        project: {
+          projectId: '',
+          projectName: ''
+        },
+        projectId: '',
+        expectFinishDate: '',
+        expectFinishTime: '',
+        spentClock: '',
+        priority: '',
+        isFinished: false
+      }
+    },
+    computed: {
+      date () {
+        console.log(this.$refs.datePicker.value)
+        return this.$refs.datePicker.value
+      }
+    },
     mounted: function () {
       console.log('add todo mounted!')
       $('select').material_select()
-      $('.datepicker').pickadate({
-        selectMonths: false, // Creates a dropdown to control month
-        selectYears: 15 // Creates a dropdown of 15 years to control year
-      })
       $('.chips').material_chip()
       $('.chips-placeholder').material_chip({
         placeholder: '输入并回车继续',
@@ -104,6 +130,17 @@
       },
       saveNewTodoHandler (event) {
         console.log('save the new todo task')
+      },
+      setExpectFinishTime (event) {
+        console.log('set the setExpectFinishTime')
+        this.expectFinishTime = event || '23:59'
+      },
+      setExpectedFinishDate (event) {
+        console.log('set the setExpectedFinishDate')
+        this.expectFinishDate = event
+      },
+      updateValue (event) {
+        console.log('date')
       }
     }
   }

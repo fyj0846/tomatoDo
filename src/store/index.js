@@ -13,12 +13,14 @@ const store = new Vuex.Store({
     // todos: [{
     //   todoTitle: 'EDA基线管理',
     //   todoId: '001',
+    //   todoDesc: '',
     //   tags: [{
     //     tagName: 'hard'
     //   }, {
     //     tagName: 'EDA'
     //   }],
     //   scene: {
+    //     sceneId: 'sc001',
     //     sceneName: '办公'
     //   },
     //   expectFinishTime: '17:00',

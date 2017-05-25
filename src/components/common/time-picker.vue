@@ -1,13 +1,7 @@
 <template>
   <div class="time-picker">
-    <!--<div class="input-wrapper" @mouseenter="showCancel = true" @mouseleave="showCancel = false">-->
-      <!--<div class="input" @click="toggleModal" v-text="value"></div>-->
-      <!--<transition name="fade">-->
-        <!--<img class="cancel-btn" src="../../../src/assets/cancel.png" v-show="showCancel" @click="clear">-->
-      <!--</transition>-->
-    <!--</div>-->
     <div class="input-field col s12">
-      <input id="timePicker" type="text" @click="toggleModal" v-model="value">
+      <input id="timePicker" type="text" @click="openModal" v-model="value">
       <label for="timePicker">期待完成时间</label>
     </div>
     <div id='modal1' class="modal">
@@ -29,15 +23,15 @@
           <div class="seperator"><i class="material-icons">swap_horiz</i></div>
           <div class="time-picker-quick">
             <span>快捷选择</span>
-            <button class="btn ">午饭前</button>
-            <button class="btn ">晚饭前</button>
-            <button class="btn ">临睡前</button>
+            <button class="btn " @click='setTime("11:30")'>午饭前</button>
+            <button class="btn " @click="setTime('17:30')">晚饭前</button>
+            <button class="btn " @click="setTime('22:30')">临睡前</button>
           </div>
         </div>
         <div class="panel-footer">
-          <a class="waves-effect  btn-flat active">NOW</a>
-          <a class="waves-effect  btn-flat">OK</a>
-          <a class="waves-effect  btn-flat active">CLOSE</a>
+          <a class="waves-effect  btn-flat active" @click="defaultInitTime">NOW</a>
+          <a class="waves-effect  btn-flat" @click="clearTime">CLEAR</a>
+          <a class="waves-effect  btn-flat active" @click="closeModal">CLOSE</a>
         </div>
       </div>
     </div>
@@ -50,19 +44,34 @@
     data () {
       return {
         showCancel: false,
+        initTime: {},
         timeHour: 0,
         timeMinute: 0,
       }
     },
     methods: {
-      toggleModal () {
+      openModal () {
         $('#modal1').modal('open')
+      },
+      closeModal () {
+        $('#modal1').modal('close')
+      },
+      setTime (time) {
+        if(time && time.indexOf(":") > -1) {
+          this.timeHour = time.split(":")[0];
+          this.timeMinute = time.split(":")[1];
+        }
+      },
+      clearTime () {
+        this.timeHour = '23';
+        this.timeMinute = '59';
       },
       defaultInitTime () {
         // 初始化， 设置默认时钟
-        var now = new Date();
-        this.timeHour = now.getHours();
-        this.timeMinute = now.getMinutes();
+        this.initTime = new Date()
+        this.timeHour = this.initTime.getHours()
+        var tmp = this.initTime.getMinutes() + ''
+        this.timeMinute = (tmp.length == 1 ? '0'+tmp : tmp)
       },
       clear () {
 
@@ -73,34 +82,22 @@
         return this.timeHour + ":" + this.timeMinute
       }
     },
+    watch: {
+      // 监视选择事件的变动，随意同步到父组件上
+      value: function (newValue) {
+        this.$emit('updateSelectedTime', newValue)
+      }
+    },
     mounted () {
       $('select').material_select()
       $('.modal').modal()
-
-      this.defaultInitTime();
-
-//      this.$nextTick(() => {
-//        if(this.$el.parentNode.offsetWidth + this.$el.parentNode.offsetLeft - this.$el.offsetLeft <= 300){
-//          this.coordinates = {right: '0', top: `${window.getComputedStyle(this.$el.children[0]).offsetHeight + 4}px`}
-//        }else{
-//          this.coordinates = {left: '0', top: `${window.getComputedStyle(this.$el.children[0]).offsetHeight + 4}px`}
-//        }
-//        if(!this.value){
-//          this.$emit('input', '')
-//        }
-//        window.addEventListener('click', this.close)
-//      })
-    },
-    beforeDestroy () {
-//      window.removeEventListener('click', this.close)
+      this.defaultInitTime()
     }
   }
 </script>
 
 <style scoped lang='less'>
   .time-picker{
-    /*position: relative;*/
-    /*height: 32px;*/
     display: flex;
     flex-direction: column;
     align-items: center;

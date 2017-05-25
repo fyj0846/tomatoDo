@@ -5,6 +5,9 @@
 </template>
 
 <script>
+//  import $ from 'jquery'
+//  import Vue from 'vue'
+
   export default {
     methods: {
       // 路由回退demo
