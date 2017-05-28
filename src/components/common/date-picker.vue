@@ -2,7 +2,7 @@
   <div class="date-picker">
     <div class="input-field col s12">
       <input id="datePicker" type="text" @click="openModal" v-model="selectedDate">
-      <label for="datePicker">期待完成日期</label>
+      <label for="datePicker">计划完成日期</label>
     </div>
     <div id='modal2' class="modal">
       <div class="date-panel">

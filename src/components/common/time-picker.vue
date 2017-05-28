@@ -2,7 +2,7 @@
   <div class="time-picker">
     <div class="input-field col s12">
       <input id="timePicker" type="text" @click="openModal" v-model="value">
-      <label for="timePicker">期待完成时间</label>
+      <label for="timePicker">计划完成时间</label>
     </div>
     <div id='modal1' class="modal">
       <div class="date-panel">
@@ -10,22 +10,22 @@
           选择截止时间
         </div>
         <div class="panel-date">
-          2017-04-01
+          {{ date }}
         </div>
         <div class="panel-content">
           <div class="input-field">
-            <input class="" type="text" placeholder="00" v-model="timeHour">
+            <input class="" type="number" placeholder="0" :value="timeHour" @input="handleHour($event)">
           </div>
           <div class="timeDivider">:</div>
           <div class="input-field">
-            <input class="" type="text" placeholder="00" v-model="timeMinute">
+            <input class="" type="number" placeholder="0" :value="timeMinute" @input="handleMinute($event)">
           </div>
           <div class="seperator"><i class="material-icons">swap_horiz</i></div>
           <div class="time-picker-quick">
             <span>快捷选择</span>
-            <button class="btn " @click='setTime("11:30")'>午饭前</button>
-            <button class="btn " @click="setTime('17:30')">晚饭前</button>
-            <button class="btn " @click="setTime('22:30')">临睡前</button>
+            <button class="btn " v-on:click.stop.prevent='setTime("11:30")'>午饭前</button>
+            <button class="btn " v-on:click.stop.prevent='setTime("17:30")'>晚饭前</button>
+            <button class="btn " v-on:click.stop.prevent='setTime("22:30")'>临睡前</button>
           </div>
         </div>
         <div class="panel-footer">
@@ -41,6 +41,7 @@
 <script>
   import $ from 'jquery'
   export default {
+    props: ['date'],
     data () {
       return {
         showCancel: false,
@@ -50,6 +51,16 @@
       }
     },
     methods: {
+      // tools
+      // 将数转换为两位
+      transTo2Digits (value) {
+        if(value != null  && (value + "").length == 1) {
+          return '0' + value;
+        }
+        else {
+          return value;
+        }
+      },
       openModal () {
         $('#modal1').modal('open')
       },
@@ -73,13 +84,30 @@
         var tmp = this.initTime.getMinutes() + ''
         this.timeMinute = (tmp.length == 1 ? '0'+tmp : tmp)
       },
-      clear () {
-
+      handleHour (event) {
+        var e = event.target.value.slice(0, 2)
+        if(e < 0) {
+          e = 0
+        } else if( e > 23) {
+          e = 23
+        }
+        this.timeHour = e
+        event.target.value = e  // 不得不手动刷新dom元素
+      },
+      handleMinute (event) {
+        var e = event.target.value.slice(0, 2)
+        if(e < 0) {
+          e = 0
+        } else if( e > 59) {
+          e = 59
+        }
+        this.timeMinute = e
+        event.target.value = e  // 不得不刷新dom元素
       }
     },
     computed: {
       value() {
-        return this.timeHour + ":" + this.timeMinute
+        return this.transTo2Digits(this.timeHour) + ":" + this.transTo2Digits(this.timeMinute)
       }
     },
     watch: {
@@ -161,13 +189,13 @@
 
   .panel-content div {
     font-size: 3rem;
-    width: 4rem;
+    width: 4.9rem;
     color: black;
     text-align: center;
   }
 
-  .panel-content input[type=text] {
-    flex: 0 0 25%;
+  .panel-content input[type=number] {
+    flex: 0 0 20%;
     font-size: inherit;
     text-align: center;
   }

@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import $ from 'jquery'
 
 // 初始化， 从localStorage加载todo
 export function LOAD_TODOS (state, todos) {
@@ -34,9 +35,17 @@ export function DELETE_TODO (state, { id, name, newValue }) {
   console.log('mutation delete_todo')
   for (var i = 0; i < state.todos.length; i++) {
     if (state.todos[i].todoId === id) {
-      state.todos[i][name] = newValue
-      state.todos[i]['isDeleted'] = true
+      var newCopy = $.extend(true, {}, state.todos[i])
+      newCopy[name] = newValue
+      newCopy['isDeleted'] = true
+      Vue.set(state.todos, i, newCopy)  // Vue method to discover change of list
       break
     }
   }
+}
+
+// 添加， todo新增 id-todo任务编号  item-任务属性
+export function ADD_TODO (state, { id, item }) {
+  console.log('mutation add_todo')
+  state.todos.push(item)
 }

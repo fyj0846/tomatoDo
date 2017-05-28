@@ -1,7 +1,7 @@
 <template>
   <div class="add-todo-view" append="tree">
     <div class="add-todo-view-header header light-blue white-text">
-      <div class="cancle" @click="cancleNewTodoHandler"> 取消</div>
+      <div class="cancel" @click="cancelNewTodoHandler"> 取消</div>
       <div class="save row-padding-5" @click="saveNewTodoHandler"> 保存</div>
       <div>|</div>
       <div class="share row-padding-5"> 发送</div>
@@ -32,9 +32,9 @@
           </div>
         </div>
         <div class="row">
-          <DatePicker title="传递的titile" v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
+          <DatePicker class="col s6" title="传递的titile" v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
           <!--  通过自定义事件，完成父子组件的通信 -->
-          <TimePicker v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
+          <TimePicker class="col s6" :date='expectFinishDate' v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
         </div>
         <div class="row">
           <div class="input-field col s12">
@@ -83,58 +83,91 @@
         todoTitle: '',
         todoId: '',
         todoDesc: '',
-        tags: [
-//            {
-//            tagName: 'hard'
-//            },
-//            {
-//            tagName: 'EDA'
-//            }
-        ],
-        scene: {
-//            sceneId: '',
-//            sceneName: '办公'
-        },
-        sceneId: '',
-        project: {
-          projectId: '',
-          projectName: ''
-        },
-        projectId: '',
+        priority: '',
         expectFinishDate: '',
         expectFinishTime: '',
+        sceneId: '',
+        projectId: '',
+        tags: [],
         spentClock: '',
-        priority: '',
         isFinished: false
       }
     },
     computed: {
-      date () {
-        console.log(this.$refs.datePicker.value)
-        return this.$refs.datePicker.value
+      // 新任务对象
+      newTODOItem () {
+        return {
+          'todoTitle': this.todoTitle,
+          'todoId': this.todoId,
+          'todoDesc': this.todoDesc,
+          'priority': this.priority,
+          'expectFinishDate': this.expectFinishDate,
+          'expectFinishTime': this.expectFinishTime,
+          'sceneId': this.sceneId,
+          'projectId': this.projectId,
+          'tags': this.tags,
+          'spentClock': this.spentClock,
+          'isFinished': this.isFinished
+        }
       }
     },
     mounted: function () {
-      console.log('add todo mounted!')
+      var VM = this
+      // materialize-css 初始化方法
       $('select').material_select()
       $('.chips').material_chip()
       $('.chips-placeholder').material_chip({
         placeholder: '输入并回车继续',
         secondaryPlaceholder: '添加标签'
       })
+      $('.chips').on('chip.add', function (e, chip) {
+        // you have the added chip here
+        VM.tags.push({'tagName': chip.tag})
+      })
+      $('.chips').on('chip.delete', function (e, chip) {
+        // you have the added chip here
+        VM.tags = VM.deleteObjectInArray(VM.tags, 'tagName', chip.tag)
+      })
     },
     methods: {
-      cancleNewTodoHandler (event) {
+      // tools: delete ele in array
+      deleteElementInArray (obj, target) {
+        var index = obj.indexOf(target)
+        if (index > -1) {
+          return obj.slice(0, index).concat(obj.slice(index + 1))
+        } else {
+          return obj
+        }
+      },
+      // tools: delete ele in Object
+      deleteObjectInArray (obj, propNm, target) {
+        for (var p in obj) {
+          if (obj[p].hasOwnProperty(propNm) && obj[p][propNm] === target) {
+            obj.splice(p, 1)
+            break
+          }
+        }
+        return obj
+      },
+      // 取消新任务
+      cancelNewTodoHandler (event) {
         console.log('cancel and go back!')
+        this.newTODOItem = {}
         this.$router.back()
       },
+      // 保存新任务
       saveNewTodoHandler (event) {
         console.log('save the new todo task')
+        // 触发新增任务
+        this.$store.dispatch('ADD_TODO', {'item': this.newTODOItem})
+        this.$router.back()
       },
+      // 设置计划完成的时间
       setExpectFinishTime (event) {
         console.log('set the setExpectFinishTime')
         this.expectFinishTime = event || '23:59'
       },
+      // 设置计划完成的日期
       setExpectedFinishDate (event) {
         console.log('set the setExpectedFinishDate')
         this.expectFinishDate = event
@@ -149,6 +182,18 @@
 <style scoped>
   .add-todo-view {
     height: 100%;
+  }
+
+  .add-todo-view .row .col {
+    padding: 0px
+  }
+
+  .add-todo-view .row div {
+    padding: 0 1rem;
+  }
+
+  .select-wrapper .caret {
+    right: 5px !important;
   }
 
   .add-todo-view-header {
@@ -174,7 +219,7 @@
   .add-todo-view-content {
     margin-top: 80px;
   }
-  .add-todo-view .cancle {
+  .add-todo-view .cancel {
     flex: 0 0 80%;
     padding-left: 15px;
   }
