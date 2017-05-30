@@ -1,13 +1,15 @@
 <template>
   <div class="time-picker">
-    <div class="input-field col s12">
-      <input id="timePicker" type="text" @click="openModal" v-model="value">
-      <label for="timePicker">计划完成时间</label>
+    <div class=" col s12">
+      <!--<input id="timePicker" type="text" @click="openModal" v-model="value">-->
+      <!--<label for="timePicker">计划完成时间</label>-->
+      <div class="pickerLabel">计划完成时间</div>
+      <div class="input" tabindex="1" id="timePicker"  @click="openModal"> {{ value }}</div>
     </div>
     <div id='modal1' class="modal">
       <div class="date-panel">
         <div class="panel-header">
-          选择截止时间
+          {{ title }}
         </div>
         <div class="panel-date">
           {{ date }}
@@ -41,7 +43,7 @@
 <script>
   import $ from 'jquery'
   export default {
-    props: ['date'],
+    props: ['title', 'date'],
     data () {
       return {
         showCancel: false,
@@ -129,6 +131,27 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  .pickerLabel {
+    font-size: 0.8rem;
+    left: 0.75rem;
+    color: #9e9e9e;
+  }
+
+  .time-picker .input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #9e9e9e;
+    height: 3rem;
+    line-height: 2.5rem;
+    width: 100%;
+  }
+
+  /* 为了使div拥有onfous效果，需要给div增加"tabindex"属性并且赋值 */
+  .time-picker .input:focus {
+    outline: none;
+    border-bottom:  2px solid #25776f;
   }
 
   .panel-header{

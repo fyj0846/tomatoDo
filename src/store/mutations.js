@@ -49,3 +49,15 @@ export function ADD_TODO (state, { id, item }) {
   console.log('mutation add_todo')
   state.todos.push(item)
 }
+
+// 加载， 从localStorage中读取projects配置
+export function LOAD_PROJECTS (state, projects) {
+  console.log('mutation load_projects')
+  Vue.set(state, 'projects', projects)
+}
+
+// 加载， 从localStorage中读取scenes配置
+export function LOAD_SCENES (state, scenes) {
+  console.log('mutation load_scenes')
+  Vue.set(state, 'scenes', scenes)
+}

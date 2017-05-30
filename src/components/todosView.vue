@@ -1,8 +1,8 @@
 <template>
   <div class="todo-view" append="tree">
     <app-header class="todo-view-header">
-      <side-nav slot="sideNav"></side-nav>
     </app-header>
+    <side-nav slot="sideNav"></side-nav>
     <div class="row todo-view-content">
       <div v-for="todo in todoList" class="col s12 m6">
         <todo :todoMeta="todo"></todo>

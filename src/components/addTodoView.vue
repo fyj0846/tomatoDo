@@ -32,17 +32,18 @@
           </div>
         </div>
         <div class="row">
-          <DatePicker class="col s6" title="传递的titile" v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
+          <DatePicker class="col s6" title="选择日期" v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
           <!--  通过自定义事件，完成父子组件的通信 -->
-          <TimePicker class="col s6" :date='expectFinishDate' v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
+          <TimePicker class="col s6" title="选择时间" :date='expectFinishDate' v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
         </div>
         <div class="row">
           <div class="input-field col s12">
             <select v-select="projectId">
               <option value="" disabled selected>请选择项目</option>
-              <option value="project001">EDA</option>
-              <option value="project002">鹰眼</option>
-              <option value="project003">todo</option>
+              <option v-for="item in activeProjects" :value="item.projectId">{{ item.projectName }}</option>
+              <!--<option value="project001">EDA</option>-->
+              <!--<option value="project002">鹰眼</option>-->
+              <!--<option value="project003">todo</option>-->
             </select>
             <label>项目</label>
           </div>
@@ -51,9 +52,10 @@
           <div class="input-field col s12">
             <select v-select="sceneId">
               <option value="" disabled selected>请选择场景</option>
-              <option value="scene001">study</option>
-              <option value="scene002">work</option>
-              <option value="scene003">fun</option>
+              <option v-for="item in activeScenes" :value="item.sceneId"> {{ item.sceneName }}</option>
+              <!--<option value="scene001">study</option>-->
+              <!--<option value="scene002">work</option>-->
+              <!--<option value="scene003">fun</option>-->
             </select>
             <label>场景</label>
           </div>
@@ -89,7 +91,7 @@
         sceneId: '',
         projectId: '',
         tags: [],
-        spentClock: '',
+        spentClock: 0,
         isFinished: false
       }
     },
@@ -109,7 +111,19 @@
           'spentClock': this.spentClock,
           'isFinished': this.isFinished
         }
+      },
+      // 已配置project对象
+      activeProjects () {
+        return this.$store.getters.activeProjects
+      },
+      // 已配置scenes对象
+      activeScenes () {
+        return this.$store.getters.activeScenes
       }
+    },
+    beforeMount: function () {
+      this.$store.dispatch('LOAD_PROJECTS')
+      this.$store.dispatch('LOAD_SCENES')
     },
     mounted: function () {
       var VM = this

@@ -1,8 +1,10 @@
 <template>
   <div class="date-picker">
-    <div class="input-field col s12">
-      <input id="datePicker" type="text" @click="openModal" v-model="selectedDate">
-      <label for="datePicker">计划完成日期</label>
+    <div class="col s12">
+      <!--<input id="datePicker" type="text" @click="openModal" v-model="selectedDate">-->
+      <!--<label for="datePicker">计划完成日期</label>-->
+      <div class="pickerLabel">计划完成日期</div>
+      <div id="datePicker" tabindex="0" class="input" @click="openModal" v-model="selectedDate"> {{ selectedDate }}</div>
     </div>
     <div id='modal2' class="modal">
       <div class="date-panel">
@@ -123,9 +125,10 @@
 
       // 设置目标日期为周末
       setWeekend () {
-        var weekend = new Date()
-        var offset = weekend.getDay()
-        this.selectedDay = this.transTo2Digits(weekend.getDate() + ( 6 - offset))   //推至当前日所在的周六
+        var today = new Date()
+        var dayInWeek = today.getDay()
+        var weekend = new Date(today.getFullYear(), today.getMonth(), today.getDate() + (6 - dayInWeek));
+        this.selectedDay = this.transTo2Digits(weekend.getDate())   //推至当前日所在的周六
         this.selectedMonth = this.transTo2Digits(weekend.getMonth() + 1)
         this.selectedYear = weekend.getFullYear()
       }
@@ -189,6 +192,27 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  .pickerLabel {
+    font-size: 0.8rem;
+    left: 0.75rem;
+    color: #9e9e9e;
+  }
+
+  .date-picker .input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #9e9e9e;
+    height: 3rem;
+    line-height: 2.5rem;
+    width: 100%;
+  }
+
+  /* 为了使div拥有onfous效果，需要给div增加"tabindex"属性并且赋值 */
+  .date-picker .input:focus {
+    outline: none;
+    border-bottom:  2px solid #25776f;
   }
 
   .panel-header {
