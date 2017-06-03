@@ -36,9 +36,9 @@
     <div class="card-action todo-action">
       <i @click="stopTodo" class="material-icons right">stop</i>
       <i @click="toggleTodo" class="material-icons right"> {{ timerController }}</i>
+      <i @click="continueTodo" v-bind:class="[{ active: this.continueFlag }, 'material-icons', 'right']">repeat_one</i>
       <i @click="editTodo" class="material-icons right">edit</i>
-      <i @click="viewTodo" class="material-icons right">description</i>
-      <i @click="alertTodo" class="material-icons right">alarm</i>
+      <!--<i @click="viewTodo" class="material-icons right">description</i>-->
       <!--<a class="" @click="watchTodo"><i class="material-icons right">visibility</i></a>-->
 
     </div>
@@ -56,7 +56,8 @@
         timerHandle: -1,
         timer: '',
         timerShow: '',
-        timerController: ''
+        timerController: '',
+        continueFlag: false
       }
     },
     props: {
@@ -167,6 +168,10 @@
             second = Math.floor(THAT.timer) - (minute * 60)
           } else if (THAT.timer === 0) {
             THAT.stopTodo()
+            // 持续进行
+            if (THAT.continueFlag) {
+              THAT.startTodo()
+            }
             return
           }
           if (minute <= 9) minute = '0' + minute
@@ -226,8 +231,8 @@
 
       // 重置  todo 定时器
       resetTimer () {
-        this.timerShow = '01:00'
-        this.timer = 60
+        this.timerShow = '00:10'
+        this.timer = 10
         this.timerHandle = -1
         this.timerController = 'play_arrow'
       },
@@ -243,8 +248,15 @@
       },
 
       // todo 告警
-      alertTodo () {
-        console.log('alert todo task')
+      continueTodo () {
+        console.log('continue todo task one by one')
+        this.continueFlag = !this.continueFlag
+      },
+
+      // 编辑 todo
+      editTodoHandler () {
+        console.log('message', 'edit todo touched')
+        this.$router.push({ path: 'editTodoView' })
       }
     }
   }
@@ -303,6 +315,10 @@
 
   .todo-header i, .todo-action i {
     margin: 0 7px;
+  }
+
+  .todo-action .active {
+    background-color: red;
   }
 
 </style>

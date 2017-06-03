@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import todosView from '@/components/todosView'
 import addTodoView from '@/components/addTodoView'
+import editTodoView from '@/components/editTodoView'
 import timePicker from '../components/common/time-picker'
 
 Vue.use(Router)
@@ -24,6 +25,11 @@ export default new Router({
       path: '/addTodoView',
       name: 'addTodoView',
       component: addTodoView
+    }, {
+      // todo任务-编辑
+      path: '/editTodoView',
+      name: 'editTodoView',
+      component: editTodoView
     }, {
       // 测试组件
       path: '/test',
