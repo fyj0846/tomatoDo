@@ -12,7 +12,7 @@
           {{ title }}
         </div>
         <div class="panel-date">
-          {{ date }}
+          {{ propDate }}
         </div>
         <div class="panel-content">
           <div class="input-field">
@@ -43,13 +43,13 @@
 <script>
   import $ from 'jquery'
   export default {
-    props: ['title', 'date'],
+    props: ['title', 'propDate', 'propTime'],
     data () {
       return {
         showCancel: false,
-        initTime: {},
-        timeHour: 0,
-        timeMinute: 0,
+//        initTime: {},
+        timeHour: -1,
+        timeMinute: -1,
       }
     },
     methods: {
@@ -80,11 +80,16 @@
         this.timeMinute = '59';
       },
       defaultInitTime () {
-        // 初始化， 设置默认时钟
-        this.initTime = new Date()
-        this.timeHour = this.initTime.getHours()
-        var tmp = this.initTime.getMinutes() + ''
-        this.timeMinute = (tmp.length == 1 ? '0'+tmp : tmp)
+        // 初始化，
+        // 设置默认时钟
+        if(this.propTime && this.propTime.indexOf(":") > -1) {
+          this.timeHour = this.transTo2Digits(this.propTime.split(":")[0])
+          this.timeMinute = this.transTo2Digits(this.propTime.split(":")[1])
+        } else {
+          var initTime = new Date()
+          this.timeHour = this.transTo2Digits(initTime.getHours())
+          this.timeMinute = this.transTo2Digits(initTime.getMinutes())
+        }
       },
       handleHour (event) {
         var e = event.target.value.slice(0, 2)

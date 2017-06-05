@@ -47,7 +47,8 @@
   import $ from 'jquery'
   export default {
     props: [
-      "title"
+      "title",
+      "propDate"
     ],
     data () {
       return {
@@ -115,6 +116,17 @@
         this.selectedDay = this.transTo2Digits(item.day)
       },
 
+      // 设置初始化默认日期
+      defaultInitDate () {
+        var today = new Date()
+        if(this.propDate) {
+          today = new Date(this.propDate)
+        }
+        this.selectedDay = this.transTo2Digits(today.getDate())
+        this.selectedMonth = this.transTo2Digits(today.getMonth() + 1)
+        this.selectedYear = today.getFullYear()
+      },
+
       // 设置目标日期为今天
       setToday () {
         var today = new Date()
@@ -180,7 +192,7 @@
     mounted () {
       $('select').material_select()
       $('.modal').modal()
-      this.setToday()
+      this.defaultInitDate()
     },
     beforeDestroy () {
     }

@@ -7,9 +7,15 @@ export function LOAD_TODOS (state, todos) {
   Vue.set(state, 'todos', todos)
 }
 
+// 加载指定Id的todo
+export function LOAD_TODO (state, todo) {
+  console.log('mutation load_todo')
+  Vue.set(state, 'curEditTodo', todo)
+}
+
 // 更新， todo状态更新 name-目标属性名  newValue-新的属性值
-export function UPDATE_TODO (state, { id, name, newValue }) {
-  console.log('mutation upadte_todo')
+export function UPDATE_TODO_MNGR (state, { id, name, newValue }) {
+  console.log('mutation upadte_mngr_todo')
   for (var i = 0; i < state.todos.length; i++) {
     if (state.todos[i].todoId === id) {
       state.todos[i][name] = newValue
@@ -40,6 +46,16 @@ export function DELETE_TODO (state, { id, name, newValue }) {
       newCopy['isDeleted'] = true
       Vue.set(state.todos, i, newCopy)  // Vue method to discover change of list
       break
+    }
+  }
+}
+
+// 添加， todo更新 id-todo任务编号  item-任务属性
+export function UPDATE_TODO (state, { id, item }) {
+  console.log('mutation update_todo')
+  for (var i = 0; i < state.todos.length; i++) {
+    if (state.todos[i].todoId === id) {
+      state.todos.splice(i, 1, item)
     }
   }
 }

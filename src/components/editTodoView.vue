@@ -8,6 +8,9 @@
     </div>
     <div class="edit-todo-view-content row">
       <form class="col s12">
+        <div class="loading row"> <!-- v-if="loading" -->
+          Loading...
+        </div>
         <div class="row">
           <div class="input-field col s12">
             <input placeholder="标题" id="todoTitle" type="text" class="validate" v-model="todoTitle">
@@ -21,29 +24,28 @@
         <div class="row">
           <div class="input-field col s12">
             <select v-select="priority">
-              <option value="" disabled selected>请选择优先级</option>
-              <option value="1">1星</option>
-              <option value="2">2星</option>
-              <option value="3">3星</option>
-              <option value="4">4星</option>
-              <option value="5">5星</option>
+              <option value="" disabled>请选择优先级</option>
+              <template v-for="star in stars">
+                <option v-if="star == priority" :value="star" selected> {{ star }}星</option>
+                <option v-else :value="star"> {{ star }}星</option>
+              </template>
             </select>
             <label>优先级</label>
           </div>
         </div>
         <div class="row">
-          <DatePicker class="col s6" title="选择日期" v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
+          <DatePicker class="col s6" title="选择日期" :propDate='expectFinishDate' v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
           <!--  通过自定义事件，完成父子组件的通信 -->
-          <TimePicker class="col s6" title="选择时间" :date='expectFinishDate' v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
+          <TimePicker class="col s6" title="选择时间" :propDate='expectFinishDate' :propTime='expectFinishTime' v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
         </div>
         <div class="row">
           <div class="input-field col s12">
             <select v-select="projectId">
               <option value="" disabled selected>请选择项目</option>
-              <option v-for="item in activeProjects" :value="item.projectId">{{ item.projectName }}</option>
-              <!--<option value="project001">EDA</option>-->
-              <!--<option value="project002">鹰眼</option>-->
-              <!--<option value="project003">todo</option>-->
+              <template v-for="item in activeProjects">
+                <option v-if="item.projectId == projectId" :value="item.projectId" selected>{{ item.projectName }}</option>
+                <option v-else :value="item.projectId">{{ item.projectName }}</option>
+              </template>
             </select>
             <label>项目</label>
           </div>
@@ -52,17 +54,22 @@
           <div class="input-field col s12">
             <select v-select="sceneId">
               <option value="" disabled selected>请选择场景</option>
-              <option v-for="item in activeScenes" :value="item.sceneId"> {{ item.sceneName }}</option>
-              <!--<option value="scene001">study</option>-->
-              <!--<option value="scene002">work</option>-->
-              <!--<option value="scene003">fun</option>-->
+              <template v-for="item in activeScenes">
+                <option v-if="item.sceneId == sceneId" :value="item.sceneId" selected> {{ item.sceneName }}</option>
+                <option v-else :value="item.sceneId"> {{ item.sceneName }}</option>
+              </template>
             </select>
             <label>场景</label>
           </div>
         </div>
         <div class="row">
           <div class="input-field col s12">
-            <div class="chips chips-placeholder">
+            <div class="chips chips-initial">
+              <!--<template v-for="tag in tags">-->
+                <!--<div class="chip"> {{ tag.tagName }}-->
+                  <!--<i class="material-icons close">close</i>-->
+                <!--</div>-->
+              <!--</template>-->
               <input id="tags" class="input" placeholder="回车添加标签">
               <!--<label for="tags">标签</label>-->
             </div>
@@ -82,22 +89,24 @@
     components: { TimePicker, DatePicker },
     data: function () {
       return {
-        todoTitle: '',
-        todoId: '',
-        todoDesc: '',
-        priority: '',
-        expectFinishDate: '',
-        expectFinishTime: '',
-        sceneId: '',
-        projectId: '',
-        tags: [],
-        spentClock: 0,
-        isFinished: false
+        'loading': true,
+        'stars': ['1', '2', '3', '4', '5'],
+        'todoTitle': '',
+        'todoId': '',
+        'todoDesc': '',
+        'priority': '',
+        'expectFinishDate': '',
+        'expectFinishTime': '',
+        'sceneId': '',
+        'projectId': '',
+        'tags': '',
+        'spentClock': '',
+        'isFinished': ''
       }
     },
     computed: {
       // 新任务对象
-      newTODOItem () {
+      updatedTODOItem () {
         return {
           'todoTitle': this.todoTitle,
           'todoId': this.todoId,
@@ -112,6 +121,11 @@
           'isFinished': this.isFinished
         }
       },
+      // 当前编辑的todo对象
+      curEditTodo () {
+        var todo = this.$store.getters.curEditTodo
+        return todo
+      },
       // 已配置project对象
       activeProjects () {
         return this.$store.getters.activeProjects
@@ -122,14 +136,28 @@
       }
     },
     beforeMount: function () {
+      this.$store.dispatch('LOAD_TODO', {id: this.$route.params.todoId})
       this.$store.dispatch('LOAD_PROJECTS')
       this.$store.dispatch('LOAD_SCENES')
+      this.initTodoMeta(this.$store.getters.curEditTodo)
     },
     mounted: function () {
       var VM = this
+      // 初始化的tag标签
+      if (!this.tags) {
+        this.tags = []
+      }
+      var initTags = this.tags.map(function (tag) {
+        return {
+          tag: tag.tagName
+        }
+      })
       // materialize-css 初始化方法
       $('select').material_select()
       $('.chips').material_chip()
+      $('.chips-initial').material_chip({
+        data: initTags
+      })
       $('.chips-placeholder').material_chip({
         placeholder: '输入并回车继续',
         secondaryPlaceholder: '添加标签'
@@ -163,6 +191,20 @@
         }
         return obj
       },
+      // 在页面挂载前初始化data
+      initTodoMeta (todo) {
+        this.todoTitle = todo.todoTitle
+        this.todoId = todo.todoId
+        this.todoDesc = todo.todoDesc
+        this.priority = todo.priority
+        this.expectFinishDate = todo.expectFinishDate
+        this.expectFinishTime = todo.expectFinishTime
+        this.sceneId = todo.sceneId
+        this.projectId = todo.projectId
+        this.tags = todo.tags
+        this.spentClock = todo.spentClock
+        this.isFinished = todo.isFinished
+      },
       // 取消新任务
       cancelNewTodoHandler (event) {
         console.log('cancel and go back!')
@@ -171,9 +213,9 @@
       },
       // 保存新任务
       saveNewTodoHandler (event) {
-        console.log('save the new todo task')
-        // 触发新增任务
-        this.$store.dispatch('ADD_TODO', {'item': this.newTODOItem})
+        console.log('save the update todo task')
+        // 触发更新任务
+        this.$store.dispatch('UPDATE_TODO', {'item': this.updatedTODOItem})
         this.$router.back()
       },
       // 设置计划完成的时间

@@ -37,7 +37,7 @@
       <i @click="stopTodo" class="material-icons right">stop</i>
       <i @click="toggleTodo" class="material-icons right"> {{ timerController }}</i>
       <i @click="continueTodo" v-bind:class="[{ active: this.continueFlag }, 'material-icons', 'right']">repeat_one</i>
-      <i @click="editTodo" class="material-icons right">edit</i>
+      <i @click="editTodoHandler(todoMeta.todoId)" class="material-icons right">edit</i>
       <!--<i @click="viewTodo" class="material-icons right">description</i>-->
       <!--<a class="" @click="watchTodo"><i class="material-icons right">visibility</i></a>-->
 
@@ -199,12 +199,12 @@
           // 完整完成一个 clock
           // 更新统计信息
           var spClock = this.todoMeta.spentClock || 0
-          this.$store.dispatch('UPDATE_TODO', {id: this.todoMeta.todoId, name: 'spentClock', newValue: spClock - 0 + 1})
+          this.$store.dispatch('UPDATE_TODO_MNGR', {id: this.todoMeta.todoId, name: 'spentClock', newValue: spClock - 0 + 1})
         } else {
           // 中途干扰，任务停止
           // 统计中断次数
           var ipt = this.todoMeta.interupt || 0
-          this.$store.dispatch('UPDATE_TODO', {id: this.todoMeta.todoId, name: 'interupt', newValue: ipt - 0 + 1})
+          this.$store.dispatch('UPDATE_TODO_MNGR', {id: this.todoMeta.todoId, name: 'interupt', newValue: ipt - 0 + 1})
         }
         this.resetTimer()
       },
@@ -238,8 +238,9 @@
       },
 
       // todo 编辑
-      editTodo () {
-        console.log('edit todo task')
+      editTodoHandler (todoId) {
+        console.log('message', 'edit todo touched')
+        this.$router.push({name: 'editTodoView', params: { todoId: todoId }})
       },
 
       // todo 查看
@@ -253,11 +254,6 @@
         this.continueFlag = !this.continueFlag
       },
 
-      // 编辑 todo
-      editTodoHandler () {
-        console.log('message', 'edit todo touched')
-        this.$router.push({ path: 'editTodoView' })
-      }
     }
   }
 </script>
@@ -318,7 +314,7 @@
   }
 
   .todo-action .active {
-    background-color: red;
+    background-color: yellow;
   }
 
 </style>

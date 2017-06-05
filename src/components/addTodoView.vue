@@ -21,12 +21,11 @@
         <div class="row">
           <div class="input-field col s12">
             <select v-select="priority">
-              <option value="" disabled selected>请选择优先级</option>
-              <option value="1">1星</option>
-              <option value="2">2星</option>
-              <option value="3">3星</option>
-              <option value="4">4星</option>
-              <option value="5">5星</option>
+              <option value="" disabled>请选择优先级</option>
+              <template v-for="star in stars">
+                <option v-if="star == priority" :value="star" selected> {{ star }}星</option>
+                <option v-else :value="star"> {{ star }}星</option>
+              </template>
             </select>
             <label>优先级</label>
           </div>
@@ -34,7 +33,7 @@
         <div class="row">
           <DatePicker class="col s6" title="选择日期" v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
           <!--  通过自定义事件，完成父子组件的通信 -->
-          <TimePicker class="col s6" title="选择时间" :date='expectFinishDate' v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
+          <TimePicker class="col s6" title="选择时间" :propDate='expectFinishDate' v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
         </div>
         <div class="row">
           <div class="input-field col s12">
@@ -82,6 +81,7 @@
     components: { TimePicker, DatePicker },
     data: function () {
       return {
+        stars: ['1', '2', '3', '4', '5'],
         todoTitle: '',
         todoId: '',
         todoDesc: '',

@@ -41,9 +41,24 @@ export function LOAD_TODOS ({ commit, dispatch, state }) {
   }))
 }
 
-export function UPDATE_TODO ({ commit, dispatch, state }, { id, name, newValue }) {
-  console.log('action comit update_todo')
-  commit('UPDATE_TODO', { id, name, newValue })
+export function LOAD_TODO ({ commit, dispatch, state }, { id }) {
+  console.log('action comit load_todo')
+  var todosFromStorage = JSON.parse(storage.getItem('todos'))
+  var curEditTodo = {}
+  for (var i = 0; i < todosFromStorage.length; i++) {
+    if (todosFromStorage[i].todoId === id) {
+      curEditTodo = todosFromStorage[i]
+      break
+    }
+  }
+  commit('LOAD_TODO', curEditTodo)
+  // 加载 todo 都本地localStorage
+  // storage.setItem('todos', JSON.stringify(state.todos))
+}
+
+export function UPDATE_TODO_MNGR ({ commit, dispatch, state }, { id, name, newValue }) {
+  console.log('action comit update_mngr_todo')
+  commit('UPDATE_TODO_MNGR', { id, name, newValue })
   // 更新 todo 都本地localStorage
   storage.setItem('todos', JSON.stringify(state.todos))
 }
@@ -70,6 +85,14 @@ export function ADD_TODO ({ commit, dispatch, state }, { item }) {
   var id = userId + '-' + timestamp.getFullYear() + '' + timestamp.getMonth() + '' + timestamp.getDate() + '-' + timestamp.getTime()
   item.todoId = id
   commit('ADD_TODO', { id, item })
+  // 更新 todo 都本地localStorage
+  storage.setItem('todos', JSON.stringify(state.todos))
+}
+
+export function UPDATE_TODO ({ commit, dispatch, state }, { item }) {
+  console.log('action comit update_todo')
+  var id = item.todoId
+  commit('UPDATE_TODO', { id, item })
   // 更新 todo 都本地localStorage
   storage.setItem('todos', JSON.stringify(state.todos))
 }

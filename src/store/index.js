@@ -10,6 +10,7 @@ const store = new Vuex.Store({
   mutations,
   state: {
     todos: [],
+    curEditTodo: {},
     projects: [],
     scenes: [],
     users: {}
@@ -22,6 +23,10 @@ const store = new Vuex.Store({
           return true
         }
       })
+    },
+    curEditTodo (state) {
+      const { curEditTodo } = state
+      return curEditTodo
     },
     activeTodosCount (state, getters) {
       return getters.activeTodos.length
