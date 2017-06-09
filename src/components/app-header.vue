@@ -49,7 +49,7 @@
     background-color: #42b983;
   }
   .header-title {
-    flex: 0 0 70%;
+    flex: 0 0 72%;
     font-size: 2rem;
   }
 
@@ -58,7 +58,7 @@
   }
 
   .header-sidenav-btn {
-    flex: 0 0 20%;
+    flex: 0 0 15%;
     font-size: 2rem;
   }
 

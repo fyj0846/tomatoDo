@@ -1,29 +1,33 @@
 <template>
-  <div class="card">
+  <div class="card"  v-bind:class="{ 'card-active': timerHandle }">
     <div class="todo-header grey lighten-1">
       <span>{{ todoMeta.todoTitle }}</span>
       <i @click="getTodoDone" class="material-icons right">done</i>
       <i @click="getTodoDelete" class="material-icons right">delete</i>
     </div>
-    <div class="card-content todo-content">
+    <div class=" todo-content">
       <div class="todo-content-left">
-        <div class="todo-flags">
-          <i class="material-icons">bookmark</i>
-          <span class="todo-flag" v-for="tag in todoMeta.tags">
+        <div class="todo-project left-center">
+          <i class="material-icons">folder</i>
+          <span class=" padding_left_right">{{ todoMeta.project.projectName }}</span>
+        </div>
+        <div class="todo-scene left-center">
+          <i class="material-icons">place</i>
+          <span class=" padding_left_right">{{ todoMeta.scene.sceneName }}</span>
+        </div>
+        <div class="todo-flags left-center">
+          <i class="material-icons">label</i>
+          <span class="todo-flag padding_left_right" v-for="tag in todoMeta.tags">
             {{ tag.tagName }}
           </span>
         </div>
-        <div class="todo-situation">
-          <i class="material-icons">place</i>
-          <span class="todo-timeLeft">{{ todoMeta.scene.sceneName }}</span>
-        </div>
-        <div class="todo-timing">
+        <div class="todo-timing left-center">
           <i class="material-icons">schedule</i>
-          <span class="todo-timeLeft">{{ todoMeta.expectFinishTime }}</span>
+          <span class="todo-timeLeft padding_left_right">{{ todoMeta.expectFinishTime }}</span>
         </div>
-        <div class="todo-statis">
-          <i class="material-icons">show_chart</i>
-          <span class="todo-spent">{{ todoMeta.spentClock }}</span>
+        <div class="todo-statis left-center">
+          <i class="material-icons">thumb_up</i>
+          <span class="todo-spent padding_left_right">{{ todoMeta.spentClock }}</span>
         </div>
       </div>
       <div class="todo-content-right">
@@ -33,14 +37,11 @@
         <div class="todo-inTask"> {{ timerShow }}</div>
       </div>
     </div>
-    <div class="card-action todo-action">
-      <i @click="stopTodo" class="material-icons right">stop</i>
-      <i @click="toggleTodo" class="material-icons right"> {{ timerController }}</i>
-      <i @click="continueTodo" v-bind:class="[{ active: this.continueFlag }, 'material-icons', 'right']">repeat_one</i>
+    <div class="card-action todo-action right-center">
       <i @click="editTodoHandler(todoMeta.todoId)" class="material-icons right">edit</i>
-      <!--<i @click="viewTodo" class="material-icons right">description</i>-->
-      <!--<a class="" @click="watchTodo"><i class="material-icons right">visibility</i></a>-->
-
+      <i @click="continueTodo" v-bind:class="[{ active: this.continueFlag }, 'material-icons', 'right']">repeat_one</i>
+      <i @click="toggleTodo" class="material-icons right"> {{ timerController }}</i>
+      <i @click="stopTodo" class="material-icons right">stop</i>
     </div>
     <div class="card-reveal">
       <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
@@ -53,7 +54,7 @@
   export default {
     data: function () {
       return {
-        timerHandle: -1,
+        timerHandle: 0,
         timer: '',
         timerShow: '',
         timerController: '',
@@ -68,44 +69,6 @@
       }
     },
     computed: {
-      /*
-      isDone () {
-        return this.todo.done ? 'undo...' : 'done!'
-      },
-      buttonStyle () {
-        if (this.todo.done) {
-          return {
-            'color': '#a0a0a0',
-            'backgroundColor': 'white',
-            'borderColor': 'white',
-            'textDecoration': 'underline'
-          }
-        } else {
-          return {
-            'color': 'white',
-            'backgroundColor': '#35495e',
-            'borderColor': '#2c3e50',
-            'textDecoration': 'none'
-          }
-        }
-      },
-      textStyle () {
-        if (this.todo.done) {
-          return {
-            'textDecoration': 'line-through',
-            'fontStyle': 'italic',
-            'color': '#a0a0a0'
-          }
-        } else {
-          return {
-            'textDecoration': 'none',
-            'fontStyle': 'normal',
-            'color': '#404040'
-          }
-        }
-      }
-      */
-
       // 优先级转换为星星样式数组（icon）
       priorityStyle () {
         var styleList = []
@@ -226,14 +189,14 @@
       // 清理 todo 定时器
       clearTimer () {
         clearInterval(this.timerHandle)
-        this.timerHandle = -1
+        this.timerHandle = 0
       },
 
       // 重置  todo 定时器
       resetTimer () {
         this.timerShow = '00:10'
         this.timer = 10
-        this.timerHandle = -1
+        this.timerHandle = 0
         this.timerController = 'play_arrow'
       },
 
@@ -264,9 +227,13 @@
     margin: 0.5rem;
   }
 
+  .card-active {
+    border: 1px solid red;
+  }
+
   /*todo卡片头部样式*/
   .todo-header {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     padding: 5px 15px  5px 8px;
   }
 
@@ -276,7 +243,7 @@
 
   /*todo卡片体样式*/
   .todo-content {
-    padding: 24px 12px;
+    padding: 12px 12px;
     min-height: 120px;
     display: flex;
     justify-content: space-between;
@@ -285,17 +252,17 @@
 
   .todo-content-left {
     display: flex;
-    flex: 3;
+    flex: 4;
     flex-direction: column;
     align-self: flex-start;
   }
 
   .todo-content-left div {
-    line-height: 36px;
+    line-height: 30px;
   }
   .todo-content-right {
     display: flex;
-    flex: 2;
+    flex: 3;
     flex-direction: column;
     align-self: center;
   }
@@ -306,7 +273,7 @@
 
   .todo-action {
     height: 41px;
-    padding: 10px 15px;
+    padding: 10px 10px;
   }
 
   .todo-header i, .todo-action i {
@@ -317,4 +284,19 @@
     background-color: yellow;
   }
 
+  .left-center {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .right-center {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .padding_left_right {
+    padding: 0 5px;
+  }
 </style>

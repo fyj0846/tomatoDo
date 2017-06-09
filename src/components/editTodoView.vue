@@ -276,7 +276,7 @@
     margin-top: 80px;
   }
   .edit-todo-view .cancel {
-    flex: 0 0 80%;
+    flex: 0 0 70%;
     padding-left: 15px;
   }
 
