@@ -8,9 +8,9 @@
     </div>
     <div class="edit-todo-view-content row">
       <form class="col s12">
-        <div class="loading row"> <!-- v-if="loading" -->
-          Loading...
-        </div>
+        <!--<div class="loading row"> &lt;!&ndash; v-if="loading" &ndash;&gt;-->
+          <!--Loading...-->
+        <!--</div>-->
         <div class="row">
           <div class="input-field col s12">
             <input placeholder="标题" id="todoTitle" type="text" class="validate" v-model="todoTitle">
@@ -50,18 +50,19 @@
             <label>项目</label>
           </div>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <select v-select="sceneId">
-              <option value="" disabled selected>请选择场景</option>
-              <template v-for="item in activeScenes">
-                <option v-if="item.sceneId == sceneId" :value="item.sceneId" selected> {{ item.sceneName }}</option>
-                <option v-else :value="item.sceneId"> {{ item.sceneName }}</option>
-              </template>
-            </select>
-            <label>场景</label>
-          </div>
-        </div>
+        <!--场景用途未明确，暂时不提供-->
+        <!--<div class="row">-->
+          <!--<div class="input-field col s12">-->
+            <!--<select v-select="sceneId">-->
+              <!--<option value="" disabled selected>请选择场景</option>-->
+              <!--<template v-for="item in activeScenes">-->
+                <!--<option v-if="item.sceneId == sceneId" :value="item.sceneId" selected> {{ item.sceneName }}</option>-->
+                <!--<option v-else :value="item.sceneId"> {{ item.sceneName }}</option>-->
+              <!--</template>-->
+            <!--</select>-->
+            <!--<label>场景</label>-->
+          <!--</div>-->
+        <!--</div>-->
         <div class="row">
           <div class="input-field col s12">
             <div class="chips chips-initial">
@@ -97,7 +98,7 @@
         'priority': '',
         'expectFinishDate': '',
         'expectFinishTime': '',
-        'sceneId': '',
+//        'sceneId': '',
         'projectId': '',
         'tags': '',
         'spentClock': '',
@@ -114,7 +115,7 @@
           'priority': this.priority,
           'expectFinishDate': this.expectFinishDate,
           'expectFinishTime': this.expectFinishTime,
-          'sceneId': this.sceneId,
+//          'sceneId': this.sceneId,
           'projectId': this.projectId,
           'tags': this.tags,
           'spentClock': this.spentClock,
@@ -131,14 +132,14 @@
         return this.$store.getters.activeProjects
       },
       // 已配置scenes对象
-      activeScenes () {
-        return this.$store.getters.activeScenes
-      }
+//      activeScenes () {
+//        return this.$store.getters.activeScenes
+//      }
     },
     beforeMount: function () {
       this.$store.dispatch('LOAD_TODO', {id: this.$route.params.todoId})
       this.$store.dispatch('LOAD_PROJECTS')
-      this.$store.dispatch('LOAD_SCENES')
+//      this.$store.dispatch('LOAD_SCENES')
       this.initTodoMeta(this.$store.getters.curEditTodo)
     },
     mounted: function () {
@@ -199,7 +200,7 @@
         this.priority = todo.priority
         this.expectFinishDate = todo.expectFinishDate
         this.expectFinishTime = todo.expectFinishTime
-        this.sceneId = todo.sceneId
+//        this.sceneId = todo.sceneId
         this.projectId = todo.projectId
         this.tags = todo.tags
         this.spentClock = todo.spentClock

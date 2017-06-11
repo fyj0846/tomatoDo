@@ -47,18 +47,16 @@
             <label>项目</label>
           </div>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <select v-select="sceneId">
-              <option value="" disabled selected>请选择场景</option>
-              <option v-for="item in activeScenes" :value="item.sceneId"> {{ item.sceneName }}</option>
-              <!--<option value="scene001">study</option>-->
-              <!--<option value="scene002">work</option>-->
-              <!--<option value="scene003">fun</option>-->
-            </select>
-            <label>场景</label>
-          </div>
-        </div>
+        <!--场景需求不明确，咱不提供-->
+        <!--<div class="row">-->
+          <!--<div class="input-field col s12">-->
+            <!--<select v-select="sceneId">-->
+              <!--<option value="" disabled selected>请选择场景</option>-->
+              <!--<option v-for="item in activeScenes" :value="item.sceneId"> {{ item.sceneName }}</option>-->
+            <!--</select>-->
+            <!--<label>场景</label>-->
+          <!--</div>-->
+        <!--</div>-->
         <div class="row">
           <div class="input-field col s12">
             <div class="chips chips-placeholder">
@@ -88,7 +86,7 @@
         priority: '',
         expectFinishDate: '',
         expectFinishTime: '',
-        sceneId: '',
+//        sceneId: '',
         projectId: '',
         tags: [],
         spentClock: 0,
@@ -105,7 +103,7 @@
           'priority': this.priority,
           'expectFinishDate': this.expectFinishDate,
           'expectFinishTime': this.expectFinishTime,
-          'sceneId': this.sceneId,
+//          'sceneId': this.sceneId,
           'projectId': this.projectId,
           'tags': this.tags,
           'spentClock': this.spentClock,
@@ -117,13 +115,13 @@
         return this.$store.getters.activeProjects
       },
       // 已配置scenes对象
-      activeScenes () {
-        return this.$store.getters.activeScenes
-      }
+//      activeScenes () {
+//        return this.$store.getters.activeScenes
+//      }
     },
     beforeMount: function () {
       this.$store.dispatch('LOAD_PROJECTS')
-      this.$store.dispatch('LOAD_SCENES')
+//      this.$store.dispatch('LOAD_SCENES')
     },
     mounted: function () {
       var VM = this
@@ -234,7 +232,7 @@
     margin-top: 80px;
   }
   .add-todo-view .cancel {
-    flex: 0 0 80%;
+    flex: 0 0 70%;
     padding-left: 15px;
   }
 

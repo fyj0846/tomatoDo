@@ -20,8 +20,9 @@
       <li><a class="waves-effect" href="#!">奖励</a></li>
       <li><div class="divider"></div></li>
       <li><a class="waves-effect levelTop">管理</a></li>
-      <li><a class="waves-effect" href="#!">项目</a></li>
-      <li><a class="waves-effect" href="#!">场景</a></li>
+      <li><a class="waves-effect" @click="jumpTo('projectManager')">项目</a></li>
+      <!-- 场景的需求未明确，暂时不提供 -->
+      <!--<li><a class="waves-effect" @click="jumpTo('sceneManager')">场景</a></li>-->
       <li><a class="waves-effect" href="#!">标签</a></li>
       <li><div class="divider"></div></li>
       <li><a class="waves-effect levelTop">设置</a></li>
@@ -31,8 +32,9 @@
 <script>
   export default {
     methods: {
-      handleLoginOrRegistry (event) {
-        console.log('message', 'please login or registry')
+      jumpTo (target) {
+        console.log(target + ' manager touched')
+        this.$router.push({name: target})
       }
     }
   }

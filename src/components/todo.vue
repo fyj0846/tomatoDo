@@ -8,13 +8,14 @@
     <div class=" todo-content">
       <div class="todo-content-left">
         <div class="todo-project left-center">
-          <i class="material-icons">folder</i>
+          <i class="material-icons">place</i>
           <span class=" padding_left_right">{{ todoMeta.project.projectName }}</span>
         </div>
-        <div class="todo-scene left-center">
-          <i class="material-icons">place</i>
-          <span class=" padding_left_right">{{ todoMeta.scene.sceneName }}</span>
-        </div>
+        <!--场景需求不明确，暂不提供-->
+        <!--<div class="todo-scene left-center">-->
+          <!--<i class="material-icons">place</i>-->
+          <!--<span class=" padding_left_right">{{ todoMeta.scene.sceneName }}</span>-->
+        <!--</div>-->
         <div class="todo-flags left-center">
           <i class="material-icons">label</i>
           <span class="todo-flag padding_left_right" v-for="tag in todoMeta.tags">
@@ -243,7 +244,7 @@
 
   /*todo卡片体样式*/
   .todo-content {
-    padding: 12px 12px;
+    padding: 12px 20px;
     min-height: 120px;
     display: flex;
     justify-content: space-between;

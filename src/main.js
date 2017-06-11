@@ -38,14 +38,20 @@ window.localStorage.setItem('todos',
   '"expectFinishDate":"2016-10-01","expectFinishTime":"17:00","spentClock":"0","priority":"4","isFinished":false,"isDeleted":false},' +
   '{"todoTitle":"EDA通知发布-完成","todoId":"002","tags":[{"tagName":"hard"},{"tagName":"EDA2"}],' +
   '"sceneId":"scene002","projectId":"project002","expectFinishDate":"2016-10-01","expectFinishTime":"2017-05-06 17:00","spentClock":"0","priority":"4",' +
-  '"isFinished":true},{"todoTitle":"测试项目-未完成已删除","todoId":"003","tags":[{"tagName":"hard"},' +
+  '"isFinished":true},' +
+  '{"todoTitle":"测试项目-未完成已删除","todoId":"003","tags":[{"tagName":"hard"},' +
   '{"tagName":"EDA3"}],"sceneId":"scene001","projectId":"project001","expectFinishDate":"2016-10-01","expectFinishTime":"2017-05-07 17:00",' +
-  '"spentClock":"0","priority":"4","isFinished":false,"isDeleted":true},{"todoTitle":"测试项目-未完成未删除",' +
-  '"todoId":"004","tags":[{"tagName":"hard"},{"tagName":"EDA3"}],"sceneId":"scene002","projectId":"project002",' +
+  '"spentClock":"0","priority":"4","isFinished":false,"isDeleted":true},' +
+  '{"todoTitle":"测试项目-未完成未删除","todoId":"004","tags":[{"tagName":"hard"},{"tagName":"EDA3"}],"sceneId":"scene002","projectId":"project002",' +
   '"expectFinishDate":"2016-10-01","expectFinishTime":"2017-05-07 17:00","spentClock":"0","priority":"2","isFinished":false,"isDeleted":false}]')
-window.localStorage.setItem('projects', '[{"projectId":"project001","projectName":"EDA"},{"projectId":' +
-  '"project002","projectName":"ITSM"},{"projectId":"project003","projectName":"TODO"}]')
-window.localStorage.setItem('scenes', '[{"sceneId":"scene001","sceneName":"工位"},{"sceneId":"scene002","sceneName":"家"},{"sceneId":"scene003","sceneName":"通勤"}]')
+window.localStorage.setItem('projects',
+  '[{"projectId":"project001","projectName":"EDA","projectDesc":"EDA很牛啊EDA很牛啊EDA很牛啊EDA很牛啊EDA很牛啊EDA很牛啊EDA很牛啊EDA很牛啊EDA很牛啊EDA很牛啊EDA很牛啊"},' +
+  '{"projectId":"project002","projectName":"ITSM","projectDesc":"ITSM，也很牛啊"},' +
+  '{"projectId":"project003","projectName":"TODO","projectDesc":"TODO，很有趣啊"}]')
+window.localStorage.setItem('scenes',
+  '[{"sceneId":"scene001","sceneName":"工位","sceneDesc":"工位，智造瞎子"},' +
+  '{"sceneId":"scene002","sceneName":"家","sceneDesc":"家，不适合工作"},' +
+  '{"sceneId":"scene003","sceneName":"通勤","sceneDesc":"通勤，容易堵车"}]')
 
 new Vue({
   el: '#app',

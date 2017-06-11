@@ -4,6 +4,8 @@ import todosView from '@/components/todosView'
 import addTodoView from '@/components/addTodoView'
 import editTodoView from '@/components/editTodoView'
 import timePicker from '../components/common/time-picker'
+import projectManager from '../components/projectManager'
+import sceneManager from '../components/sceneManager'
 
 Vue.use(Router)
 
@@ -31,6 +33,17 @@ export default new Router({
       name: 'editTodoView',
       component: editTodoView
     }, {
+      // 项目管理
+      path: '/projectManager',
+      name: 'projectManager',
+      component: projectManager
+    }, {
+      // 场景管理
+      path: '/sceneManager',
+      name: 'sceneManager',
+      component: sceneManager
+    },
+    {
       // 测试组件
       path: '/test',
       name: 'time-picker',

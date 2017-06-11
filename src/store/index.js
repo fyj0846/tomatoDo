@@ -16,6 +16,17 @@ const store = new Vuex.Store({
     users: {}
   },
   getters: {
+    allTodos (state) {
+      const { todos } = state
+      return todos.filter(function (todo) {
+        if (todo.isDeleted !== true) {
+          return true
+        }
+      })
+    },
+    allTodosCount (state, getters) {
+      return getters.allTodos.length
+    },
     activeTodos (state) {
       const { todos } = state
       return todos.filter(function (todo) {
@@ -24,20 +35,28 @@ const store = new Vuex.Store({
         }
       })
     },
+    activeTodosCount (state, getters) {
+      return getters.activeTodos.length
+    },
     curEditTodo (state) {
       const { curEditTodo } = state
       return curEditTodo
     },
-    activeTodosCount (state, getters) {
-      return getters.activeTodos.length
-    },
     activeProjects (state) {
       const { projects } = state
-      return projects
+      return projects.filter(function (project) {
+        if (project.isDeleted !== true) {
+          return true
+        }
+      })
     },
     activeScenes (state) {
       const { scenes } = state
-      return scenes
+      return scenes.filter(function (scene) {
+        if (scene.isDeleted !== true) {
+          return true
+        }
+      })
     }
   }
 })
