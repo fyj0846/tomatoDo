@@ -1,10 +1,8 @@
 <template>
-  <div class="add-todo-view" append="tree">
-    <div class="add-todo-view-header header light-blue white-text">
+  <div class="page-view" append="tree">
+    <div class="page-header header page-header-background page-header-text">
       <div class="cancel" @click="cancelNewTodoHandler"> 取消</div>
-      <div class="save row-padding-5" @click="saveNewTodoHandler"> 保存</div>
-      <div>|</div>
-      <div class="share row-padding-5"> 发送</div>
+      <div class="save row-padding-10" @click="saveNewTodoHandler"> 保存</div>
     </div>
     <div class="add-todo-view-content row">
       <form class="col s12">
@@ -71,6 +69,8 @@
 </template>
 
 <script>
+  // 引入公共CSS
+  require('../assets/css/common.css')
   import $ from 'jquery'
   import TimePicker from './common/time-picker'
   import DatePicker from './common/date-picker'

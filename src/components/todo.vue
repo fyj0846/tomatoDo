@@ -244,7 +244,7 @@
 
   /*todo卡片体样式*/
   .todo-content {
-    padding: 12px 20px;
+    padding: 12px 16px;
     min-height: 120px;
     display: flex;
     justify-content: space-between;
