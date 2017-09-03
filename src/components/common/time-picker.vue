@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="panel-footer">
-          <a class="waves-effect  btn-flat active" @click="defaultInitTime">NOW</a>
+          <a class="waves-effect  btn-flat active" @click="setNow">NOW</a>
           <a class="waves-effect  btn-flat" @click="clearTime">CLEAR</a>
           <a class="waves-effect  btn-flat active" @click="closeModal">CLOSE</a>
         </div>
@@ -78,6 +78,11 @@
       clearTime () {
         this.timeHour = '23';
         this.timeMinute = '59';
+      },
+      setNow() {
+        var initTime = new Date()
+        this.timeHour = this.transTo2Digits(initTime.getHours())
+        this.timeMinute = this.transTo2Digits(initTime.getMinutes())
       },
       defaultInitTime () {
         // 初始化，

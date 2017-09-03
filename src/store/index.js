@@ -19,7 +19,7 @@ const store = new Vuex.Store({
     allTodos (state) {
       const { todos } = state
       return todos.filter(function (todo) {
-        if (todo.isDeleted !== true) {
+        if (todo.isDeleted !== 'T') {
           return true
         }
       })
@@ -30,7 +30,7 @@ const store = new Vuex.Store({
     activeTodos (state) {
       const { todos } = state
       return todos.filter(function (todo) {
-        if (todo.isFinished !== true && todo.isDeleted !== true) {
+        if (todo.isFinished != 'T' && todo.isDeleted != 'T') {
           return true
         }
       })

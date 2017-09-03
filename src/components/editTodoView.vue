@@ -11,40 +11,41 @@
         <!--</div>-->
         <div class="row">
           <div class="input-field col s12">
-            <input placeholder="标题" id="todoTitle" type="text" class="validate" v-model="todoTitle">
+            <input placeholder="标题" id="todoTitle" type="text" class="validate" v-model="curEditTodo.todoTitle">
             <label for="todoTitle"></label>
           </div>
           <div class="input-field col s12">
-            <textarea id="comment" class="materialize-textarea" v-model="todoDesc"></textarea>
+            <textarea id="comment" class="materialize-textarea" v-model="curEditTodo.todoDescribe"></textarea>
             <label for="comment">描述</label>
           </div>
         </div>
         <div class="row">
           <div class="input-field col s12">
-            <select v-select="priority">
-              <option value="" disabled>请选择优先级</option>
-              <template v-for="star in stars">
-                <option v-if="star == priority" :value="star" selected> {{ star }}星</option>
-                <option v-else :value="star"> {{ star }}星</option>
-              </template>
-            </select>
-            <label>优先级</label>
+            <!--<select v-select="newChoosePriority">-->
+              <!--<option value="" disabled>请选择优先级</option>-->
+              <!--<template v-for="star in stars">-->
+                <!--<option v-if="star == newChoosePriority" :value="star" selected> {{ star }}星</option>-->
+                <!--<option v-else :value="star"> {{ star }}星</option>-->
+              <!--</template>-->
+            <!--</select>-->
+            <v-select v-model="newChoosePriority" :options="stars"></v-select>
+            <!--<label>优先级</label>-->
           </div>
         </div>
         <div class="row">
-          <DatePicker class="col s6" title="选择日期" :propDate='expectFinishDate' v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
+          <DatePicker class="col s6" title="选择日期" :propDate='newChooseDate' v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
           <!--  通过自定义事件，完成父子组件的通信 -->
-          <TimePicker class="col s6" title="选择时间" :propDate='expectFinishDate' :propTime='expectFinishTime' v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
+          <TimePicker class="col s6" title="选择时间" :propDate='newChooseDate' :propTime='newChooseTime' v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
         </div>
         <div class="row">
           <div class="input-field col s12">
-            <select v-select="projectId">
-              <option value="" disabled selected>请选择项目</option>
-              <template v-for="item in activeProjects">
-                <option v-if="item.projectId == projectId" :value="item.projectId" selected>{{ item.projectName }}</option>
-                <option v-else :value="item.projectId">{{ item.projectName }}</option>
-              </template>
-            </select>
+            <v-select v-model="newChooseProject" :options="activeProjects" label="projectName">
+              <!--<option value="" disabled selected>请选择项目</option>-->
+              <!--<template v-for="item in activeProjects">-->
+                <!--<option v-if="item.projectId == curEditTodo.projectId" :value="item.projectId" selected>{{ item.projectName }}</option>-->
+                <!--<option v-else :value="item.projectId">{{ item.projectName }}</option>-->
+              <!--</template>-->
+            </v-select>
             <label>项目</label>
           </div>
         </div>
@@ -69,7 +70,7 @@
                   <!--<i class="material-icons close">close</i>-->
                 <!--</div>-->
               <!--</template>-->
-              <input id="tags" class="input" placeholder="回车添加标签">
+              <input id="curEditTodo.tags" class="input" placeholder="回车添加标签">
               <!--<label for="tags">标签</label>-->
             </div>
           </div>
@@ -89,56 +90,57 @@
     data: function () {
       return {
         'loading': true,
-        'stars': ['1', '2', '3', '4', '5'],
-        'todoTitle': '',
-        'todoId': '',
-        'todoDesc': '',
-        'priority': '',
-        'expectFinishDate': '',
-        'expectFinishTime': '',
-//        'sceneId': '',
-        'projectId': '',
-        'tags': '',
-        'spentClock': '',
-        'isFinished': ''
+        'stars': ['1', '2', '3','4', '5'],
+        'newChoosePriority': '',
+        'newChooseProject': ''
       }
     },
     computed: {
-      // 新任务对象
-      updatedTODOItem () {
-        return {
-          'todoTitle': this.todoTitle,
-          'todoId': this.todoId,
-          'todoDesc': this.todoDesc,
-          'priority': this.priority,
-          'expectFinishDate': this.expectFinishDate,
-          'expectFinishTime': this.expectFinishTime,
-//          'sceneId': this.sceneId,
-          'projectId': this.projectId,
-          'tags': this.tags,
-          'spentClock': this.spentClock,
-          'isFinished': this.isFinished
-        }
-      },
       // 当前编辑的todo对象
       curEditTodo () {
-        var todo = this.$store.getters.curEditTodo
-        return todo
+        return  this.$store.getters.curEditTodo
       },
       // 已配置project对象
       activeProjects () {
         return this.$store.getters.activeProjects
       },
+
       // 已配置scenes对象
 //      activeScenes () {
 //        return this.$store.getters.activeScenes
-//      }
+//      },
+
+      // 新任务对象
+      updatedTODOItem () {
+        return {
+          'todoTitle': this.curEditTodo.todoTitle,
+          'todoId': this.curEditTodo.todoId,
+          'todoDescribe': this.curEditTodo.todoDescribe,
+          'priority': this.newChoosePriority,
+          'expectFinishTime': this.newChooseDate + " " + this.newChooseTime,
+          'spentClock': this.curEditTodo.spentClock,
+          'isFinished': this.curEditTodo.isFinished,
+          'projectId': this.newChooseProject.projectId,
+//          'sceneId': this.newChooseScene.sceneId,
+//          'tagId': this.newChooseTag.tagId,
+        }
+      },
+
+      newChooseDate() {
+        return this.curEditTodo.expectFinishTime ? this.curEditTodo.expectFinishTime.split(' ')[0] : "";
+      },
+
+      newChooseTime() {
+        return this.curEditTodo.expectFinishTime ? this.curEditTodo.expectFinishTime.split(' ')[1] : "";
+      },
     },
-    beforeMount: function () {
-      this.$store.dispatch('LOAD_TODO', {id: this.$route.params.todoId})
+    created: function () {
+      // 加载state中的状态
+      this.$store.dispatch('LOAD_TODO', {id: this.$route.params.todoId}).then(()=>{
+        this.init();
+      })
       this.$store.dispatch('LOAD_PROJECTS')
-//      this.$store.dispatch('LOAD_SCENES')
-      this.initTodoMeta(this.$store.getters.curEditTodo)
+//    this.$store.dispatch('LOAD_SCENES')
     },
     mounted: function () {
       var VM = this
@@ -190,47 +192,40 @@
         }
         return obj
       },
-      // 在页面挂载前初始化data
-      initTodoMeta (todo) {
-        this.todoTitle = todo.todoTitle
-        this.todoId = todo.todoId
-        this.todoDesc = todo.todoDesc
-        this.priority = todo.priority
-        this.expectFinishDate = todo.expectFinishDate
-        this.expectFinishTime = todo.expectFinishTime
-//        this.sceneId = todo.sceneId
-        this.projectId = todo.projectId
-        this.tags = todo.tags
-        this.spentClock = todo.spentClock
-        this.isFinished = todo.isFinished
+
+      // 状态初始化
+      init () {
+        this.newChoosePriority = this.curEditTodo.priority;
+        this.newChooseProject = {'projectId': this.curEditTodo.projectId, 'projectName': this.curEditTodo.projectName};
       },
       // 取消新任务
       cancelNewTodoHandler (event) {
-        console.log('cancel and go back!')
-        this.newTODOItem = {}
+        console.log('editTodoView: cancel and go back!')
         this.$router.back()
       },
       // 保存新任务
       saveNewTodoHandler (event) {
-        console.log('save the update todo task')
+        console.log('editTodoView: save and update todo')
         // 触发更新任务
-        this.$store.dispatch('UPDATE_TODO', {'item': this.updatedTODOItem})
-        this.$router.back()
+        this.$store.dispatch('UPDATE_TODO', {'item': this.updatedTODOItem}).then(()=>{
+          this.$router.back();
+        })
       },
-      // 设置计划完成的时间
       setExpectFinishTime (event) {
-        console.log('set the setExpectFinishTime')
-        this.expectFinishTime = event || '23:59'
+        console.log('set the setExpectFinishTime');
+        this.newChooseTime = event;
       },
       // 设置计划完成的日期
       setExpectedFinishDate (event) {
         console.log('set the setExpectedFinishDate')
-        this.expectFinishDate = event
-      },
-      updateValue (event) {
-        console.log('date')
+        this.newChooseDate = event;
       }
-    }
+    },
+//    watch: {
+//      'curEditTodo.priority': function(newVal) {
+//        this.newChoosePriority = newVal;
+//      }
+//    }
   }
 </script>
 

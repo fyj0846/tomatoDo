@@ -13,10 +13,13 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "jquery": "^2.2.4",
     "materialize-css": "^0.98.2",
     "vue": "^2.2.6",
-    "vue-router": "^2.3.1"
+    "vue-router": "^2.3.1",
+    "vue-select": "^2.2.0",
+    "vue-selector": "0.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",

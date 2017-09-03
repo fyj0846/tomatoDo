@@ -8,18 +8,19 @@
     <div class=" todo-content">
       <div class="todo-content-left">
         <div class="todo-project left-center">
-          <i class="material-icons">place</i>
-          <span class=" padding_left_right">{{ todoMeta.project.projectName }}</span>
+          <i class="material-icons">folder</i>
+          <span class=" padding_left_right">{{ todoMeta.projectName }}</span>
         </div>
         <!--场景需求不明确，暂不提供-->
         <!--<div class="todo-scene left-center">-->
           <!--<i class="material-icons">place</i>-->
-          <!--<span class=" padding_left_right">{{ todoMeta.scene.sceneName }}</span>-->
+          <!--<span class=" padding_left_right">{{ todoMeta.sceneName }}</span>-->
         <!--</div>-->
         <div class="todo-flags left-center">
-          <i class="material-icons">label</i>
-          <span class="todo-flag padding_left_right" v-for="tag in todoMeta.tags">
-            {{ tag.tagName }}
+          <i class="material-icons">label_outline</i>
+          <!--v-for="tag in todoMeta.tags"-->
+          <span class="todo-flag padding_left_right" >
+            {{ todoMeta.tagName }}
           </span>
         </div>
         <div class="todo-timing left-center">
@@ -27,7 +28,7 @@
           <span class="todo-timeLeft padding_left_right">{{ todoMeta.expectFinishTime }}</span>
         </div>
         <div class="todo-statis left-center">
-          <i class="material-icons">thumb_up</i>
+          <i class="material-icons">done</i>
           <span class="todo-spent padding_left_right">{{ todoMeta.spentClock }}</span>
         </div>
       </div>

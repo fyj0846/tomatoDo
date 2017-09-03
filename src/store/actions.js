@@ -1,100 +1,142 @@
-import {getItemInArray} from '../commonTool'
-
+// import {getItemInArray} from '../commonTool'
+import axios from 'axios'
 const storage = window.localStorage
+
+// axios共享配置
+var instance = axios.create({
+  baseURL: 'http://localhost:8080/api/V1/',
+  timeout: 1000,
+  // headers: {'X-Custom-Header': 'foobar'}
+});
+
+// 组装请求
+var getAllObjs = function (obj, userId, todoId) {
+  var query = obj + '/' + userId;
+  if(todoId)
+    query += '/' + todoId;
+  return instance.get(query);
+}
 
 /* context.commit,  context.dispatch, context.state, es6 函数结构写法 */
 export function LOAD_TODOS ({ commit, dispatch, state }) {
-  console.log('action comit load_todos')
-  // 从本地localStorage取所有todo任务
-  var todosFromStorage = JSON.parse(storage.getItem('todos'))
-  var projectsFromStorage = JSON.parse(storage.getItem('projects'))
-  var scenesFromStorage = JSON.parse(storage.getItem('scenes'))
-
-  commit('LOAD_TODOS', todosFromStorage.map(function (item) {
-    // 动态关联场景表
-    if (item.sceneId) {
-      // 从storage中搜索对应的配置-奉理理
-      var sceneItem = getItemInArray(scenesFromStorage, item.sceneId, 'sceneId')
-      if (!sceneItem) {
-        console.log('unknown sceneId, exit')
-      } else {
-        item.scene = {
-          sceneId: sceneItem.sceneId,
-          sceneName: sceneItem.sceneName || ''
-        }
-      }
-    }
-    // 动态关联项目表
-    if (item.projectId) {
-      // 从storage中搜索对应的配置
-      var projectItem = getItemInArray(projectsFromStorage, item.projectId, 'projectId')
-      if (!projectItem) {
-        console.log('unknown projectId, exit')
-      } else {
-        item.project = {
-          projectId: projectItem.projectId,
-          projectName: projectItem.projectName || ''
-        }
-      }
-    }
-    return item
-  }))
+  console.log('action commit: load_todos');
+  return new Promise((resolve, reject) => {
+    axios.all([getAllObjs('todo', '1'), getAllObjs('project', '1'), getAllObjs('scene', '1'), getAllObjs('tag', '1')])
+      .then(axios.spread(function (todos, projects, scenes, tags) {
+        // All requests are now complete
+        console.log(todos);
+        console.log(projects);
+        console.log(scenes);
+        console.log(tags);
+        commit('LOAD_TODOS', todos.data.resultSet.map(function (item) {
+          if(item.expectFinishTime) {
+            // 等待更高效的正则过滤替换
+            item.expectFinishTime = item.expectFinishTime.replace(/^[0-9]{2}/, '');
+            item.expectFinishTime = item.expectFinishTime.replace('T', ' ');
+            item.expectFinishTime = item.expectFinishTime.replace(/.[0-9]{3}Z$/, '');
+          }
+          if(item.cTime) {
+            item.cTime = item.cTime.replace('T', ' ');
+            item.cTime = item.cTime.replace(/.[0-9]{3}Z$/, '');
+          }
+          return item;
+        }))
+        resolve();
+      }))
+      .catch(function(err) {
+        console.log(err);
+        reject();
+      });
+  })
 }
 
 export function LOAD_TODO ({ commit, dispatch, state }, { id }) {
-  console.log('action comit load_todo')
-  var todosFromStorage = JSON.parse(storage.getItem('todos'))
-  var curEditTodo = {}
-  for (var i = 0; i < todosFromStorage.length; i++) {
-    if (todosFromStorage[i].todoId === id) {
-      curEditTodo = todosFromStorage[i]
-      break
-    }
-  }
-  commit('LOAD_TODO', curEditTodo)
-  // 加载 todo 都本地localStorage
-  // storage.setItem('todos', JSON.stringify(state.todos))
+  console.log('action commit: load_todo')
+  return new Promise((resolve, reject) => {
+    axios.all([getAllObjs('todo', '1', id), getAllObjs('project', '1'), getAllObjs('scene', '1'), getAllObjs('tag', '1')])
+      .then(axios.spread(function (todos, projects, scenes, tags) {
+        // All requests are now complete
+        console.log(todos);
+        console.log(projects);
+        console.log(scenes);
+        console.log(tags);
+        commit('LOAD_TODO', todos.data.resultSet.map(function (item) {
+            if(item.expectFinishTime) {
+              // 等待更高效的正则过滤替换
+              item.expectFinishTime = item.expectFinishTime.replace('T', ' ');
+              item.expectFinishTime = item.expectFinishTime.replace(/.[0-9]{3}Z$/, '');
+            }
+            if(item.cTime) {
+              item.cTime = item.cTime.replace('T', ' ');
+              item.cTime = item.cTime.replace(/.[0-9]{3}Z$/, '');
+            }
+            return item;
+          })[0] || {});
+        resolve();
+      }))
+      .catch(function(err) {
+        console.log(err);
+        reject();
+      });
+  })
 }
 
-export function UPDATE_TODO_MNGR ({ commit, dispatch, state }, { id, name, newValue }) {
-  console.log('action comit update_mngr_todo')
-  commit('UPDATE_TODO_MNGR', { id, name, newValue })
-  // 更新 todo 都本地localStorage
-  storage.setItem('todos', JSON.stringify(state.todos))
-}
+// export function UPDATE_TODO_MNGR ({ commit, dispatch, state }, { id, name, newValue }) {
+//   console.log('action commit update_mngr_todo')
+//   commit('UPDATE_TODO_MNGR', { id, name, newValue })
+//   // 更新 todo 都本地localStorage
+//   storage.setItem('todos', JSON.stringify(state.todos))
+// }
+//
+// export function FINISH_TODO ({ commit, dispatch, state }, { id, name, newValue }) {
+//   console.log('action commit finish_todo')
+//   commit('FINISH_TODO', { id, name, newValue })
+//   // 更新 todo 都本地localStorage
+//   storage.setItem('todos', JSON.stringify(state.todos))
+// }
 
-export function FINISH_TODO ({ commit, dispatch, state }, { id, name, newValue }) {
-  console.log('action comit finish_todo')
-  commit('FINISH_TODO', { id, name, newValue })
-  // 更新 todo 都本地localStorage
-  storage.setItem('todos', JSON.stringify(state.todos))
+// 组装请求
+var updateObjs = function (obj, userId, todoId, item) {
+  var query = obj + '/' + userId;
+  if(todoId)
+    query += '/' + todoId;
+  return instance.put(query, item);
 }
 
 export function UPDATE_TODO ({ commit, dispatch, state }, { item }) {
-  console.log('action comit update_todo')
-  commit('UPDATE_TODO', { item })
-  // 更新 todo 都本地localStorage
-  storage.setItem('todos', JSON.stringify(state.todos))
+  console.log('action commit: update_todo')
+  return new Promise((resolve, reject) => {
+    axios.all([updateObjs('todo', '1', item.todoId, item)])
+      .then(function (response) {
+        console.log('action commit: update todo success');
+        // commit('UPDATE_TODO', { item });
+        resolve();
+      })
+      .catch(function(error) {
+        console.log(error);
+        reject();
+      });
+  })
 }
-
-export function ADD_TODO ({ commit, dispatch, state }, { item }) {
-  console.log('action comit add_todo')
-  // 生成随机ID
-  var userId = 'qiujian'
-  var timestamp = new Date()
-  var id = userId + '-' + timestamp.getFullYear() + '' + timestamp.getMonth() + '' + timestamp.getDate() + '-' + timestamp.getTime()
-  item.todoId = id
-  commit('ADD_TODO', { id, item })
-  // 更新 todo 都本地localStorage
-  storage.setItem('todos', JSON.stringify(state.todos))
-}
-
-export function DELETE_TODO ({ commit, dispatch, state }, { id, name, newValue }) {
-  console.log('action comit delete_todo')
-  commit('DELETE_TODO', { id, name, newValue })
-  // 更新 todo 都本地localStorage
-  storage.setItem('todos', JSON.stringify(state.todos))
-}
+//
+// export function ADD_TODO ({ commit, dispatch, state }, { item }) {
+//   console.log('action commit add_todo')
+//   // 生成随机ID
+//   var userId = 'qiujian'
+//   var timestamp = new Date()
+//   var id = userId + '-' + timestamp.getFullYear() + '' + timestamp.getMonth() + '' + timestamp.getDate() + '-' + timestamp.getTime()
+//   item.todoId = id
+//   commit('ADD_TODO', { id, item })
+//   // 更新 todo 都本地localStorage
+//   storage.setItem('todos', JSON.stringify(state.todos))
+// }
+//
+// export function DELETE_TODO ({ commit, dispatch, state }, { id, name, newValue }) {
+//   console.log('action commit delete_todo')
+//   commit('DELETE_TODO', { id, name, newValue })
+//   // 更新 todo 都本地localStorage
+//   storage.setItem('todos', JSON.stringify(state.todos))
+// }
 
 /* context.commit,  context.dispatch, context.state, es6 函数结构写法 */
 export function LOAD_PROJECTS ({ commit, dispatch, state }) {
@@ -103,7 +145,7 @@ export function LOAD_PROJECTS ({ commit, dispatch, state }) {
 }
 
 export function ADD_PROJECT ({ commit, dispatch, state }, { item }) {
-  console.log('action comit add_project')
+  console.log('action commit add_project')
   // 生成随机ID
   var userId = 'qiujian'
   var timestamp = new Date()
@@ -115,7 +157,7 @@ export function ADD_PROJECT ({ commit, dispatch, state }, { item }) {
 }
 
 export function UPDATE_PROJECT ({ commit, dispatch, state }, { item }) {
-  console.log('action comit add_project')
+  console.log('action commit add_project')
   // 生成随机ID
   var id = item.projectId
   commit('UPDATE_PROJECT', { id, item })
@@ -124,7 +166,7 @@ export function UPDATE_PROJECT ({ commit, dispatch, state }, { item }) {
 }
 
 export function DELETE_PROJECT ({ commit, dispatch, state }, { id }) {
-  console.log('action comit delete_project')
+  console.log('action commit delete_project')
   commit('DELETE_PROJECT', { id })
   // 更新 todo 都本地localStorage
   storage.setItem('projects', JSON.stringify(state.projects))
@@ -137,7 +179,7 @@ export function LOAD_SCENES ({ commit, dispatch, state }) {
 }
 
 export function ADD_SCENE ({ commit, dispatch, state }, { item }) {
-  console.log('action comit add_scene')
+  console.log('action commit add_scene')
   // 生成随机ID
   var userId = 'qiujian'
   var timestamp = new Date()
@@ -149,7 +191,7 @@ export function ADD_SCENE ({ commit, dispatch, state }, { item }) {
 }
 
 export function DELETE_SCENE ({ commit, dispatch, state }, { id }) {
-  console.log('action comit delete_scene')
+  console.log('action commit delete_scene')
   commit('DELETE_SCENE', { id })
   // 更新 todo 都本地localStorage
   storage.setItem('scenes', JSON.stringify(state.scenes))
