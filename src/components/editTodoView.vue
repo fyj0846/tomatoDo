@@ -7,7 +7,7 @@
     <div class="edit-todo-view-content row">
       <form class="col s12">
         <!--<div class="loading row"> &lt;!&ndash; v-if="loading" &ndash;&gt;-->
-          <!--Loading...-->
+        <!--Loading...-->
         <!--</div>-->
         <div class="row">
           <div class="input-field col s12">
@@ -15,60 +15,50 @@
             <label for="todoTitle"></label>
           </div>
           <div class="input-field col s12">
-            <textarea id="comment" class="materialize-textarea" v-model="curEditTodo.todoDescribe"></textarea>
-            <label for="comment">描述</label>
+            <textarea id="describe" class="materialize-textarea" v-model="curEditTodo.todoDescribe"></textarea>
+            <label for="describe">描述</label>
           </div>
         </div>
         <div class="row">
-          <div class="input-field col s12">
             <!--<select v-select="newChoosePriority">-->
-              <!--<option value="" disabled>请选择优先级</option>-->
-              <!--<template v-for="star in stars">-->
-                <!--<option v-if="star == newChoosePriority" :value="star" selected> {{ star }}星</option>-->
-                <!--<option v-else :value="star"> {{ star }}星</option>-->
-              <!--</template>-->
+            <!--<option value="" disabled>请选择优先级</option>-->
+            <!--<template v-for="star in stars">-->
+            <!--<option v-if="star == newChoosePriority" :value="star" selected> {{ star }}星</option>-->
+            <!--<option v-else :value="star"> {{ star }}星</option>-->
+            <!--</template>-->
             <!--</select>-->
-            <v-select v-model="newChoosePriority" :options="stars"></v-select>
+          <div class="col s12">
+            <v-select v-model="newChoosePriority" :options="activePriorities" label="priorityName"></v-select>
             <!--<label>优先级</label>-->
           </div>
         </div>
         <div class="row">
-          <DatePicker class="col s6" title="选择日期" :propDate='newChooseDate' v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
           <!--  通过自定义事件，完成父子组件的通信 -->
-          <TimePicker class="col s6" title="选择时间" :propDate='newChooseDate' :propTime='newChooseTime' v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
+          <DatePicker class="col s6" title="选择日期" :propDate='newChooseDate'
+                      v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
+          <!--  通过自定义事件，完成父子组件的通信 -->
+          <TimePicker class="col s6" title="选择时间" :propDate='newChooseDate' :propTime='newChooseTime'
+                      v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
         </div>
         <div class="row">
-          <div class="input-field col s12">
-            <v-select v-model="newChooseProject" :options="activeProjects" label="projectName">
-              <!--<option value="" disabled selected>请选择项目</option>-->
-              <!--<template v-for="item in activeProjects">-->
-                <!--<option v-if="item.projectId == curEditTodo.projectId" :value="item.projectId" selected>{{ item.projectName }}</option>-->
-                <!--<option v-else :value="item.projectId">{{ item.projectName }}</option>-->
-              <!--</template>-->
-            </v-select>
-            <label>项目</label>
+          <div class=" col s12">
+            <v-select v-model="newChooseProject" :options="activeProjects" label="projectName"></v-select>
+            <!--<label>项目</label>-->
           </div>
         </div>
-        <!--场景用途未明确，暂时不提供-->
-        <!--<div class="row">-->
-          <!--<div class="input-field col s12">-->
-            <!--<select v-select="sceneId">-->
-              <!--<option value="" disabled selected>请选择场景</option>-->
-              <!--<template v-for="item in activeScenes">-->
-                <!--<option v-if="item.sceneId == sceneId" :value="item.sceneId" selected> {{ item.sceneName }}</option>-->
-                <!--<option v-else :value="item.sceneId"> {{ item.sceneName }}</option>-->
-              <!--</template>-->
-            <!--</select>-->
+        <div class="row">
+          <div class=" col s12">
+            <v-select v-model="newChooseScene" :options="activeScenes" label="sceneName"></v-select>
             <!--<label>场景</label>-->
-          <!--</div>-->
-        <!--</div>-->
+          </div>
+        </div>
         <div class="row">
           <div class="input-field col s12">
             <div class="chips chips-initial">
               <!--<template v-for="tag in tags">-->
-                <!--<div class="chip"> {{ tag.tagName }}-->
-                  <!--<i class="material-icons close">close</i>-->
-                <!--</div>-->
+              <!--<div class="chip"> {{ tag.tagName }}-->
+              <!--<i class="material-icons close">close</i>-->
+              <!--</div>-->
               <!--</template>-->
               <input id="curEditTodo.tags" class="input" placeholder="回车添加标签">
               <!--<label for="tags">标签</label>-->
@@ -86,29 +76,34 @@
   import DatePicker from './common/date-picker'
 
   export default {
-    components: { TimePicker, DatePicker },
+    components: {TimePicker, DatePicker},
     data: function () {
       return {
         'loading': true,
-        'stars': ['1', '2', '3','4', '5'],
+        'stars': '',
         'newChoosePriority': '',
-        'newChooseProject': ''
+        'newChooseProject': '',
+        'newChooseScene': ''
       }
     },
     computed: {
       // 当前编辑的todo对象
       curEditTodo () {
-        return  this.$store.getters.curEditTodo
+        return this.$store.getters.curEditTodo
       },
+      activePriorities () {
+        return this.$store.getters.activePriorities
+      },
+
       // 已配置project对象
       activeProjects () {
         return this.$store.getters.activeProjects
       },
 
       // 已配置scenes对象
-//      activeScenes () {
-//        return this.$store.getters.activeScenes
-//      },
+      activeScenes () {
+        return this.$store.getters.activeScenes
+      },
 
       // 新任务对象
       updatedTODOItem () {
@@ -120,9 +115,11 @@
           'expectFinishTime': this.newChooseDate + " " + this.newChooseTime,
           'spentClock': this.curEditTodo.spentClock,
           'isFinished': this.curEditTodo.isFinished,
-          'projectId': this.newChooseProject.projectId,
-//          'sceneId': this.newChooseScene.sceneId,
-//          'tagId': this.newChooseTag.tagId,
+          'isDelete': this.curEditTodo.isDelete,
+
+          'projectId': this.newChooseProject.projectId,  // 用于更新关联的project
+          'sceneId': this.newChooseScene.sceneId,        // 用于更新关联的scene
+          'tagId': this.newChooseTag.tagId,              // 用于更新关联的tag
         }
       },
 
@@ -135,12 +132,16 @@
       },
     },
     created: function () {
-      // 加载state中的状态
-      this.$store.dispatch('LOAD_TODO', {id: this.$route.params.todoId}).then(()=>{
+      // 从后台获取todo信息（含projectId, projectName等）
+      this.$store.dispatch('LOAD_TODO', {id: this.$route.params.todoId}).then(() => {
         this.init();
-      })
-      this.$store.dispatch('LOAD_PROJECTS')
-//    this.$store.dispatch('LOAD_SCENES')
+      });
+
+      // 从后台获取所有备选信息
+      this.$store.dispatch('LOAD_PRIORITIES');
+      this.$store.dispatch('LOAD_PROJECTS');
+      this.$store.dispatch('LOAD_SCENES');
+      this.$store.dispatch('LOAD_TAGS');
     },
     mounted: function () {
       var VM = this
@@ -154,7 +155,8 @@
         }
       })
       // materialize-css 初始化方法
-      $('select').material_select()
+//      $('select').material_select()
+
       $('.chips').material_chip()
       $('.chips-initial').material_chip({
         data: initTags
@@ -195,8 +197,10 @@
 
       // 状态初始化
       init () {
-        this.newChoosePriority = this.curEditTodo.priority;
+        this.newChoosePriority = {'priority': this.curEditTodo.priority, 'priorityName':this.curEditTodo.priority};
         this.newChooseProject = {'projectId': this.curEditTodo.projectId, 'projectName': this.curEditTodo.projectName};
+        this.newChooseScene = {'sceneId': this.curEditTodo.sceneId, 'sceneName': this.curEditTodo.sceneName};
+        this.newChooseTag = {'tagId': this.curEditTodo.tagId, 'tagName': this.curEditTodo.tagName};
       },
       // 取消新任务
       cancelNewTodoHandler (event) {
@@ -207,7 +211,7 @@
       saveNewTodoHandler (event) {
         console.log('editTodoView: save and update todo')
         // 触发更新任务
-        this.$store.dispatch('UPDATE_TODO', {'item': this.updatedTODOItem}).then(()=>{
+        this.$store.dispatch('UPDATE_TODO', {'item': this.updatedTODOItem}).then(() => {
           this.$router.back();
         })
       },
@@ -220,12 +224,7 @@
         console.log('set the setExpectedFinishDate')
         this.newChooseDate = event;
       }
-    },
-//    watch: {
-//      'curEditTodo.priority': function(newVal) {
-//        this.newChoosePriority = newVal;
-//      }
-//    }
+    }
   }
 </script>
 
@@ -269,6 +268,7 @@
   .edit-todo-view-content {
     margin-top: 80px;
   }
+
   .edit-todo-view .cancel {
     flex: 0 0 70%;
     padding-left: 15px;

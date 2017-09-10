@@ -124,3 +124,9 @@ export function DELETE_SCENE (state, { id }) {
     }
   }
 }
+
+// 加载， 读取priorities配置
+export function LOAD_PRIORITIES (state, priorities) {
+  console.log('mutation load_priorities')
+  Vue.set(state, 'priorities', priorities)
+}

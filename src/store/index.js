@@ -42,6 +42,10 @@ const store = new Vuex.Store({
       const { curEditTodo } = state
       return curEditTodo
     },
+    activePriorities (state) {
+      const { priorities } = state;
+      return priorities;
+    },
     activeProjects (state) {
       const { projects } = state
       return projects.filter(function (project) {

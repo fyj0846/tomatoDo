@@ -140,59 +140,89 @@ export function UPDATE_TODO ({ commit, dispatch, state }, { item }) {
 
 /* context.commit,  context.dispatch, context.state, es6 函数结构写法 */
 export function LOAD_PROJECTS ({ commit, dispatch, state }) {
-  var projectsFromStorage = JSON.parse(storage.getItem('projects'))
-  commit('LOAD_PROJECTS', projectsFromStorage)
+  console.log("action commit: load_projects");
+  return new Promise((resolve, reject) => {
+    axios.all([getAllObjs('project', '1')])
+      .then(axios.spread(function (projects) {
+        // All requests are now complete
+        console.log(projects);
+        commit('LOAD_PROJECTS', projects.data.resultSet)
+        resolve();
+      }))
+      .catch(function (err) {
+        console.log(err);
+        reject();
+      });
+  })
 }
 
-export function ADD_PROJECT ({ commit, dispatch, state }, { item }) {
-  console.log('action commit add_project')
-  // 生成随机ID
-  var userId = 'qiujian'
-  var timestamp = new Date()
-  var id = userId + '-project' + '-' + timestamp.getFullYear() + '' + timestamp.getMonth() + '' + timestamp.getDate() + '-' + timestamp.getTime()
-  item.projectId = id
-  commit('ADD_PROJECT', { id, item })
-  // 更新 todo 都本地localStorage
-  storage.setItem('projects', JSON.stringify(state.projects))
-}
-
-export function UPDATE_PROJECT ({ commit, dispatch, state }, { item }) {
-  console.log('action commit add_project')
-  // 生成随机ID
-  var id = item.projectId
-  commit('UPDATE_PROJECT', { id, item })
-  // 更新 todo 都本地localStorage
-  storage.setItem('projects', JSON.stringify(state.projects))
-}
-
-export function DELETE_PROJECT ({ commit, dispatch, state }, { id }) {
-  console.log('action commit delete_project')
-  commit('DELETE_PROJECT', { id })
-  // 更新 todo 都本地localStorage
-  storage.setItem('projects', JSON.stringify(state.projects))
-}
+// export function ADD_PROJECT ({ commit, dispatch, state }, { item }) {
+//   console.log('action commit add_project')
+//   // 生成随机ID
+//   var userId = 'qiujian'
+//   var timestamp = new Date()
+//   var id = userId + '-project' + '-' + timestamp.getFullYear() + '' + timestamp.getMonth() + '' + timestamp.getDate() + '-' + timestamp.getTime()
+//   item.projectId = id
+//   commit('ADD_PROJECT', { id, item })
+//   // 更新 todo 都本地localStorage
+//   storage.setItem('projects', JSON.stringify(state.projects))
+// }
+//
+// export function UPDATE_PROJECT ({ commit, dispatch, state }, { item }) {
+//   console.log('action commit add_project')
+//   // 生成随机ID
+//   var id = item.projectId
+//   commit('UPDATE_PROJECT', { id, item })
+//   // 更新 todo 都本地localStorage
+//   storage.setItem('projects', JSON.stringify(state.projects))
+// }
+//
+// export function DELETE_PROJECT ({ commit, dispatch, state }, { id }) {
+//   console.log('action commit delete_project')
+//   commit('DELETE_PROJECT', { id })
+//   // 更新 todo 都本地localStorage
+//   storage.setItem('projects', JSON.stringify(state.projects))
+// }
 
 /* context.commit,  context.dispatch, context.state, es6 函数结构写法 */
 export function LOAD_SCENES ({ commit, dispatch, state }) {
-  var scenesFromStorage = JSON.parse(storage.getItem('scenes'))
-  commit('LOAD_SCENES', scenesFromStorage)
+  console.log("action commit: load_scenes");
+  return new Promise((resolve, reject) => {
+    axios.all([getAllObjs('scene', '1')])
+      .then(axios.spread(function (scenes) {
+        // All requests are now complete
+        console.log(scenes);
+        commit('LOAD_SCENES', scenes.data.resultSet)
+        resolve();
+      }))
+      .catch(function (err) {
+        console.log(err);
+        reject();
+      });
+  })
 }
 
-export function ADD_SCENE ({ commit, dispatch, state }, { item }) {
-  console.log('action commit add_scene')
-  // 生成随机ID
-  var userId = 'qiujian'
-  var timestamp = new Date()
-  var id = userId + '-scene' + '-' + timestamp.getFullYear() + '' + timestamp.getMonth() + '' + timestamp.getDate() + '-' + timestamp.getTime()
-  item.sceneId = id
-  commit('ADD_SCENE', { id, item })
-  // 更新 todo 都本地localStorage
-  storage.setItem('scenes', JSON.stringify(state.scenes))
-}
+// export function ADD_SCENE ({ commit, dispatch, state }, { item }) {
+//   console.log('action commit add_scene')
+//   // 生成随机ID
+//   var userId = 'qiujian'
+//   var timestamp = new Date()
+//   var id = userId + '-scene' + '-' + timestamp.getFullYear() + '' + timestamp.getMonth() + '' + timestamp.getDate() + '-' + timestamp.getTime()
+//   item.sceneId = id
+//   commit('ADD_SCENE', { id, item })
+//   // 更新 todo 都本地localStorage
+//   storage.setItem('scenes', JSON.stringify(state.scenes))
+// }
+//
+// export function DELETE_SCENE ({ commit, dispatch, state }, { id }) {
+//   console.log('action commit delete_scene')
+//   commit('DELETE_SCENE', { id })
+//   // 更新 todo 都本地localStorage
+//   storage.setItem('scenes', JSON.stringify(state.scenes))
+// }
 
-export function DELETE_SCENE ({ commit, dispatch, state }, { id }) {
-  console.log('action commit delete_scene')
-  commit('DELETE_SCENE', { id })
-  // 更新 todo 都本地localStorage
-  storage.setItem('scenes', JSON.stringify(state.scenes))
+export function LOAD_PRIORITIES ({ commit, dispatch, state }) {
+  console.log("action commit: load_prioritys");
+  var priorities = [{priority: '1', priorityName: '1'}, {priority: '2', priorityName: '2'}, {priority: '3', priorityName: '3'},{priority: '4', priorityName: '4'},{priority: '5', priorityName: '5'}];
+  commit('LOAD_PRIORITIES', priorities)
 }
