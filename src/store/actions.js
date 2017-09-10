@@ -17,11 +17,25 @@ var getAllObjs = function (obj, userId, todoId) {
   return instance.get(query);
 }
 
+// 组装请求
+var updateObjs = function (obj, userId, todoId, item) {
+  var query = obj + '/' + userId;
+  if(todoId)
+    query += '/' + todoId;
+  return instance.put(query, item);
+}
+
+// 组装请求
+var createObjs = function (obj, userId, item) {
+  var query = obj + '/' + userId;
+  return instance.post(query, item);
+}
+
 /* context.commit,  context.dispatch, context.state, es6 函数结构写法 */
 export function LOAD_TODOS ({ commit, dispatch, state }) {
   console.log('action commit: load_todos');
   return new Promise((resolve, reject) => {
-    axios.all([getAllObjs('todo', '1'), getAllObjs('project', '1'), getAllObjs('scene', '1'), getAllObjs('tag', '1')])
+    axios.all([getAllObjs('todo', '1')])
       .then(axios.spread(function (todos, projects, scenes, tags) {
         // All requests are now complete
         console.log(todos);
@@ -40,7 +54,7 @@ export function LOAD_TODOS ({ commit, dispatch, state }) {
             item.cTime = item.cTime.replace(/.[0-9]{3}Z$/, '');
           }
           return item;
-        }))
+        }));
         resolve();
       }))
       .catch(function(err) {
@@ -56,10 +70,10 @@ export function LOAD_TODO ({ commit, dispatch, state }, { id }) {
     axios.all([getAllObjs('todo', '1', id), getAllObjs('project', '1'), getAllObjs('scene', '1'), getAllObjs('tag', '1')])
       .then(axios.spread(function (todos, projects, scenes, tags) {
         // All requests are now complete
-        console.log(todos);
-        console.log(projects);
-        console.log(scenes);
-        console.log(tags);
+        // console.log(todos);
+        // console.log(projects);
+        // console.log(scenes);
+        // console.log(tags);
         commit('LOAD_TODO', todos.data.resultSet.map(function (item) {
             if(item.expectFinishTime) {
               // 等待更高效的正则过滤替换
@@ -72,6 +86,11 @@ export function LOAD_TODO ({ commit, dispatch, state }, { id }) {
             }
             return item;
           })[0] || {});
+        commit('LOAD_PROJECTS', projects.data.resultSet);
+        commit('LOAD_SCENES', scenes.data.resultSet);
+        // commit('LOAD_TAGS', tags.data.resultSet);
+        LOAD_PRIORITIES({ commit, dispatch, state });  // priority为非后台数据，故在此直接调用该方法
+
         resolve();
       }))
       .catch(function(err) {
@@ -88,19 +107,11 @@ export function LOAD_TODO ({ commit, dispatch, state }, { id }) {
 //   storage.setItem('todos', JSON.stringify(state.todos))
 // }
 //
-// export function FINISH_TODO ({ commit, dispatch, state }, { id, name, newValue }) {
-//   console.log('action commit finish_todo')
-//   commit('FINISH_TODO', { id, name, newValue })
-//   // 更新 todo 都本地localStorage
-//   storage.setItem('todos', JSON.stringify(state.todos))
-// }
 
-// 组装请求
-var updateObjs = function (obj, userId, todoId, item) {
-  var query = obj + '/' + userId;
-  if(todoId)
-    query += '/' + todoId;
-  return instance.put(query, item);
+//
+export function FINISH_TODO ({ commit, dispatch, state }, { item }) {
+  console.log('action commit finish_todo');
+  UPDATE_TODO({commit, dispatch, state}, {item});
 }
 
 export function UPDATE_TODO ({ commit, dispatch, state }, { item }) {
@@ -109,7 +120,7 @@ export function UPDATE_TODO ({ commit, dispatch, state }, { item }) {
     axios.all([updateObjs('todo', '1', item.todoId, item)])
       .then(function (response) {
         console.log('action commit: update todo success');
-        // commit('UPDATE_TODO', { item });
+        commit('UPDATE_TODO', { item });
         resolve();
       })
       .catch(function(error) {
@@ -119,17 +130,21 @@ export function UPDATE_TODO ({ commit, dispatch, state }, { item }) {
   })
 }
 //
-// export function ADD_TODO ({ commit, dispatch, state }, { item }) {
-//   console.log('action commit add_todo')
-//   // 生成随机ID
-//   var userId = 'qiujian'
-//   var timestamp = new Date()
-//   var id = userId + '-' + timestamp.getFullYear() + '' + timestamp.getMonth() + '' + timestamp.getDate() + '-' + timestamp.getTime()
-//   item.todoId = id
-//   commit('ADD_TODO', { id, item })
-//   // 更新 todo 都本地localStorage
-//   storage.setItem('todos', JSON.stringify(state.todos))
-// }
+export function ADD_TODO ({ commit, dispatch, state }, { item }) {
+  console.log('action commit add_todo')
+  return new Promise((resolve, reject) => {
+    axios.all([createObjs('todo', '1', item)])
+      .then(function (response) {
+        console.log('action commit: create todo success');
+        commit('ADD_TODO', { item });
+        resolve();
+      })
+      .catch(function(error) {
+        console.log(error);
+        reject();
+      });
+  })
+}
 //
 // export function DELETE_TODO ({ commit, dispatch, state }, { id, name, newValue }) {
 //   console.log('action commit delete_todo')
@@ -223,6 +238,6 @@ export function LOAD_SCENES ({ commit, dispatch, state }) {
 
 export function LOAD_PRIORITIES ({ commit, dispatch, state }) {
   console.log("action commit: load_prioritys");
-  var priorities = [{priority: '1', priorityName: '1'}, {priority: '2', priorityName: '2'}, {priority: '3', priorityName: '3'},{priority: '4', priorityName: '4'},{priority: '5', priorityName: '5'}];
+  var priorities = [{priority: '1', priorityName: '1星'}, {priority: '2', priorityName: '2星'}, {priority: '3', priorityName: '3星'},{priority: '4', priorityName: '4星'},{priority: '5', priorityName: '5星'}];
   commit('LOAD_PRIORITIES', priorities)
 }

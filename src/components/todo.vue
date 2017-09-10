@@ -16,7 +16,7 @@
           <!--<i class="material-icons">place</i>-->
           <!--<span class=" padding_left_right">{{ todoMeta.sceneName }}</span>-->
         <!--</div>-->
-        <div class="todo-flags left-center">
+        <div class="todo-tags left-center">
           <i class="material-icons">label_outline</i>
           <!--v-for="tag in todoMeta.tags"-->
           <span class="todo-flag padding_left_right" >
@@ -89,12 +89,16 @@
     methods: {
       // todo 完成
       getTodoDone () {
-        console.log('todo done!')
+        console.log('todo done!');
         this.clearTimer()
         this.resetTimerController()
-        var spClock = this.todoMeta.spentClock || 0
+        this.todoMeta.isFinished = 'T';
+//        this.todoMeta.spentClock = this.todoMeta.spentClock - 0 + 1;
         // 优化spentClock计算规则
-        this.$store.dispatch('FINISH_TODO', {id: this.todoMeta.todoId, name: 'spentClock', newValue: spClock - 0 + 1})
+        // 模拟满意度和得分
+        this.todoMeta.satisfiyDegree = 3.9
+        this.todoMeta.score = 3.9 * this.todoMeta.priority
+        this.$store.dispatch('UPDATE_TODO', {item: this.todoMeta})
       },
 
       // todo 删除
@@ -102,9 +106,9 @@
         console.log('todo delete!')
         this.clearTimer()
         this.resetTimerController()
-        var spClock = this.todoMeta.spentClock || 0
+        this.todoMeta.isDelete = "T";
         // 优化spentClock计算规则
-        this.$store.dispatch('DELETE_TODO', {id: this.todoMeta.todoId, name: 'spentClock', newValue: spClock - 0 + 1})
+        this.$store.dispatch('UPDATE_TODO', {item: this.todoMeta})
       },
 
       // todo 开始或启动，根据timerHandler来判断
@@ -152,24 +156,24 @@
         this.clearTimer()
         // 中途遭受干扰，任务暂停
         // 统计中断次数
-        this.toggleTimerController()
       },
 
       // todo 停止
       stopTodo () {
         this.clearTimer()
-        this.resetTimerController()
         // update spent clock
         if (this.timer === 0) {
           // 完整完成一个 clock
           // 更新统计信息
-          var spClock = this.todoMeta.spentClock || 0
-          this.$store.dispatch('UPDATE_TODO_MNGR', {id: this.todoMeta.todoId, name: 'spentClock', newValue: spClock - 0 + 1})
+          console.log("timeout expired");
+          this.todoMeta.spentClock = this.todoMeta.spentClock - 0 + 1;
+          this.$store.dispatch('UPDATE_TODO', {item: this.todoMeta})
         } else {
           // 中途干扰，任务停止
           // 统计中断次数
-          var ipt = this.todoMeta.interupt || 0
-          this.$store.dispatch('UPDATE_TODO_MNGR', {id: this.todoMeta.todoId, name: 'interupt', newValue: ipt - 0 + 1})
+          console.log("interrupt occur")
+//          this.todoMeta.interupt = this.todoMeta.interupt - 0 + 1;
+//          this.$store.dispatch('UPDATE_TODO', {item: this.todoMeta})
         }
         this.resetTimer()
       },
@@ -192,6 +196,7 @@
       clearTimer () {
         clearInterval(this.timerHandle)
         this.timerHandle = 0
+        this.toggleTimerController()
       },
 
       // 重置  todo 定时器
@@ -199,7 +204,7 @@
         this.timerShow = '00:10'
         this.timer = 10
         this.timerHandle = 0
-        this.timerController = 'play_arrow'
+        this.resetTimerController();
       },
 
       // todo 编辑

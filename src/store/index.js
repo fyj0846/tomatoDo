@@ -13,7 +13,8 @@ const store = new Vuex.Store({
     curEditTodo: {},
     projects: [],
     scenes: [],
-    users: {}
+    users: {},
+    priorities: [],
   },
   getters: {
     allTodos (state) {
@@ -30,7 +31,7 @@ const store = new Vuex.Store({
     activeTodos (state) {
       const { todos } = state
       return todos.filter(function (todo) {
-        if (todo.isFinished != 'T' && todo.isDeleted != 'T') {
+        if (todo.isFinished != 'T' && todo.isDelete != 'T') {
           return true
         }
       })

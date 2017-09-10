@@ -12,11 +12,17 @@
         <div class="row">
           <div class="input-field col s12">
             <input placeholder="标题" id="todoTitle" type="text" class="validate" v-model="curEditTodo.todoTitle">
-            <label for="todoTitle"></label>
+            <label for="todoTitle">标题</label>
           </div>
           <div class="input-field col s12">
-            <textarea id="describe" class="materialize-textarea" v-model="curEditTodo.todoDescribe"></textarea>
+            <textarea placeholder="请输入描述信息" id="describe" class="materialize-textarea" v-model="curEditTodo.todoDescribe"></textarea>
             <label for="describe">描述</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input placeholder="所需番茄钟" id="expectClock" type="text" class="validate" v-model="curEditTodo.expectClock">
+            <label for="expectClock">时长</label>
           </div>
         </div>
         <div class="row">
@@ -83,7 +89,8 @@
         'stars': '',
         'newChoosePriority': '',
         'newChooseProject': '',
-        'newChooseScene': ''
+        'newChooseScene': '',
+        'newChooseTag': ""
       }
     },
     computed: {
@@ -111,15 +118,15 @@
           'todoTitle': this.curEditTodo.todoTitle,
           'todoId': this.curEditTodo.todoId,
           'todoDescribe': this.curEditTodo.todoDescribe,
-          'priority': this.newChoosePriority,
+          'priority': this.newChoosePriority.priority,  // 用于更新关联的project
+          'expectClock': this.curEditTodo.expectClock,
           'expectFinishTime': this.newChooseDate + " " + this.newChooseTime,
           'spentClock': this.curEditTodo.spentClock,
           'isFinished': this.curEditTodo.isFinished,
           'isDelete': this.curEditTodo.isDelete,
-
           'projectId': this.newChooseProject.projectId,  // 用于更新关联的project
           'sceneId': this.newChooseScene.sceneId,        // 用于更新关联的scene
-          'tagId': this.newChooseTag.tagId,              // 用于更新关联的tag
+          'tagId': this.newChooseTag.tagId,              // 用于更新关联的tag,待优化
         }
       },
 
@@ -132,16 +139,16 @@
       },
     },
     created: function () {
-      // 从后台获取todo信息（含projectId, projectName等）
+      // 从后台获取todo信息（含projectId, projectName等），同时获取所有的备选信息
       this.$store.dispatch('LOAD_TODO', {id: this.$route.params.todoId}).then(() => {
         this.init();
       });
 
       // 从后台获取所有备选信息
-      this.$store.dispatch('LOAD_PRIORITIES');
-      this.$store.dispatch('LOAD_PROJECTS');
-      this.$store.dispatch('LOAD_SCENES');
-      this.$store.dispatch('LOAD_TAGS');
+//      this.$store.dispatch('LOAD_PRIORITIES');
+//      this.$store.dispatch('LOAD_PROJECTS');
+//      this.$store.dispatch('LOAD_SCENES');
+//      this.$store.dispatch('LOAD_TAGS');
     },
     mounted: function () {
       var VM = this

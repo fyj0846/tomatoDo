@@ -58,8 +58,8 @@ export function DELETE_TODO (state, { id, name, newValue }) {
   }
 }
 
-// 添加， todo新增 id-todo任务编号  item-任务属性
-export function ADD_TODO (state, { id, item }) {
+// 添加， todo新增  item-任务属性
+export function ADD_TODO (state, { item }) {
   console.log('mutation add_todo')
   state.todos.push(item)
 }

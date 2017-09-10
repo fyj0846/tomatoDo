@@ -19,7 +19,7 @@
     components: { AppHeader, Todo, SideNav },
     computed: {
       todoList () {
-        return this.$store.getters.allTodos
+        return this.$store.getters.activeTodos
       }
     },
     beforeMount: function () {
