@@ -18,10 +18,10 @@ var getAllObjs = function (obj, userId, todoId) {
 }
 
 // 组装请求
-var updateObjs = function (obj, userId, todoId, item) {
+var updateObjs = function (obj, userId, itemId, item) {
   var query = obj + '/' + userId;
-  if(todoId)
-    query += '/' + todoId;
+  if(itemId)
+    query += '/' + itemId;
   return instance.put(query, item);
 }
 
@@ -88,7 +88,7 @@ export function LOAD_TODO ({ commit, dispatch, state }, { id }) {
           })[0] || {});
         commit('LOAD_PROJECTS', projects.data.resultSet);
         commit('LOAD_SCENES', scenes.data.resultSet);
-        // commit('LOAD_TAGS', tags.data.resultSet);
+        commit('LOAD_TAGS', tags.data.resultSet);
         LOAD_PRIORITIES({ commit, dispatch, state });  // priority为非后台数据，故在此直接调用该方法
 
         resolve();
@@ -114,13 +114,14 @@ export function FINISH_TODO ({ commit, dispatch, state }, { item }) {
   UPDATE_TODO({commit, dispatch, state}, {item});
 }
 
-export function UPDATE_TODO ({ commit, dispatch, state }, { item }) {
+export function UPDATE_TODO ({ commit, dispatch, state }, { item, tag }) {
   console.log('action commit: update_todo')
   return new Promise((resolve, reject) => {
-    axios.all([updateObjs('todo', '1', item.todoId, item)])
+    axios.all([updateObjs('todo', '1', item.todoId, item), updateObjs('tag', '1', tag.tagId, tag)])
       .then(function (response) {
         console.log('action commit: update todo success');
         commit('UPDATE_TODO', { item });
+        commit('UPDATE_TAG', { tag });
         resolve();
       })
       .catch(function(error) {

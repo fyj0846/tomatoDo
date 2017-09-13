@@ -130,3 +130,20 @@ export function LOAD_PRIORITIES (state, priorities) {
   console.log('mutation load_priorities')
   Vue.set(state, 'priorities', priorities)
 }
+
+// 加载， 读取tags配置
+export function LOAD_TAGS (state, tag) {
+  console.log('mutation load_tags')
+  Vue.set(state, 'tags', tag)
+}
+
+// 更新， tag状态更新, 更新时需要考虑部分覆盖的问题
+export function UPDATE_TAG (state, { tag }) {
+  console.log('mutation update_todo')
+  for (var i = 0; i < state.tags.length; i++) {
+    if (state.tags[i].tagId === tag.tagId) {
+      Vue.set(state.tags, i, $.extend(state.tags[i], tag)) // Vue method to discover change of list
+      break
+    }
+  }
+}

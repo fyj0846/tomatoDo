@@ -66,7 +66,7 @@
               <!--<i class="material-icons close">close</i>-->
               <!--</div>-->
               <!--</template>-->
-              <input id="curEditTodo.tags" class="input" placeholder="回车添加标签">
+              <input id="tags" class="input" placeholder="回车添加标签">
               <!--<label for="tags">标签</label>-->
             </div>
           </div>
@@ -90,7 +90,8 @@
         'newChoosePriority': '',
         'newChooseProject': '',
         'newChooseScene': '',
-        'newChooseTag': ""
+        'newChooseTag': '',
+        'tags': []
       }
     },
     computed: {
@@ -137,6 +138,13 @@
       newChooseTime() {
         return this.curEditTodo.expectFinishTime ? this.curEditTodo.expectFinishTime.split(' ')[1] : "";
       },
+
+      updatedTAGItem () {
+        return {
+          'tagId': this.newChooseTag.tagId,
+          'tagName' : this.tags.map(function (item) {return item.tag;}).join(";")
+        }
+      }
     },
     created: function () {
       // 从后台获取todo信息（含projectId, projectName等），同时获取所有的备选信息
@@ -152,34 +160,24 @@
     },
     mounted: function () {
       var VM = this
-      // 初始化的tag标签
-      if (!this.tags) {
-        this.tags = []
-      }
-      var initTags = this.tags.map(function (tag) {
-        return {
-          tag: tag.tagName
-        }
-      })
       // materialize-css 初始化方法
 //      $('select').material_select()
 
       $('.chips').material_chip()
-      $('.chips-initial').material_chip({
-        data: initTags
-      })
+
       $('.chips-placeholder').material_chip({
         placeholder: '输入并回车继续',
         secondaryPlaceholder: '添加标签'
       })
       $('.chips').on('chip.add', function (e, chip) {
         // you have the added chip here
-        VM.tags.push({'tagName': chip.tag})
+        VM.tags.push({'tag' : chip.tag})
       })
       $('.chips').on('chip.delete', function (e, chip) {
         // you have the added chip here
-        VM.tags = VM.deleteObjectInArray(VM.tags, 'tagName', chip.tag)
+        VM.tags = VM.deleteObjectInArray(VM.tags, 'tag', chip.tag)
       })
+
     },
     methods: {
       // tools: delete ele in array
@@ -208,6 +206,13 @@
         this.newChooseProject = {'projectId': this.curEditTodo.projectId, 'projectName': this.curEditTodo.projectName};
         this.newChooseScene = {'sceneId': this.curEditTodo.sceneId, 'sceneName': this.curEditTodo.sceneName};
         this.newChooseTag = {'tagId': this.curEditTodo.tagId, 'tagName': this.curEditTodo.tagName};
+        this.tags = this.curEditTodo.tagName.split(";").map(function(item) {
+          return {'tag': item};
+        });
+
+        $('.chips-initial').material_chip({
+          data: this.tags
+        })
       },
       // 取消新任务
       cancelNewTodoHandler (event) {
@@ -217,8 +222,8 @@
       // 保存新任务
       saveNewTodoHandler (event) {
         console.log('editTodoView: save and update todo')
-        // 触发更新任务
-        this.$store.dispatch('UPDATE_TODO', {'item': this.updatedTODOItem}).then(() => {
+        // 触发更新任务，需要更新tag表中的tagName序列
+        this.$store.dispatch('UPDATE_TODO', {'item': this.updatedTODOItem, 'tag': this.updatedTAGItem}).then(() => {
           this.$router.back();
         })
       },

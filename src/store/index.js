@@ -15,6 +15,7 @@ const store = new Vuex.Store({
     scenes: [],
     users: {},
     priorities: [],
+    tags: []
   },
   getters: {
     allTodos (state) {
