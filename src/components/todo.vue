@@ -20,7 +20,7 @@
           <i class="material-icons">label_outline</i>
           <!--v-for="tag in todoMeta.tags"-->
           <span class="todo-flag padding_left_right" >
-            {{ todoMeta.tagName }}
+            {{ todoMeta.tags }}
           </span>
         </div>
         <div class="todo-timing left-center">

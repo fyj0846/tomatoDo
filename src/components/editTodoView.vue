@@ -123,11 +123,11 @@
           'expectClock': this.curEditTodo.expectClock,
           'expectFinishTime': this.newChooseDate + " " + this.newChooseTime,
           'spentClock': this.curEditTodo.spentClock,
+          'tags': this.updatedTags,
           'isFinished': this.curEditTodo.isFinished,
           'isDelete': this.curEditTodo.isDelete,
           'projectId': this.newChooseProject.projectId,  // 用于更新关联的project
           'sceneId': this.newChooseScene.sceneId,        // 用于更新关联的scene
-          'tagId': this.newChooseTag.tagId,              // 用于更新关联的tag,待优化
         }
       },
 
@@ -139,11 +139,8 @@
         return this.curEditTodo.expectFinishTime ? this.curEditTodo.expectFinishTime.split(' ')[1] : "";
       },
 
-      updatedTAGItem () {
-        return {
-          'tagId': this.newChooseTag.tagId,
-          'tagName' : this.tags.map(function (item) {return item.tag;}).join(";")
-        }
+      updatedTags () {
+        return this.tags.map(function (item) {return item.tag;}).join(";")
       }
     },
     created: function () {
@@ -205,8 +202,7 @@
         this.newChoosePriority = {'priority': this.curEditTodo.priority, 'priorityName':this.curEditTodo.priority};
         this.newChooseProject = {'projectId': this.curEditTodo.projectId, 'projectName': this.curEditTodo.projectName};
         this.newChooseScene = {'sceneId': this.curEditTodo.sceneId, 'sceneName': this.curEditTodo.sceneName};
-        this.newChooseTag = {'tagId': this.curEditTodo.tagId, 'tagName': this.curEditTodo.tagName};
-        this.tags = this.curEditTodo.tagName.split(";").map(function(item) {
+        this.tags = this.curEditTodo.tags.split(";").map(function(item) {
           return {'tag': item};
         });
 
@@ -223,7 +219,7 @@
       saveNewTodoHandler (event) {
         console.log('editTodoView: save and update todo')
         // 触发更新任务，需要更新tag表中的tagName序列
-        this.$store.dispatch('UPDATE_TODO', {'item': this.updatedTODOItem, 'tag': this.updatedTAGItem}).then(() => {
+        this.$store.dispatch('UPDATE_TODO', {'item': this.updatedTODOItem}).then(() => {
           this.$router.back();
         })
       },

@@ -36,12 +36,9 @@ export function LOAD_TODOS ({ commit, dispatch, state }) {
   console.log('action commit: load_todos');
   return new Promise((resolve, reject) => {
     axios.all([getAllObjs('todo', '1')])
-      .then(axios.spread(function (todos, projects, scenes, tags) {
+      .then(axios.spread(function (todos) {
         // All requests are now complete
         console.log(todos);
-        console.log(projects);
-        console.log(scenes);
-        console.log(tags);
         commit('LOAD_TODOS', todos.data.resultSet.map(function (item) {
           if(item.expectFinishTime) {
             // 等待更高效的正则过滤替换
@@ -67,8 +64,8 @@ export function LOAD_TODOS ({ commit, dispatch, state }) {
 export function LOAD_TODO ({ commit, dispatch, state }, { id }) {
   console.log('action commit: load_todo')
   return new Promise((resolve, reject) => {
-    axios.all([getAllObjs('todo', '1', id), getAllObjs('project', '1'), getAllObjs('scene', '1'), getAllObjs('tag', '1')])
-      .then(axios.spread(function (todos, projects, scenes, tags) {
+    axios.all([getAllObjs('todo', '1', id), getAllObjs('project', '1'), getAllObjs('scene', '1')])
+      .then(axios.spread(function (todos, projects, scenes) {
         // All requests are now complete
         // console.log(todos);
         // console.log(projects);
@@ -88,7 +85,6 @@ export function LOAD_TODO ({ commit, dispatch, state }, { id }) {
           })[0] || {});
         commit('LOAD_PROJECTS', projects.data.resultSet);
         commit('LOAD_SCENES', scenes.data.resultSet);
-        commit('LOAD_TAGS', tags.data.resultSet);
         LOAD_PRIORITIES({ commit, dispatch, state });  // priority为非后台数据，故在此直接调用该方法
 
         resolve();
@@ -114,14 +110,13 @@ export function FINISH_TODO ({ commit, dispatch, state }, { item }) {
   UPDATE_TODO({commit, dispatch, state}, {item});
 }
 
-export function UPDATE_TODO ({ commit, dispatch, state }, { item, tag }) {
+export function UPDATE_TODO ({ commit, dispatch, state }, {item}) {
   console.log('action commit: update_todo')
   return new Promise((resolve, reject) => {
-    axios.all([updateObjs('todo', '1', item.todoId, item), updateObjs('tag', '1', tag.tagId, tag)])
+    axios.all([updateObjs('todo', '1', item.todoId, item)])
       .then(function (response) {
         console.log('action commit: update todo success');
         commit('UPDATE_TODO', { item });
-        commit('UPDATE_TAG', { tag });
         resolve();
       })
       .catch(function(error) {

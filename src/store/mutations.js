@@ -41,7 +41,7 @@ export function UPDATE_TODO (state, { item }) {
   console.log('mutation update_todo')
   for (var i = 0; i < state.todos.length; i++) {
     if (state.todos[i].todoId === item.todoId) {
-      Vue.set(state.todos, i, item)  // Vue method to discover change of list
+      Vue.set(state.todos, i, $.extend(state.todos[i], item))  // Vue method to discover change of list
       break
     }
   }
@@ -81,7 +81,7 @@ export function UPDATE_PROJECT (state, { id, item }) {
   console.log('mutation update_project')
   for (var i = 0; i < state.projects.length; i++) {
     if (state.projects[i].projectId === id) {
-      Vue.set(state.projects, i, item)  // Vue method to discover change of list
+      Vue.set(state.projects, i, $.extend(state.projects[i], item))  // Vue method to discover change of list
       break
     }
   }
@@ -132,18 +132,18 @@ export function LOAD_PRIORITIES (state, priorities) {
 }
 
 // 加载， 读取tags配置
-export function LOAD_TAGS (state, tag) {
-  console.log('mutation load_tags')
-  Vue.set(state, 'tags', tag)
-}
-
-// 更新， tag状态更新, 更新时需要考虑部分覆盖的问题
-export function UPDATE_TAG (state, { tag }) {
-  console.log('mutation update_todo')
-  for (var i = 0; i < state.tags.length; i++) {
-    if (state.tags[i].tagId === tag.tagId) {
-      Vue.set(state.tags, i, $.extend(state.tags[i], tag)) // Vue method to discover change of list
-      break
-    }
-  }
-}
+// export function LOAD_TAGS (state, tag) {
+//   console.log('mutation load_tags')
+//   Vue.set(state, 'tags', tag)
+// }
+//
+// // 更新， tag状态更新, 更新时需要考虑部分覆盖的问题
+// export function UPDATE_TAG (state, { tag }) {
+//   console.log('mutation update_tag')
+//   for (var i = 0; i < state.tags.length; i++) {
+//     if (state.tags[i].tagId === tag.tagId) {
+//       Vue.set(state.tags, i, $.extend(state.tags[i], tag)) // Vue method to discover change of list
+//       break
+//     }
+//   }
+// }

@@ -79,13 +79,12 @@
         expectFinishTime: '',
         sceneId: '',
         projectId: '',
-        tagId: '',
         spentClock: 0,
         isFinished: 'F',
         newChoosePriority: '',
         newChooseProject: '',
         newChooseScene: '',
-        newChooseTag: ""
+        tags: []
       }
     },
     computed: {
@@ -97,13 +96,16 @@
           'priority': this.newChoosePriority.priority,
           'expectClock': this.expectClock,
           'expectFinishTime': this.newChooseDate + " " + this.newChooseTime,
+          'tags': this.newTagItem,
           'spentClock': this.spentClock,
           'isFinished': this.isFinished,
           'isDelete': this.isDelete,
           'sceneId': this.newChooseScene.sceneId,
           'projectId': this.newChooseProject.projectId,
-          'tagId': 1 //this.newChooseTag.tagId,
         }
+      },
+      newTagItem (){
+        return this.tags.map(function (item) {return item.tag;}).join(";")
       },
       activePriorities () {
         return this.$store.getters.activePriorities
@@ -129,7 +131,6 @@
       this.$store.dispatch('LOAD_PRIORITIES');
       this.$store.dispatch('LOAD_PROJECTS');
       this.$store.dispatch('LOAD_SCENES');
-//      this.$store.dispatch('LOAD_TAGS');
     },
     mounted: function () {
       var VM = this
@@ -142,11 +143,12 @@
       })
       $('.chips').on('chip.add', function (e, chip) {
         // you have the added chip here
-        VM.tags.push({'tagName': chip.tag})
+        console.log("chip.add")
+        VM.tags.push({'tag': chip.tag})
       })
       $('.chips').on('chip.delete', function (e, chip) {
         // you have the added chip here
-        VM.tags = VM.deleteObjectInArray(VM.tags, 'tagName', chip.tag)
+        VM.tags = VM.deleteObjectInArray(VM.tags, 'tag', chip.tag)
       })
     },
     methods: {
@@ -182,7 +184,6 @@
         this.newChoosePriority = {'priority': -1, 'priorityName': '请选择优先级'};
         this.newChooseProject = {'projectId': -1, 'projectName': '请选择项目'};
         this.newChooseScene = {'sceneId': -1, 'sceneName': '请选择场景'};
-        this.newChooseTag = {'tagId': -1, 'tagName': '请选择标签'};
       },
       // 取消新任务
       cancelNewTodoHandler (event) {
@@ -206,9 +207,6 @@
       setExpectedFinishDate (event) {
         console.log('set the setExpectedFinishDate')
         this.newChooseDate = event;
-      },
-      updateValue (event) {
-        console.log('date')
       }
     }
   }
