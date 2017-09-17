@@ -91,6 +91,8 @@
         'newChooseProject': '',
         'newChooseScene': '',
         'newChooseTag': '',
+        'newChooseDate': '',
+        'newChooseTime': '',
         'tags': []
       }
     },
@@ -129,14 +131,6 @@
           'projectId': this.newChooseProject.projectId,  // 用于更新关联的project
           'sceneId': this.newChooseScene.sceneId,        // 用于更新关联的scene
         }
-      },
-
-      newChooseDate() {
-        return this.curEditTodo.expectFinishTime ? this.curEditTodo.expectFinishTime.split(' ')[0] : "";
-      },
-
-      newChooseTime() {
-        return this.curEditTodo.expectFinishTime ? this.curEditTodo.expectFinishTime.split(' ')[1] : "";
       },
 
       updatedTags () {
@@ -202,6 +196,8 @@
         this.newChoosePriority = {'priority': this.curEditTodo.priority, 'priorityName':this.curEditTodo.priority};
         this.newChooseProject = {'projectId': this.curEditTodo.projectId, 'projectName': this.curEditTodo.projectName};
         this.newChooseScene = {'sceneId': this.curEditTodo.sceneId, 'sceneName': this.curEditTodo.sceneName};
+        this.newChooseDate = this.curEditTodo.expectFinishTime ? this.curEditTodo.expectFinishTime.split(' ')[0] : "";
+        this.newChooseTime = this.curEditTodo.expectFinishTime ? this.curEditTodo.expectFinishTime.split(' ')[1] : "";
         this.tags = this.curEditTodo.tags.split(";").map(function(item) {
           return {'tag': item};
         });
@@ -224,12 +220,12 @@
         })
       },
       setExpectFinishTime (event) {
-        console.log('set the setExpectFinishTime');
+        console.log('set the setExpectFinishTime: ' + event);
         this.newChooseTime = event;
       },
       // 设置计划完成的日期
       setExpectedFinishDate (event) {
-        console.log('set the setExpectedFinishDate')
+        console.log('set the setExpectedFinishDate: ' +event)
         this.newChooseDate = event;
       }
     }

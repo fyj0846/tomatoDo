@@ -1,8 +1,8 @@
 <template>
   <div class="page-view">
     <div class="page-header header page-header-background page-header-text">
-      <div class="cancel" @click="cancelHandler"> 取消</div>
-      <div class="save row-padding-10" @click=""> 保存</div>
+      <div class="cancel" @click="goBackHandler"> 返回</div>
+      <!--<div class="save row-padding-10" @click=""> 保存</div>-->
     </div>
     <div class="page-content row">
       <ul class="collapsible  itemList" data-collapsible="accordion">
@@ -19,16 +19,14 @@
               </div>
             </div>
             <div class="collapsible-body">
-              <div>
-                <span><i class="material-icons delete" v-on:click.stop="editItem(project)">edit</i></span>
-                <span>
-                  <i class="material-icons delete"
-                         v-bind:class='{disabled: project_todos_count(project_activeTodos_rel, project.projectId)}'
-                         v-on:click.stop="deleteItem(project.projectId)">delete
-                  </i>
+              <div class="body-describe"><span> {{ project.projectDescribe }}</span></div>
+              <div class="body-tools">
+                <span class="material-icons delete" v-on:click.stop="editItem(project)">edit</span>
+                <span class="material-icons delete"
+                      v-bind:class='{disabled: project_todos_count(project_activeTodos_rel, project.projectId)}'
+                      v-on:click.stop="deleteItem(project)">delete
                 </span>
               </div>
-              <div><span> {{ project.projectDesc }}</span></div>
             </div>
           </li>
         </template>
@@ -36,14 +34,14 @@
       <div id="addItem" class="modal">
         <div class="modal-content">
           <h4>新建项目</h4>
-          <p>项目是您项目的项目的项目啊，这个还要解释吗</p>
+          <p>新建一个您正在进行的项目</p>
           <div class="row">
             <div class="input-field col s12">
               <input placeholder="项目名称" id="projectName" type="text" class="validate" v-model="projectName">
               <label for="projectName"></label>
             </div>
             <div class="input-field col s12">
-              <textarea id="projectDesc" placeholder="项目描述" class="materialize-textarea" v-model="projectDesc"></textarea>
+              <textarea id="projectDesc" placeholder="项目描述" class="materialize-textarea" v-model="projectDescribe"></textarea>
               <label for="projectDesc"></label>
             </div>
           </div>
@@ -56,14 +54,14 @@
       <div id="editItem" class="modal">
         <div class="modal-content">
           <h4>编辑项目</h4>
-          <p>项目是您项目的项目的项目啊，这个还要解释吗</p>
+          <p>修改该项目的名称和描述信息</p>
           <div class="row">
             <div class="input-field col s12">
               <input placeholder="项目名称" id="projectName2" type="text" class="validate" v-model="projectName">
               <label for="projectName2"></label>
             </div>
             <div class="input-field col s12">
-              <textarea id="projectDesc2" placeholder="项目描述" class="materialize-textarea" v-model="projectDesc"></textarea>
+              <textarea id="projectDesc2" placeholder="项目描述" class="materialize-textarea" v-model="projectDescribe"></textarea>
               <label for="projectDesc2"></label>
             </div>
           </div>
@@ -88,7 +86,7 @@
       return {
         projectId: '',
         projectName: '',
-        projectDesc: ''
+        projectDescribe: ''
       }
     },
     computed: {
@@ -96,7 +94,7 @@
         return {
           projectId: this.projectId,
           projectName: this.projectName,
-          projectDesc: this.projectDesc
+          projectDescribe: this.projectDescribe
         }
       },
       // 已配置projects对象
@@ -137,8 +135,8 @@
       }
     },
     methods: {
-      // 取消
-      cancelHandler (event) {
+      // 返回
+      goBackHandler (event) {
         console.log('cancel and go back!')
         this.$router.back()
       },
@@ -164,29 +162,32 @@
         console.log('edit item')
         this.projectId = project.projectId
         this.projectName = project.projectName
-        this.projectDesc = project.projectDesc
+        this.projectDescribe = project.projectDescribe
         $('#editItem').modal('open');
       },
-      deleteItem (id) {
+      deleteItem (project) {
         console.log('delete item')
-        if (this.project_todos_count(this.project_activeTodos_rel, id)) {
+        if (this.project_todos_count(this.project_activeTodos_rel, project.projectId)) {
           console.log('还有未完成的任务，项目无法删除')
           return
         }
-        this.$store.dispatch('DELETE_PROJECT', {id: id})
+        project.isDelete = 'T';
+        this.$store.dispatch('DELETE_PROJECT', {item: project})
       },
       clearItem () {
         this.projectName = ''
         this.projectId = ''
-        this.projectDesc = ''
+        this.projectDescribe = ''
       }
     },
     mounted () {
       $('#sidenav-overlay').remove()
       $('.modal').modal()
       $('.collapsible').collapsible()
-
+    },
+    created () {
       this.$store.dispatch('LOAD_PROJECTS')
+      this.$store.dispatch('LOAD_TODOS')
     }
   }
 </script>
@@ -195,15 +196,16 @@
   .itemList {
     display: flex;
     flex-direction: column;
-    width: 90%;
-    margin-left: 5%;
-    margin-top: 30%;
+    width: 96%;
+    margin-left: 2%;
+    margin-top: 20%;
   }
 
   .collapsible-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    background-color: #F5f5f5;
   }
 
   .collapsible-header span.badge {
@@ -214,19 +216,34 @@
 
   .collapsible-body {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
-    padding: 1.2rem;
+    padding: 1rem;
   }
 
-  .collapsible-body div:nth-child(2) {
-    /*flex: 4;*/
+  .collapsible-body .body-tools {
+    display: flex;
+    align-items: center;
   }
 
-  .collapsible-body div:nth-child(1) {
-    margin-left: 75%;
-    margin-bottom: 5px;
+  .collapsible-body .body-tools .material-icons {
+    padding: 0 6px;
   }
+
+  .collapsible-body .body-describe {
+    display: flex;
+    flex: 0 0 80%;
+    align-items: center;
+  }
+
+  /*.collapsible-body div:nth-child(2) {*/
+    /*!*flex: 4;*!*/
+  /*}*/
+
+  /*.collapsible-body div:nth-child(1) {*/
+    /*margin-left: 75%;*/
+    /*margin-bottom: 5px;*/
+  /*}*/
 
   .collapsible-body div:nth-child(1) span {
     margin: 0 3px;

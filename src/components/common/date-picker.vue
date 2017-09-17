@@ -83,6 +83,13 @@
         }
       },
 
+      initDate() {
+        var newDay = new Date()
+        this.selectedDay = this.transTo2Digits(newDay.getDate())
+        this.selectedMonth = this.transTo2Digits(newDay.getMonth() + 1)
+        this.selectedYear = newDay.getFullYear()
+      },
+
       // 月份跳转
       moveToNextMonth () {
         var tmp = this.selectedMonth - 0 + 1  //处理跨年问题
@@ -116,17 +123,6 @@
         this.selectedDay = this.transTo2Digits(item.day)
       },
 
-      // 设置初始化默认日期
-      defaultInitDate () {
-        var today = new Date()
-        if(this.propDate) {
-          today = new Date(this.propDate)
-        }
-        this.selectedDay = this.transTo2Digits(today.getDate())
-        this.selectedMonth = this.transTo2Digits(today.getMonth() + 1)
-        this.selectedYear = today.getFullYear()
-      },
-
       // 设置目标日期为今天
       setToday () {
         var today = new Date()
@@ -140,13 +136,14 @@
         var today = new Date()
         var dayInWeek = today.getDay()
         var weekend = new Date(today.getFullYear(), today.getMonth(), today.getDate() + (6 - dayInWeek));
-        this.selectedDay = this.transTo2Digits(weekend.getDate())   //推至当前日所在的周六
+        this.selectedDay = this .transTo2Digits(weekend.getDate())   //推至当前日所在的周六
         this.selectedMonth = this.transTo2Digits(weekend.getMonth() + 1)
         this.selectedYear = weekend.getFullYear()
       }
     },
     computed: {
       // 当前选择日期：yyyy-mm-dd
+      // 设置初始化默认日期
       selectedDate() {
         return this.selectedYear + "-" + this.selectedMonth + "-" + this.selectedDay
       },
@@ -185,6 +182,14 @@
       }
     },
     watch: {
+      propDate (newValue) {
+        console.log("date-picker: init date " + this.propDate );
+        var newDay = new Date(newValue)
+        this.selectedDay = this.transTo2Digits(newDay.getDate())
+        this.selectedMonth = this.transTo2Digits(newDay.getMonth() + 1)
+        this.selectedYear = newDay.getFullYear()
+      },
+
       selectedDate(newValue) {
           this.$emit('updateSelectedDate', newValue)
       }
@@ -192,7 +197,7 @@
     mounted () {
       $('select').material_select()
       $('.modal').modal()
-      this.defaultInitDate()
+      this.initDate()
     },
     beforeDestroy () {
     }

@@ -1,11 +1,11 @@
 <template>
   <div class="page-view">
     <div class="page-header header page-header-background page-header-text">
-      <div class="cancel" @click="cancelHandler"> 取消</div>
-      <div class="save row-padding-10" @click=""> 保存</div>
+      <div class="cancel" @click="goBackHandler"> 返回</div>
+      <!--<div class="save row-padding-10" @click=""> 保存</div>-->
     </div>
     <div class="page-content row">
-      <ul class="collapsible popout itemList" data-collapsible="accordion">
+      <ul class="collapsible  itemList" data-collapsible="accordion">
         <template v-for="scene in activeScenes">
           <li>
             <div class="collapsible-header">
@@ -13,29 +13,61 @@
                 <i class="material-icons">place</i>
                 {{ scene.sceneName }}
               </div>
-              <i class="material-icons delete" v-on:click.stop="deleteItem(scene.sceneId)">delete</i>
+              <div>
+                <span class="badge red"  v-text="scene_todos_count(scene_activeTodos_rel, scene.sceneId)"></span>
+                <span class="badge grey" v-text="scene_todos_count(scene_allTodos_rel, scene.sceneId)"></span>
+              </div>
             </div>
-            <div class="collapsible-body"><span> {{ scene.sceneDesc }}</span></div>
+            <div class="collapsible-body">
+              <div class="body-describe"><span> {{ scene.sceneDescribe }}</span></div>
+              <div class="body-tools">
+                <span class="material-icons delete" v-on:click.stop="editItem(scene)">edit</span>
+                <span class="material-icons delete"
+                      v-bind:class='{disabled: scene_todos_count(scene_activeTodos_rel, scene.sceneId)}'
+                      v-on:click.stop="deleteItem(scene)">delete
+                </span>
+              </div>
+            </div>
           </li>
         </template>
       </ul>
       <div id="addItem" class="modal">
         <div class="modal-content">
-          <h4>新建项目</h4>
-          <p>项目是您项目的项目的项目啊，这个还要解释吗</p>
+          <h4>新建场景</h4>
+          <p>新建一个您正在进行的场景</p>
           <div class="row">
             <div class="input-field col s12">
-              <input placeholder="项目名称" id="sceneName" type="text" class="validate" v-model="sceneName">
+              <input placeholder="场景名称" id="sceneName" type="text" class="validate" v-model="sceneName">
               <label for="sceneName"></label>
             </div>
             <div class="input-field col s12">
-              <textarea id="sceneDesc" placeholder="项目描述" class="materialize-textarea" v-model="sceneDesc"></textarea>
+              <textarea id="sceneDesc" placeholder="场景描述" class="materialize-textarea" v-model="sceneDescribe"></textarea>
               <label for="sceneDesc"></label>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <a class="modal-action modal-close waves-effect waves-green btn-flat" v-on:click="saveItem">保存</a>
+          <a class="modal-action modal-close waves-effect waves-green btn-flat" v-on:click="saveItem('add')">保存</a>
+          <a class="modal-action modal-close waves-effect waves-green btn-flat">取消</a>
+        </div>
+      </div>
+      <div id="editItem" class="modal">
+        <div class="modal-content">
+          <h4>编辑场景</h4>
+          <p>修改该场景的名称和描述信息</p>
+          <div class="row">
+            <div class="input-field col s12">
+              <input placeholder="场景名称" id="sceneName2" type="text" class="validate" v-model="sceneName">
+              <label for="sceneName2"></label>
+            </div>
+            <div class="input-field col s12">
+              <textarea id="sceneDesc2" placeholder="场景描述" class="materialize-textarea" v-model="sceneDescribe"></textarea>
+              <label for="sceneDesc2"></label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a class="modal-action modal-close waves-effect waves-green btn-flat" v-on:click="saveItem('update')">保存</a>
           <a class="modal-action modal-close waves-effect waves-green btn-flat">取消</a>
         </div>
       </div>
@@ -54,7 +86,7 @@
       return {
         sceneId: '',
         sceneName: '',
-        sceneDesc: ''
+        sceneDescribe: ''
       }
     },
     computed: {
@@ -62,43 +94,97 @@
         return {
           sceneId: this.sceneId,
           sceneName: this.sceneName,
-          sceneDesc: this.sceneDesc
+          sceneDescribe: this.sceneDescribe
         }
       },
       // 已配置scenes对象
       activeScenes () {
         return this.$store.getters.activeScenes
+      },
+      // 已关联的todo数量
+      allTodos () {
+        return this.$store.getters.allTodos
+      },
+      // 活跃的todo数量
+      activeTodos () {
+        return this.$store.getters.activeTodos
+      },
+      scene_allTodos_rel () {
+        var tmp1 = {}
+        for (var todo1 in this.allTodos) {
+          if (tmp1[this.allTodos[todo1].sceneId] == null) {
+            tmp1[this.allTodos[todo1].sceneId] = []
+            tmp1[this.allTodos[todo1].sceneId].push(this.allTodos[todo1].todoId)
+          } else {
+            tmp1[this.allTodos[todo1].sceneId].push(this.allTodos[todo1].todoId)
+          }
+        }
+        return tmp1
+      },
+      scene_activeTodos_rel () {
+        var tmp2 = {}
+        for (var todo2 in this.activeTodos) {
+          if (tmp2[this.activeTodos[todo2].sceneId] == null) {
+            tmp2[this.activeTodos[todo2].sceneId] = []
+            tmp2[this.activeTodos[todo2].sceneId].push(this.activeTodos[todo2].todoId)
+          } else {
+            tmp2[this.activeTodos[todo2].sceneId].push(this.activeTodos[todo2].todoId)
+          }
+        }
+        return tmp2
       }
     },
     methods: {
-      // 取消
-      cancelHandler (event) {
+      // 返回
+      goBackHandler (event) {
         console.log('cancel and go back!')
         this.$router.back()
       },
-      log () {
-        console.log('delete')
+      scene_todos_count (list, obj) {
+        if (list != null && list[obj] != null) {
+          return list[obj].length
+        } else {
+          return 0
+        }
       },
-      saveItem () {
+      saveItem (type) {
         console.log('save new item')
-        this.$store.dispatch('ADD_SCENE', {item: this.newItem})
+        if (type == 'add') {
+          this.$store.dispatch('ADD_SCENE', {item: this.newItem})
+        } else if (type == 'update') {
+          this.$store.dispatch('UPDATE_SCENE', {item: this.newItem})
+        }
       },
-      deleteItem (id) {
+      editItem (scene) {
+        console.log('edit item')
+        this.sceneId = scene.sceneId
+        this.sceneName = scene.sceneName
+        this.sceneDescribe = scene.sceneDescribe
+        $('#editItem').modal('open');
+      },
+      deleteItem (scene) {
         console.log('delete item')
-        this.$store.dispatch('DELETE_SCENE', {id: id})
+        if (this.scene_todos_count(this.scene_activeTodos_rel, scene.sceneId)) {
+          console.log('还有未完成的任务，场景无法删除')
+          return
+        }
+        scene.isDelete = 'T';
+        this.$store.dispatch('DELETE_SCENE', {item: scene})
       },
       clearItem () {
         this.sceneName = ''
         this.sceneId = ''
-        this.sceneDesc = ''
+        this.sceneDescribe = ''
       }
     },
     mounted () {
       $('#sidenav-overlay').remove()
       $('.modal').modal()
       $('.collapsible').collapsible()
-
+    },
+    created () {
       this.$store.dispatch('LOAD_SCENES')
+      this.$store.dispatch('LOAD_TODOS')
     }
   }
 </script>
@@ -107,20 +193,56 @@
   .itemList {
     display: flex;
     flex-direction: column;
-    width: 90%;
-    margin-left: 5%;
-    margin-top: 30%;
+    width: 96%;
+    margin-left: 2%;
+    margin-top: 20%;
   }
 
   .collapsible-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    background-color: #F5f5f5;
+  }
+
+  .collapsible-header span.badge {
+    /*min-width: auto;*/
+    border-radius: 60%;
+    color: white;
+  }
+
+  .collapsible-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+
+  .collapsible-body .body-tools {
+    display: flex;
+    align-items: center;
+  }
+
+  .collapsible-body .body-tools .material-icons {
+    padding: 0 6px;
+  }
+
+  .collapsible-body .body-describe {
+    display: flex;
+    flex: 0 0 80%;
+    align-items: center;
+  }
+
+  .collapsible-body div:nth-child(1) span {
+    margin: 0 3px;
   }
 
   .floatAddBtn {
     position: fixed;
     bottom: 10%;
     right: 15%;
+  }
+  .disabled {
+    color: #ccc;
   }
 </style>

@@ -235,7 +235,8 @@
   }
 
   .card-active {
-    border: 1px solid red;
+    /*后续可以考虑做成闪烁*/
+    box-shadow: 0 6px 6px 0 rgba(0,0,255,0.14), 0 4px 8px 0 rgba(0,0,255,0.22), 0 6px 4px -8px rgba(0,0,255,0.2);
   }
 
   /*todo卡片头部样式*/

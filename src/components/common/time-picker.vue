@@ -69,6 +69,13 @@
       closeModal () {
         $('#modal1').modal('close')
       },
+
+      initTime() {
+        var today = new Date();
+        this.timeHour = this.transTo2Digits(today.getHours())
+        this.timeMinute = this.transTo2Digits(today.getMinutes())
+      },
+
       setTime (time) {
         if(time && time.indexOf(":") > -1) {
           this.timeHour = time.split(":")[0];
@@ -83,18 +90,6 @@
         var initTime = new Date()
         this.timeHour = this.transTo2Digits(initTime.getHours())
         this.timeMinute = this.transTo2Digits(initTime.getMinutes())
-      },
-      defaultInitTime () {
-        // 初始化，
-        // 设置默认时钟
-        if(this.propTime && this.propTime.indexOf(":") > -1) {
-          this.timeHour = this.transTo2Digits(this.propTime.split(":")[0])
-          this.timeMinute = this.transTo2Digits(this.propTime.split(":")[1])
-        } else {
-          var initTime = new Date()
-          this.timeHour = this.transTo2Digits(initTime.getHours())
-          this.timeMinute = this.transTo2Digits(initTime.getMinutes())
-        }
       },
       handleHour (event) {
         var e = event.target.value.slice(0, 2)
@@ -126,12 +121,19 @@
       // 监视选择事件的变动，随意同步到父组件上
       value: function (newValue) {
         this.$emit('updateSelectedTime', newValue)
-      }
+      },
+
+      propTime (newValue) {
+        // 初始化，
+        // 设置默认时钟
+        this.timeHour = this.transTo2Digits(newValue.split(":")[0])
+        this.timeMinute = this.transTo2Digits(newValue.split(":")[1])
+      },
     },
     mounted () {
       $('select').material_select()
       $('.modal').modal()
-      this.defaultInitTime()
+      this.initTime()
     }
   }
 </script>

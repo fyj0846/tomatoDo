@@ -21,7 +21,7 @@ const store = new Vuex.Store({
     allTodos (state) {
       const { todos } = state
       return todos.filter(function (todo) {
-        if (todo.isDeleted !== 'T') {
+        if (todo.isDelete !== 'T') {
           return true
         }
       })
@@ -51,7 +51,7 @@ const store = new Vuex.Store({
     activeProjects (state) {
       const { projects } = state
       return projects.filter(function (project) {
-        if (project.isDeleted !== true) {
+        if (project.isDelete !== 'T') {
           return true
         }
       })
@@ -59,7 +59,7 @@ const store = new Vuex.Store({
     activeScenes (state) {
       const { scenes } = state
       return scenes.filter(function (scene) {
-        if (scene.isDeleted !== true) {
+        if (scene.isDelete !== 'T') {
           return true
         }
       })
