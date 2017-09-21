@@ -37,6 +37,14 @@ const store = new Vuex.Store({
         }
       })
     },
+    finishedTodos (state) {
+      const { todos } = state
+      return todos.filter(function (todo) {
+        if (todo.isFinished == 'T' && todo.isDelete != 'T') {
+          return true
+        }
+      })
+    },
     activeTodosCount (state, getters) {
       return getters.activeTodos.length
     },

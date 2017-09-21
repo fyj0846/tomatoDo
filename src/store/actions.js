@@ -39,7 +39,8 @@ function getAssignIdFromResp(response) {
 
 // axios共享配置
 var instance = axios.create({
-  baseURL: 'http://localhost:8080/api/V1/',
+  baseURL: 'http://192.168.43.194:8080/api/V1/',
+  // baseURL: 'http://localhost:8080/api/V1/',
   timeout: 1000,
   // headers: {'X-Custom-Header': 'foobar'}
 });

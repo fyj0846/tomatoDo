@@ -6,8 +6,8 @@ import App from './App'
 import router from './router'
 import store from './store'
 import vSelect from 'vue-select'
-import 'materialize-css/dist/js/materialize.min.js'
-import 'materialize-css/dist/css/materialize.min.css'
+import '../static/js/materialize.min.js'
+import '../static/css/materialize.min.css'
 import $ from 'jquery'
 
 Vue.config.productionTip = false
