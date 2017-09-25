@@ -4,20 +4,21 @@
     <div class="header">
       <div class="header-sidenav-btn">
         <a href="#" data-activates="slide-out" class="button-collapse white-text">
-          <i class="material-icons ">view_headline</i>
+          <i class="material-icons ">&#xE8EE;</i>
         </a>
       </div>
       <div class="header-title white-text">
         <span class="title">tomatoDo</span>
       </div>
       <div class="header-add-btn white-text">
-        <i class="material-icons" @click="addTodoHandler">add</i>
+        <i class="material-icons" @click="addTodoHandler">&#xE145;</i>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+
   export default {
     methods: {
       addTodoHandler (event) {
