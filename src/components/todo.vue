@@ -109,6 +109,7 @@
       }
     },
     mounted () {
+      $('.modal').modal()
       this.resetTimer()
     },
     methods: {
@@ -272,6 +273,10 @@
     box-shadow: 0 6px 6px 0 rgba(0,0,255,0.14), 0 4px 8px 0 rgba(0,0,255,0.22), 0 6px 4px -8px rgba(0,0,255,0.2);
   }
 
+  .card .card-action {
+    padding: 0px;
+  }
+
   /*todo卡片头部样式*/
   .todo-header {
     font-size: 1.3rem;
@@ -339,5 +344,29 @@
 
   .padding_left_right {
     padding: 0 5px;
+  }
+
+  .modal {
+    padding: 24px 8px 16px;
+    width: 100%;
+    top: 20% !important;
+  }
+
+  .modal .panel-header {
+    text-align: center;
+    font-size: 1.2rem;
+  }
+
+  .modal .panel-content {
+    text-align: center;
+    padding: 18px 0px 10px 0px;
+  }
+
+  .modal .panel-content .material-icons {
+    font-size: 2.6rem;
+  }
+
+  .modal .panel-footer {
+    text-align: center;
   }
 </style>

@@ -247,6 +247,6 @@
     color: #26a69a;
   }
   .time-picker .modal {
-    width: 298px;
+    width: 100%;
   }
 </style>

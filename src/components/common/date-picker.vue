@@ -287,14 +287,14 @@
   .panel-content .day-view li {
     flex: 0 0 14.2%;
     text-align: center;
-    height: 34px;
+    height: 2.4rem;
     font-family: Roboto, sans-serif;
-    line-height: 34px;
+    line-height: 2.4rem;
   }
 
   .panel-content .day-view li .message{
-    height: 32px;
-    margin: 1px 10.5px;
+    height: 2.4rem;
+    /*margin: 1px 10.5px;*/
     border-radius: 100%;
   }
 
@@ -326,7 +326,7 @@
     color: #26a69a;
   }
 
-  .Date-picker .modal {
-    width: 298px;
+  .date-picker .modal {
+    width: 100%;
   }
 </style>
