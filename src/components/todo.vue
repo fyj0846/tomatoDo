@@ -2,7 +2,7 @@
   <div class="card"  v-bind:class="{ 'card-active': timerHandle }">
     <div class="todo-header grey lighten-1">
       <span>{{ todoMeta.todoTitle }}</span>
-      <i @click="getTodoDone" class="material-icons right">done</i>
+      <i @click="openModal" class="material-icons right">done</i>
       <i @click="getTodoDelete" class="material-icons right">delete</i>
     </div>
     <div class=" todo-content">
@@ -45,21 +45,17 @@
       <i @click="toggleTodo" class="material-icons right"> {{ timerController }}</i>
       <i @click="stopTodo" class="material-icons right">stop</i>
     </div>
-    <!--<div class="card-reveal">-->
-      <!--<span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>-->
-      <!--<p>Here is some more information about this product that is only revealed once clicked on.</p>-->
-    <!--</div>-->
     <div id='modalSave' class="modal">
       <div class="date-panel">
-        <div class="panel-header">任务满意度调查</div>
+        <div class="panel-header">任务满意度</div>
         <div class="panel-content">
           <div class="todo-satisfiyDegree red-text">
-            <i v-for="style in satisfyStyle" class="material-icons" :tap="onSelectSatify($index)">{{ style }}</i>
+            <i v-for="(style,index) in satisfyStyle" class="material-icons" @click="onSelectSatify(index)">{{ style }}</i>
           </div>
         </div>
         <div class="panel-footer">
-          <a class="waves-effect  btn-flat active" @click="setToday">保存</a>
-          <a class="waves-effect  btn-flat active" @click="setToday">取消</a>
+          <a class="waves-effect  btn-flat active" @click="getTodoDone" >保存</a>
+          <a class="waves-effect  btn-flat active" @click="closeModal">取消</a>
         </div>
       </div>
     </div>
@@ -67,6 +63,8 @@
 </template>
 
 <script>
+  import $ from 'jquery';
+
   export default {
     data: function () {
       return {
@@ -74,12 +72,13 @@
         timer: '',
         timerShow: '',
         timerController: '',
-        continueFlag: false
+        continueFlag: false,
+        todoMeta: $.extend({}, this.todoMetaProp)
       }
     },
     props: {
       // todoView 传递的参数
-      todoMeta: {
+      todoMetaProp: {
         type: Object,
         required: true
       }
@@ -113,6 +112,12 @@
       this.resetTimer()
     },
     methods: {
+      openModal () {
+        $('#modalSave').modal('open')
+      },
+      closeModal () {
+        $('#modalSave').modal('close')
+      },
       // todo 完成
       getTodoDone () {
         console.log('todo done!');
@@ -121,9 +126,6 @@
         this.todoMeta.isFinished = 'T';
 //        this.todoMeta.spentClock = this.todoMeta.spentClock - 0 + 1;
         // 优化spentClock计算规则
-        // 模拟满意度和得分
-//      @click="openModal"
-        this.todoMeta.satisfiyDegree = 3.9
         this.todoMeta.score = 3.9 * this.todoMeta.priority
         this.$store.dispatch('UPDATE_TODO', {item: this.todoMeta})
       },
@@ -253,7 +255,7 @@
       // 反馈满意度
       onSelectSatify(index) {
         console.log("set todo satisfiyDegree");
-        this.todoMeta.satisfiyDegree = index + 1;
+        this.todoMeta = $.extend(true, {}, this.todoMeta, { 'satisfiyDegree': index + 1 })
       }
     }
   }

@@ -10,14 +10,14 @@
     <div id="finishedTodos" class="col s12">
       <div class="row todo-view-content">
         <div v-for="todo in finishedList" class="col s12 m6">
-          <todo :todoMeta="todo"></todo>
+          <todo :todoMetaProp="todo"></todo>
         </div>
       </div>
     </div>
     <div id="activeTodos" class="col s12">
       <div class="row todo-view-content">
         <div v-for="todo in todoList" class="col s12 m6">
-          <todo :todoMeta="todo"></todo>
+          <todo :todoMetaProp="todo"></todo>
         </div>
       </div>
     </div>
@@ -34,7 +34,17 @@
     components: {AppHeader, Todo, SideNav},
     computed: {
       todoList () {
-        return this.$store.getters.activeTodos
+//        return this.$store.getters.activeTodos
+        return [{
+          todoTitle: "TEST001",
+          projectName: "测试项目",
+          tags: "测试,挑战",
+          expectFinishTime: "2017-09-28",
+          spentClock: "2",
+          priority: "3",
+          isFinished: "F",
+          satisfiyDegree: 0,
+        }]
       },
       finishedList() {
         return this.$store.getters.finishedTodos

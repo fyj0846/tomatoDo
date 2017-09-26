@@ -22,7 +22,8 @@
     "vue": "^2.2.6",
     "vue-router": "^2.3.1",
     "vue-select": "^2.2.0",
-    "vue-selector": "0.0.1"
+    "vue-selector": "0.0.1",
+    "vuex": "^2.4.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
