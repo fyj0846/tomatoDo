@@ -17,7 +17,7 @@
     <div id="activeTodos" class="col s12">
       <div class="row todo-view-content">
         <div v-for="todo in todoList" class="col s12 m6">
-          <todo v-on:FINISHTODO="finishCurrentTodo" :todoMetaProp="todo"></todo>
+          <todo v-on:FINISHTODO="getCurrentTodo" :todoMetaProp="todo"></todo>
         </div>
       </div>
     </div>
@@ -82,29 +82,32 @@
         return satisfyStyleList
       },
     },
-    methods: {// 反馈满意度
-      finishCurrentTodo(opt) {
+    methods: {
+      // 从todo卡片获取当前处理的todo
+      getCurrentTodo(opt) {
         this.currentTodo = opt.todo;
         this.openModal();
       },
+      // 选择满意度星星
       onSelectSatifyDegree(index) {
         console.log("set todo satisfiyDegree");
         this.currentTodo.satisfiyDegree = index + 1;
       },
+      // 保存
       getTodoDone () {
-        console.log('todo done!');
         this.currentTodo.isFinished = 'T';
-//        this.todoMeta.spentClock = this.todoMeta.spentClock - 0 + 1;
         // 优化spentClock计算规则
         this.currentTodo.score = 3.9 * this.currentTodo.priority
         this.$store.dispatch('UPDATE_TODO', {item: this.currentTodo})
         this.closeModal();
       },
-      closeModal () {
-        $('#modalSave').modal('close')
-      },
+      // 打开满意度modal
       openModal () {
         $('#modalSave').modal('open')
+      },
+      // 关闭满意度modal
+      closeModal () {
+        $('#modalSave').modal('close')
       },
     },
     beforeMount: function () {
