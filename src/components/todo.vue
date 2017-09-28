@@ -54,8 +54,8 @@
           </div>
         </div>
         <div class="panel-footer">
-          <a class="waves-effect  btn-flat active" @click="getTodoDone" >保存</a>
           <a class="waves-effect  btn-flat active" @click="closeModal">取消</a>
+          <a class="waves-effect  btn-flat active" @click="getTodoDone">保存</a>
         </div>
       </div>
     </div>
@@ -347,26 +347,39 @@
   }
 
   .modal {
-    padding: 24px 8px 16px;
     width: 100%;
     top: 20% !important;
   }
 
   .modal .panel-header {
-    text-align: center;
-    font-size: 1.2rem;
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1rem;
+    background-color: #25776f;
   }
 
   .modal .panel-content {
     text-align: center;
-    padding: 18px 0px 10px 0px;
+    padding: 68px 0px 60px 0px;
   }
 
   .modal .panel-content .material-icons {
-    font-size: 2.6rem;
+    font-size: 3.2rem;
   }
 
   .modal .panel-footer {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 1rem;
+  }
+
+  .modal .panel-footer .active {
+    color: #26a69a;
   }
 </style>

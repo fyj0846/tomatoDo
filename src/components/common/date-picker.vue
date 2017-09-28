@@ -271,6 +271,15 @@
     justify-content: center;
   }
 
+  .week-content .day-view li {
+    display: flex;
+    justify-content: center;
+  }
+
+  .week-content .day-view li .message {
+    width: 2.6rem;
+  }
+
   .panel-content .day-view {
     display: flex;
     flex-flow: row wrap;
@@ -287,13 +296,13 @@
   .panel-content .day-view li {
     flex: 0 0 14.2%;
     text-align: center;
-    height: 2.4rem;
+    height: 2.6rem;
     font-family: Roboto, sans-serif;
-    line-height: 2.4rem;
+    line-height: 2.6rem;
   }
 
   .panel-content .day-view li .message{
-    height: 2.4rem;
+    height: 2.6rem;
     /*margin: 1px 10.5px;*/
     border-radius: 100%;
   }

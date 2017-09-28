@@ -2,7 +2,7 @@
   <div class="page-view" append="tree">
     <div class="page-header header page-header-background page-header-text">
       <div class="cancel" @click="cancelNewTodoHandler"> 取消</div>
-      <div class="save row-padding-10" @click="saveNewTodoHandler"> 保存</div>
+      <div class="save row-padding-20" @click="saveNewTodoHandler"> 保存</div>
     </div>
     <div class="edit-todo-view-content row">
       <form class="col s12">

@@ -33,8 +33,9 @@
       </ul>
       <div id="addItem" class="modal">
         <div class="modal-content">
-          <h4>新建项目</h4>
-          <p>新建一个您正在进行的项目</p>
+          <div class="panel-header">
+            新建项目
+          </div>
           <div class="row">
             <div class="input-field col s12">
               <input placeholder="项目名称" id="projectName" type="text" class="validate" v-model="projectName">
@@ -46,15 +47,16 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <a class="modal-action modal-close waves-effect waves-green btn-flat" v-on:click="saveItem('add')">保存</a>
-          <a class="modal-action modal-close waves-effect waves-green btn-flat">取消</a>
+        <div class="panel-footer">
+          <a class="modal-action modal-close waves-effect active btn-flat">取消</a>
+          <a class="modal-action modal-close waves-effect active btn-flat" v-on:click="saveItem('add')">保存</a>
         </div>
       </div>
       <div id="editItem" class="modal">
         <div class="modal-content">
-          <h4>编辑项目</h4>
-          <p>修改该项目的名称和描述信息</p>
+          <div class="panel-header">
+            编辑项目
+          </div>
           <div class="row">
             <div class="input-field col s12">
               <input placeholder="项目名称" id="projectName2" type="text" class="validate" v-model="projectName">
@@ -66,9 +68,9 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <a class="modal-action modal-close waves-effect waves-green btn-flat" v-on:click="saveItem('update')">保存</a>
-          <a class="modal-action modal-close waves-effect waves-green btn-flat">取消</a>
+        <div class="panel-footer">
+          <a class="modal-action modal-close waves-effect active btn-flat">取消</a>
+          <a class="modal-action modal-close waves-effect active btn-flat" v-on:click="saveItem('update')">保存</a>
         </div>
       </div>
       <a class="btn-floating waves-effect waves-light floatAddBtn" href="#addItem" v-on:click="clearItem"><i class="material-icons">add</i></a>

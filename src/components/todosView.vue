@@ -87,7 +87,7 @@
   }
 
   .todo-tabs .tab a.active, .todo-tabs .tab a:hover {
-    color: #42b983;
+    color: #2e9787;
   }
 
   .todo-view-content {

@@ -18,7 +18,6 @@
 </template>
 
 <script>
-
   export default {
     methods: {
       addTodoHandler (event) {
@@ -44,10 +43,7 @@
     -webkit-justify-content: flex-start;
     align-items: center;
     -webkit-align-items: center;
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    border-bottom-color: #35495e;
-    background-color: #42b983;
+    background-color: #2e9787;
   }
   .header-title {
     flex: 0 0 72%;

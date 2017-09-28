@@ -10,8 +10,6 @@ import '../static/js/materialize.min.js'
 import '../static/css/materialize.min.css'
 import '../static/css/material-icons.css'
 
-import $ from 'jquery'
-
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
