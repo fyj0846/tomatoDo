@@ -17,11 +17,25 @@
     <div id="activeTodos" class="col s12">
       <div class="row todo-view-content">
         <div v-for="todo in todoList" class="col s12 m6">
-          <todo :todoMetaProp="todo"></todo>
+          <todo v-on:FINISHTODO="finishCurrentTodo" :todoMetaProp="todo"></todo>
         </div>
       </div>
     </div>
     <!--<div id="deleteTotos" class="col s12">空</div>-->
+    <div id='modalSave' class="modal">
+      <div class="date-panel">
+        <div class="panel-header">任务满意度</div>
+        <div class="panel-content">
+          <div class="todo-satisfiyDegree red-text">
+            <i v-for="(style,index) in satisfyStyle" class="material-icons" @click="onSelectSatifyDegree(index)">{{ style }}</i>
+          </div>
+        </div>
+        <div class="panel-footer">
+          <a class="waves-effect  btn-flat active" @click="closeModal">取消</a>
+          <a class="waves-effect  btn-flat active" @click="getTodoDone">保存</a>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -32,23 +46,66 @@
   import $ from 'jquery'
   export default {
     components: {AppHeader, Todo, SideNav},
+    data: function () {
+      return {
+        currentTodo: null,
+      }
+    },
     computed: {
       todoList () {
-//        return this.$store.getters.activeTodos
-        return [{
-          todoTitle: "TEST001",
-          projectName: "测试项目",
-          tags: "测试,挑战",
-          expectFinishTime: "2017-09-28",
-          spentClock: "2",
-          priority: "3",
-          isFinished: "F",
-          satisfiyDegree: 0,
-        }]
+        return this.$store.getters.activeTodos
+//        return [{
+//          todoTitle: "TEST001",
+//          projectName: "测试项目",
+//          tags: "测试,挑战",
+//          expectFinishTime: "2017-09-28",
+//          spentClock: "2",
+//          priority: "3",
+//          isFinished: "F",
+//          satisfiyDegree: 0,
+//        }]
       },
       finishedList() {
         return this.$store.getters.finishedTodos
-      }
+      },
+      // 满意度转换为星星样式数组（icon）
+      satisfyStyle () {
+        var satisfyStyleList = []
+        if(this.currentTodo) {
+          for (var i = 0; i < this.currentTodo.satisfiyDegree && i < 5; i++) {
+            satisfyStyleList.push('star')
+          }
+          for (var j = this.currentTodo.satisfiyDegree; j < 5; j++) {
+            satisfyStyleList.push('star_border')
+          }
+        }
+        return satisfyStyleList
+      },
+    },
+    methods: {// 反馈满意度
+      finishCurrentTodo(opt) {
+        this.currentTodo = opt.todo;
+        this.openModal();
+      },
+      onSelectSatifyDegree(index) {
+        console.log("set todo satisfiyDegree");
+        this.currentTodo.satisfiyDegree = index + 1;
+      },
+      getTodoDone () {
+        console.log('todo done!');
+        this.currentTodo.isFinished = 'T';
+//        this.todoMeta.spentClock = this.todoMeta.spentClock - 0 + 1;
+        // 优化spentClock计算规则
+        this.currentTodo.score = 3.9 * this.currentTodo.priority
+        this.$store.dispatch('UPDATE_TODO', {item: this.currentTodo})
+        this.closeModal();
+      },
+      closeModal () {
+        $('#modalSave').modal('close')
+      },
+      openModal () {
+        $('#modalSave').modal('open')
+      },
     },
     beforeMount: function () {
       console.log('todoView: load todos')
@@ -57,6 +114,8 @@
     mounted: function () {
       console.log('todosView: view mounted')
       $('.button-collapse').sideNav()
+      $('ul.tabs').tabs();
+      $('.modal').modal()
     }
   }
 </script>
@@ -92,5 +151,42 @@
 
   .todo-view-content {
     margin-top: 8px;
+  }
+
+  .modal {
+    width: 100%;
+    top: 20% !important;
+  }
+
+  .modal .panel-header {
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1rem;
+    background-color: #25776f;
+  }
+
+  .modal .panel-content {
+    text-align: center;
+    padding: 68px 0px 60px 0px;
+  }
+
+  .modal .panel-content .material-icons {
+    font-size: 3.2rem;
+  }
+
+  .modal .panel-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 1rem;
+  }
+
+  .modal .panel-footer .active {
+    color: #26a69a;
   }
 </style>

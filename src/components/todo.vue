@@ -2,7 +2,7 @@
   <div class="card"  v-bind:class="{ 'card-active': timerHandle }">
     <div class="todo-header grey lighten-1">
       <span>{{ todoMeta.todoTitle }}</span>
-      <i @click="openModal" class="material-icons right">done</i>
+      <i @click="finishTodo" class="material-icons right">done</i>
       <i @click="getTodoDelete" class="material-icons right">delete</i>
     </div>
     <div class=" todo-content">
@@ -45,20 +45,6 @@
       <i @click="toggleTodo" class="material-icons right"> {{ timerController }}</i>
       <i @click="stopTodo" class="material-icons right">stop</i>
     </div>
-    <div id='modalSave' class="modal">
-      <div class="date-panel">
-        <div class="panel-header">任务满意度</div>
-        <div class="panel-content">
-          <div class="todo-satisfiyDegree red-text">
-            <i v-for="(style,index) in satisfyStyle" class="material-icons" @click="onSelectSatify(index)">{{ style }}</i>
-          </div>
-        </div>
-        <div class="panel-footer">
-          <a class="waves-effect  btn-flat active" @click="closeModal">取消</a>
-          <a class="waves-effect  btn-flat active" @click="getTodoDone">保存</a>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -95,40 +81,15 @@
         }
         return styleList
       },
-
-      // 满意度转换为星星样式数组（icon）
-      satisfyStyle () {
-        var satisfyStyleList = []
-        for (var i = 0; i < this.todoMeta.satisfiyDegree && i < 5; i++) {
-          satisfyStyleList.push('star')
-        }
-        for (var j = this.todoMeta.satisfiyDegree; j < 5; j++) {
-          satisfyStyleList.push('star_border')
-        }
-        return satisfyStyleList
-      }
     },
     mounted () {
-      $('.modal').modal()
       this.resetTimer()
     },
     methods: {
-      openModal () {
-        $('#modalSave').modal('open')
-      },
-      closeModal () {
-        $('#modalSave').modal('close')
-      },
-      // todo 完成
-      getTodoDone () {
-        console.log('todo done!');
+      finishTodo () {
         this.clearTimer()
         this.resetTimerController()
-        this.todoMeta.isFinished = 'T';
-//        this.todoMeta.spentClock = this.todoMeta.spentClock - 0 + 1;
-        // 优化spentClock计算规则
-        this.todoMeta.score = 3.9 * this.todoMeta.priority
-        this.$store.dispatch('UPDATE_TODO', {item: this.todoMeta})
+        this.$emit("FINISHTODO", {todo: this.todoMetaProp});
       },
 
       // todo 删除
@@ -253,11 +214,6 @@
         console.log('continue todo task one by one')
         this.continueFlag = !this.continueFlag
       },
-      // 反馈满意度
-      onSelectSatify(index) {
-        console.log("set todo satisfiyDegree");
-        this.todoMeta = $.extend(true, {}, this.todoMeta, { 'satisfiyDegree': index + 1 })
-      }
     }
   }
 </script>
@@ -344,42 +300,5 @@
 
   .padding_left_right {
     padding: 0 5px;
-  }
-
-  .modal {
-    width: 100%;
-    top: 20% !important;
-  }
-
-  .modal .panel-header {
-    display: flex;
-    flex-flow: row nowrap;
-    width: 100%;
-    height: 40px;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-size: 1rem;
-    background-color: #25776f;
-  }
-
-  .modal .panel-content {
-    text-align: center;
-    padding: 68px 0px 60px 0px;
-  }
-
-  .modal .panel-content .material-icons {
-    font-size: 3.2rem;
-  }
-
-  .modal .panel-footer {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-    font-size: 1rem;
-  }
-
-  .modal .panel-footer .active {
-    color: #26a69a;
   }
 </style>
