@@ -252,7 +252,7 @@
   .edit-todo-view-header {
     position: fixed;
     top: 0;
-    font-size: 16px;
+    font-size: 14px;
     width: 100%;
     height: 80px;
     z-index: 2;

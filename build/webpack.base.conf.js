@@ -69,10 +69,11 @@ module.exports = {
           name: utils.assetsPath('/fonts/[name].[hash:7].[ext]')
         }
       },
-      // {
-      //   test: /\.css$/,
-      //   loader: 'style-loader!css-loader'
-      // }
+      //解析.scss文件,对于用 import 或 require 引入的sass文件进行加载，以及<style lang="sass">...</style>声明的内部样式进行加载
+      {
+        test: /\.scss$/,
+        loader: 'style-loader!css-loader!sass-loader'
+      }
     ]
   },
   plugins: [

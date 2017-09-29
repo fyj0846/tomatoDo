@@ -34,20 +34,19 @@
 <style scoped>
   .header {
     font-size: 16px;
-    height: 80px;
+    height: 40px;
     margin-bottom: 3px;
     display: flex;
     flex-flow: nowrap;
     flex-direction: row;
-    justify-content: flex-start;
-    -webkit-justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     -webkit-align-items: center;
     background-color: #2e9787;
   }
   .header-title {
     flex: 0 0 72%;
-    font-size: 2rem;
+    font-size: 1.2rem;
   }
 
   .title {
@@ -55,12 +54,14 @@
   }
 
   .header-sidenav-btn {
-    flex: 0 0 15%;
-    font-size: 2rem;
+    /*flex: 0 0 15%;*/
+    font-size: 1.4rem;
+    padding-left: 8px;
   }
 
   .header-sidenav-btn i, .header-add-btn  i {
     display: block;
-    font-size: 2.5rem;
+    font-size: 1.4rem;
+    padding-right: 8px;
   }
 </style>

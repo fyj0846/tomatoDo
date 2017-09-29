@@ -63,7 +63,7 @@
 
 <script>
   // 引入公共CSS
-  require('../assets/css/common.css')
+  require('../assets/css/common_back.css')
   import $ from 'jquery'
   import TimePicker from './common/time-picker'
   import DatePicker from './common/date-picker'
@@ -232,9 +232,9 @@
   .add-todo-view-header {
     position: fixed;
     top: 0;
-    font-size: 16px;
+    font-size: 14px;
     width: 100%;
-    height: 80px;
+    height: 40px;
     z-index: 2;
     margin-bottom: 3px;
     display: flex;
@@ -250,7 +250,7 @@
   }
 
   .add-todo-view-content {
-    margin-top: 80px;
+    margin-top: 40px;
   }
 
   .add-todo-view .cancel {

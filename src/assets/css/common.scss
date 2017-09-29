@@ -1,0 +1,79 @@
+@import '../sass/variables';
+
+.page-view {
+  height: 100%;
+
+  .page-header {
+    position: fixed;
+    top: 0;
+    font-size: $common-font-size;
+    width: $common-full-width;
+    height: $common-header-height;
+    z-index: 2;
+    margin-bottom: $common-space-UD;
+    display: flex;
+    flex-flow: nowrap;
+    flex-direction: row;
+    justify-content: space-between;
+    -webkit-justify-content: space-between;
+    align-items: center;
+    -webkit-align-items: center;
+
+    .cancel {
+      padding-left: $common-space-LR;
+    }
+
+    .page-header-background {
+      background-color: $common-blue !important;
+    }
+
+    .page-header-text {
+      color: $common-white;
+    }
+  }
+
+  .page-content {
+    margin-top: $common-header-height;
+  }
+}
+
+.row-padding-20 {
+  padding: 0 20px;
+}
+
+.todo-view {
+  .todo-tabs .indicator {
+    background-color: $common-green !important;
+  }
+}
+
+.modal {
+  width: $common-modal-width !important;
+
+  .panel-header{
+    display: flex;
+    flex-flow: row nowrap;
+    width: $common-modal-width;
+    height: $common-header-height;
+    justify-content: center;
+    align-items: center;
+    color: $common-white;
+    font-size: $common-font-size;
+    background-color: $common-green;
+  }
+
+  .modal-content {
+    padding: 0px !important;
+  }
+
+  .panel-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: $common-space-UD;
+    font-size: $common-font-size;
+
+    .active {
+      color: $common-green;
+    }
+  }
+}

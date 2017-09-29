@@ -80,7 +80,7 @@
 
 <script>
   // 引入公共CSS
-  require('../assets/css/common.css')
+  require('../assets/css/common_back.css')
   import $ from 'jquery'
 
   export default {

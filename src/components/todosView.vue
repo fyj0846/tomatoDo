@@ -133,12 +133,12 @@
     top: 0;
     font-size: 16px;
     width: 100%;
-    height: 80px;
+    height: 40px;
     z-index: 5;
   }
 
   .todo-tabs {
-    margin-top: 80px;
+    margin-top: 40px;
     width: auto;
     margin-left: 15px;
     margin-right: 15px;
