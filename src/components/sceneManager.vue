@@ -1,8 +1,9 @@
 <template>
   <div class="page-view">
-    <div class="page-header header page-header-background page-header-text">
+    <div class="page-header">
       <div class="cancel" @click="goBackHandler"> 返回</div>
-      <!--<div class="save row-padding-10" @click=""> 保存</div>-->
+      <div class="title"></div>
+      <div class="save"></div>
     </div>
     <div class="page-content row">
       <ul class="collapsible  itemList" data-collapsible="accordion">
@@ -14,7 +15,7 @@
                 {{ scene.sceneName }}
               </div>
               <div>
-                <span class="badge red"  v-text="scene_todos_count(scene_activeTodos_rel, scene.sceneId)"></span>
+                <span class="badge red" v-text="scene_todos_count(scene_activeTodos_rel, scene.sceneId)"></span>
                 <span class="badge grey" v-text="scene_todos_count(scene_allTodos_rel, scene.sceneId)"></span>
               </div>
             </div>
@@ -33,35 +34,36 @@
       </ul>
       <div id="addItem" class="modal">
         <div class="modal-content">
-          <div class="panel-header">新建场景</div>
+          <div class="modal-header">新建场景</div>
           <div class="row">
             <div class="input-field col s12">
-              <input placeholder="场景名称" id="sceneName" type="text" class="validate" v-model="sceneName">
+              <input placeholder="输入场景名称" id="sceneName" type="text" class="validate" v-model="sceneName">
               <label for="sceneName"></label>
             </div>
             <div class="input-field col s12">
-              <textarea id="sceneDesc" placeholder="场景描述" class="materialize-textarea" v-model="sceneDescribe"></textarea>
-              <label for="sceneDesc"></label>
+              <textarea id="sceneDesc" placeholder="输入场景描述" class="materialize-textarea"
+                        v-model="sceneDescribe"></textarea>
+              <!--<label for="sceneDesc"></label>-->
             </div>
           </div>
         </div>
-        <div class="panel-footer">
+        <div class="modal-footer">
           <a class="modal-action modal-close waves-effect active btn-flat">取消</a>
           <a class="modal-action modal-close waves-effect active btn-flat" v-on:click="saveItem('add')">保存</a>
-
         </div>
       </div>
       <div id="editItem" class="modal">
         <div class="modal-content">
-          <div class="panel-header">编辑场景</div>
+          <div class="modal-header">编辑场景</div>
           <div class="row">
             <div class="input-field col s12">
-              <input placeholder="场景名称" id="sceneName2" type="text" class="validate" v-model="sceneName">
-              <label for="sceneName2"></label>
+              <input placeholder="输入场景名称" id="sceneName2" type="text" class="validate" v-model="sceneName">
+              <!--<label for="sceneName2"></label>-->
             </div>
             <div class="input-field col s12">
-              <textarea id="sceneDesc2" placeholder="场景描述" class="materialize-textarea" v-model="sceneDescribe"></textarea>
-              <label for="sceneDesc2"></label>
+              <textarea id="sceneDesc2" placeholder="输入场景描述" class="materialize-textarea"
+                        v-model="sceneDescribe"></textarea>
+              <!--<label for="sceneDesc2"></label>-->
             </div>
           </div>
         </div>
@@ -70,14 +72,13 @@
           <a class="modal-action modal-close waves-effect active btn-flat" v-on:click="saveItem('update')">保存</a>
         </div>
       </div>
-      <a class="btn-floating waves-effect waves-light floatAddBtn" href="#addItem" v-on:click="clearItem"><i class="material-icons">add</i></a>
+      <a class="btn-floating waves-effect waves-light floatAddBtn" href="#addItem" v-on:click="clearItem"><i
+        class="material-icons">add</i></a>
     </div>
   </div>
 </template>
 
 <script>
-  // 引入公共CSS
-  require('../assets/css/common.css')
   import $ from 'jquery'
 
   export default {
@@ -149,9 +150,9 @@
       saveItem (type) {
         console.log('save new item')
         if (type == 'add') {
-          this.$store.dispatch('ADD_SCENE', {item: this.newItem})
+          this.$store.dispatch('ADD_SCENE', { item: this.newItem })
         } else if (type == 'update') {
-          this.$store.dispatch('UPDATE_SCENE', {item: this.newItem})
+          this.$store.dispatch('UPDATE_SCENE', { item: this.newItem })
         }
       },
       editItem (scene) {
@@ -168,7 +169,7 @@
           return
         }
         scene.isDelete = 'T';
-        this.$store.dispatch('DELETE_SCENE', {item: scene})
+        this.$store.dispatch('DELETE_SCENE', { item: scene })
       },
       clearItem () {
         this.sceneName = ''
@@ -188,60 +189,16 @@
   }
 </script>
 
-<style scoped>
-  .itemList {
-    display: flex;
-    flex-direction: column;
-    width: 96%;
-    margin-left: 2%;
-    margin-top: 20%;
-  }
+<style scoped type="text/scss">
+  .page-view {
+    .page-content {
+      .floatAddBtn {
+        position: fixed;
+        bottom: 10%;
+        right: 15%;
+      }
+    }
 
-  .collapsible-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background-color: #F5f5f5;
-  }
 
-  .collapsible-header span.badge {
-    /*min-width: auto;*/
-    border-radius: 60%;
-    color: white;
-  }
-
-  .collapsible-body {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 1rem;
-  }
-
-  .collapsible-body .body-tools {
-    display: flex;
-    align-items: center;
-  }
-
-  .collapsible-body .body-tools .material-icons {
-    padding: 0 6px;
-  }
-
-  .collapsible-body .body-describe {
-    display: flex;
-    flex: 0 0 80%;
-    align-items: center;
-  }
-
-  .collapsible-body div:nth-child(1) span {
-    margin: 0 3px;
-  }
-
-  .floatAddBtn {
-    position: fixed;
-    bottom: 10%;
-    right: 15%;
-  }
-  .disabled {
-    color: #ccc;
   }
 </style>

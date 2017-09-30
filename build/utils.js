@@ -44,13 +44,24 @@ exports.cssLoaders = function (options) {
     }
   }
 
+  // console.log("variable.scss: " +path.resolve(__dirname, '../src/assets/sass/_variables.scss'))
   // https://vue-loader.vuejs.org/en/configurations/extract-css.html
   return {
     css: generateLoaders(),
     postcss: generateLoaders(),
     less: generateLoaders('less'),
     sass: generateLoaders('sass', { indentedSyntax: true }),
+    // modify to global import public scss file
     scss: generateLoaders('sass'),
+    //   .concat(
+    //   {
+    //     loader: 'sass-resources-loader',
+    //     options: {
+    //       resources: [path.resolve(__dirname, '../src/assets/sass/_variables.scss'),path.resolve(__dirname, '../src/assets/sass/_commonStyle.scss')]
+    //       // resources: path.resolve(__dirname, '../src/assets/sass/_variables.scss'),
+    //     }
+    //   }
+    // ),
     stylus: generateLoaders('stylus'),
     styl: generateLoaders('stylus')
   }

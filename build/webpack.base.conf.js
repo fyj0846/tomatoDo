@@ -47,6 +47,12 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueLoaderConfig
+        // options: {
+        //   loaders: {
+        //     scss: 'vue-style-loader!css-loader!sass-loader', // <style lang="scss">
+        //     sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax' // <style lang="sass">
+        //   }
+        // }
       },
       {
         test: /\.js$/,
@@ -69,11 +75,12 @@ module.exports = {
           name: utils.assetsPath('/fonts/[name].[hash:7].[ext]')
         }
       },
-      //解析.scss文件,对于用 import 或 require 引入的sass文件进行加载，以及<style lang="sass">...</style>声明的内部样式进行加载
-      {
-        test: /\.scss$/,
-        loader: 'style-loader!css-loader!sass-loader'
-      }
+      // {
+      //   loader: 'sass-resources-loader',
+      //   options: {
+      //     resources: path.resolve(__dirname, '../src/assets/sass/_variables.scss')
+      //   }
+      // }
     ]
   },
   plugins: [

@@ -1,10 +1,11 @@
 <template>
   <div class="page-view" append="tree">
-    <div class="page-header header page-header-background page-header-text">
+    <div class="page-header">
       <div class="cancel" @click="cancelNewTodoHandler"> 取消</div>
-      <div class="save row-padding-20" @click="saveNewTodoHandler"> 保存</div>
+      <div class="title"></div>
+      <div class="save" @click="saveNewTodoHandler"> 保存</div>
     </div>
-    <div class="edit-todo-view-content row">
+    <div class="page-content row">
       <form class="col s12">
         <!--<div class="loading row"> &lt;!&ndash; v-if="loading" &ndash;&gt;-->
         <!--Loading...-->
@@ -232,53 +233,6 @@
   }
 </script>
 
-<style scoped>
-  .edit-todo-view {
-    height: 100%;
-  }
+<style scoped type="text/scss">
 
-  .edit-todo-view .row .col {
-    padding: 0px
-  }
-
-  .edit-todo-view .row div {
-    padding: 0 1rem;
-  }
-
-  .select-wrapper .caret {
-    right: 5px !important;
-  }
-
-  .edit-todo-view-header {
-    position: fixed;
-    top: 0;
-    font-size: 14px;
-    width: 100%;
-    height: 80px;
-    z-index: 2;
-    margin-bottom: 3px;
-    display: flex;
-    flex-flow: nowrap;
-    flex-direction: row;
-    justify-content: flex-start;
-    -webkit-justify-content: flex-start;
-    align-items: center;
-    -webkit-align-items: center;
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    border-bottom-color: #35495e;
-  }
-
-  .edit-todo-view-content {
-    margin-top: 80px;
-  }
-
-  .edit-todo-view .cancel {
-    flex: 0 0 70%;
-    padding-left: 15px;
-  }
-
-  .row-padding-5 {
-    padding: 0 5px;
-  }
 </style>

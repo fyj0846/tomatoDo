@@ -1,11 +1,17 @@
-$common-header-height: 40px !default;
+// 公共尺寸
+$common-header-height: 48px !default;
 $common-font-size: 14px !default;
 $common-full-width: 100% !default;
-$common-space-UD: 8px;
-$common-space-LR: 8px;
-$common-modal-width: 100%;
-$common-modal-top: 20%;
+$common-space-UD: 8px !default;
+$common-space-LR: 8px !default;
+$common-modal-width: 100% !default;
+$common-modal-top: 20% !default;
 
+// 配色方案
 $common-white: #FFF !default;
 $common-blue: #03a9f4 !default;
 $common-green: #2e9787 !default;
+$common-black: #000 !default;
+$common-grey: #ccc !default;
+$common-grey-bg: #F5f5f5 !default;
+

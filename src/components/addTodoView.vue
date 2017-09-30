@@ -1,58 +1,57 @@
 <template>
   <div class="page-view" append="tree">
-    <div class="page-header header page-header-background page-header-text">
+    <div class="page-header">
       <div class="cancel" @click="cancelNewTodoHandler"> 取消</div>
-      <div class="save row-padding-20" @click="saveNewTodoHandler"> 保存</div>
+      <div class="title"></div>
+      <div class="save" @click="saveNewTodoHandler"> 保存</div>
     </div>
-    <div class="add-todo-view-content row">
-      <form class="col s12">
-        <div class="row">
-          <div class="input-field col s12">
-            <input placeholder="输入标题" id="todoTitle" type="text" class="validate" v-model="todoTitle">
-            <label for="todoTitle">标题</label>
+    <div class="page-content">
+      <form class="">
+        <div class="">
+          <div class="input-field">
+            <input placeholder="输入任务标题" id="todoTitle" type="text" class="validate" v-model="todoTitle">
+            <!--<label for="todoTitle">标题</label>-->
           </div>
-          <div class="input-field col s12">
-            <textarea placeholder="输入描述信息" id="describe" class="materialize-textarea" v-model="todoDescribe"></textarea>
-            <label for="describe">描述</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input placeholder="所需番茄钟" id="expectClock" type="text" class="validate" v-model="expectClock">
-            <label for="expectClock">时长</label>
+          <div class="input-field">
+            <textarea placeholder="输入任务描述" id="describe" class="materialize-textarea" v-model="todoDescribe"></textarea>
+            <!--<label for="describe">描述</label>-->
           </div>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
+        <div class="">
+          <div class="input-field">
+            <input placeholder="输入所需番茄钟" id="expectClock" type="text" class="validate" v-model="expectClock">
+            <!--<label for="expectClock">时长</label>-->
+          </div>
+        </div>
+        <div class="">
+          <div class="input-field">
             <v-select v-model="newChoosePriority" :options="activePriorities" label="priorityName"></v-select>
             <!--<label>优先级</label>-->
           </div>
         </div>
-        <div class="row">
-          <DatePicker class="col s6" title="选择日期" :propDate='newChooseDate'
+        <div class="selector">
+          <DatePicker class="" title="选择日期" :propDate='newChooseDate'
                       v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
           <!--  通过自定义事件，完成父子组件的通信 -->
-          <TimePicker class="col s6" title="选择时间" :propDate='newChooseDate' :propTime='newChooseTime'
+          <TimePicker class="" title="选择时间" :propDate='newChooseDate' :propTime='newChooseTime'
                       v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
+        <div class="">
+          <div class="input-field">
             <v-select v-model="newChooseProject" :options="activeProjects" label="projectName"></v-select>
             <!--<label>项目</label>-->
           </div>
         </div>
         <!--场景-->
-        <div class="row">
-          <div class="input-field col s12">
+        <div class="">
+          <div class="input-field">
             <v-select v-model="newChooseScene" :options="activeScenes" label="sceneName"></v-select>
-            <!--<label>场景</label>-->
           </div>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
+        <div class="">
+          <div class="input-field">
             <div class="chips chips-placeholder">
               <input id="tags" class="input" placeholder="回车添加标签">
-              <!--<label for="tags">标签</label>-->
             </div>
           </div>
         </div>
@@ -63,13 +62,12 @@
 
 <script>
   // 引入公共CSS
-  require('../assets/css/common_back.css')
   import $ from 'jquery'
   import TimePicker from './common/time-picker'
   import DatePicker from './common/date-picker'
 
   export default {
-    components: {TimePicker, DatePicker},
+    components: { TimePicker, DatePicker },
     data: function () {
       return {
         todoTitle: '',
@@ -105,7 +103,9 @@
         }
       },
       newTagItem (){
-        return this.tags.map(function (item) {return item.tag;}).join(";")
+        return this.tags.map(function (item) {
+          return item.tag;
+        }).join(";")
       },
       activePriorities () {
         return this.$store.getters.activePriorities
@@ -144,7 +144,7 @@
       $('.chips').on('chip.add', function (e, chip) {
         // you have the added chip here
         console.log("chip.add")
-        VM.tags.push({'tag': chip.tag})
+        VM.tags.push({ 'tag': chip.tag })
       })
       $('.chips').on('chip.delete', function (e, chip) {
         // you have the added chip here
@@ -154,10 +154,10 @@
     methods: {
       toDouble: function (t) {
         var num = t;
-        if(typeof t == 'string') {
+        if (typeof t == 'string') {
           num = parseInt(t);
         }
-        if(num >= 1 && num <= 9) {
+        if (num >= 1 && num <= 9) {
           num = '0' + num;
         }
         return num + '';
@@ -181,9 +181,9 @@
         return hour + s2 + minute + s2 + second;
       },
       init() {
-        this.newChoosePriority = {'priority': -1, 'priorityName': '请选择优先级'};
-        this.newChooseProject = {'projectId': -1, 'projectName': '请选择项目'};
-        this.newChooseScene = {'sceneId': -1, 'sceneName': '请选择场景'};
+        this.newChoosePriority = { 'priority': -1, 'priorityName': '请选择优先级' };
+        this.newChooseProject = { 'projectId': -1, 'projectName': '请选择项目' };
+        this.newChooseScene = { 'sceneId': -1, 'sceneName': '请选择场景' };
       },
       // 取消新任务
       cancelNewTodoHandler (event) {
@@ -195,7 +195,7 @@
       saveNewTodoHandler (event) {
         console.log('save the new todo task')
         // 触发新增任务
-        this.$store.dispatch('ADD_TODO', {'item': this.newTODOItem}).then(() => {
+        this.$store.dispatch('ADD_TODO', { 'item': this.newTODOItem }).then(() => {
           this.$router.back()
         })
       },
@@ -212,53 +212,6 @@
   }
 </script>
 
-<style scoped>
-  .add-todo-view {
-    height: 100%;
-  }
+<style scoped type="text/scss">
 
-  .add-todo-view .row .col {
-    padding: 0px
-  }
-
-  .add-todo-view .row div {
-    padding: 0 1rem;
-  }
-
-  .select-wrapper .caret {
-    right: 5px !important;
-  }
-
-  .add-todo-view-header {
-    position: fixed;
-    top: 0;
-    font-size: 14px;
-    width: 100%;
-    height: 40px;
-    z-index: 2;
-    margin-bottom: 3px;
-    display: flex;
-    flex-flow: nowrap;
-    flex-direction: row;
-    justify-content: flex-start;
-    -webkit-justify-content: flex-start;
-    align-items: center;
-    -webkit-align-items: center;
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    border-bottom-color: #35495e;
-  }
-
-  .add-todo-view-content {
-    margin-top: 40px;
-  }
-
-  .add-todo-view .cancel {
-    flex: 0 0 70%;
-    padding-left: 15px;
-  }
-
-  .row-padding-5 {
-    padding: 0 5px;
-  }
 </style>

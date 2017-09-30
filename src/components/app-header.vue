@@ -1,7 +1,7 @@
 <template>
   <div>
     <slot name="sideNav"></slot>
-    <div class="header">
+    <div class="page-header">
       <div class="header-sidenav-btn">
         <a href="#" data-activates="slide-out" class="button-collapse white-text">
           <i class="material-icons ">&#xE8EE;</i>

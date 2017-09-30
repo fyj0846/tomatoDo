@@ -9,6 +9,7 @@ import vSelect from 'vue-select'
 import '../static/js/materialize.min.js'
 import '../static/css/materialize.min.css'
 import '../static/css/material-icons.css'
+import '../src/assets/css/common.scss'
 
 Vue.config.productionTip = false
 

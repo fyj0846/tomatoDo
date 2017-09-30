@@ -1,5 +1,5 @@
 <template>
-  <div class="todo-view" append="tree">
+  <div class="page-view" append="tree">
     <app-header class="todo-view-header"></app-header>
     <side-nav slot="sideNav"></side-nav>
     <ul id="todoTab" class="todo-tabs tabs">
@@ -27,7 +27,8 @@
         <div class="panel-header">任务满意度</div>
         <div class="panel-content">
           <div class="todo-satisfiyDegree red-text">
-            <i v-for="(style,index) in satisfyStyle" class="material-icons" @click="onSelectSatifyDegree(index)">{{ style }}</i>
+            <i v-for="(style,index) in satisfyStyle" class="material-icons" @click="onSelectSatifyDegree(index)">{{
+              style }}</i>
           </div>
         </div>
         <div class="panel-footer">
@@ -45,7 +46,7 @@
   import SideNav from '../components/sideNav.vue'
   import $ from 'jquery'
   export default {
-    components: {AppHeader, Todo, SideNav},
+    components: { AppHeader, Todo, SideNav },
     data: function () {
       return {
         currentTodo: null,
@@ -53,17 +54,17 @@
     },
     computed: {
       todoList () {
-        return this.$store.getters.activeTodos
-//        return [{
-//          todoTitle: "TEST001",
-//          projectName: "测试项目",
-//          tags: "测试,挑战",
-//          expectFinishTime: "2017-09-28",
-//          spentClock: "2",
-//          priority: "3",
-//          isFinished: "F",
-//          satisfiyDegree: 0,
-//        }]
+//        return this.$store.getters.activeTodos
+        return [{
+          todoTitle: "TEST001",
+          projectName: "测试项目",
+          tags: "测试,挑战",
+          expectFinishTime: "2017-09-28",
+          spentClock: "2",
+          priority: "3",
+          isFinished: "F",
+          satisfiyDegree: 0,
+        }]
       },
       finishedList() {
         return this.$store.getters.finishedTodos
@@ -71,7 +72,7 @@
       // 满意度转换为星星样式数组（icon）
       satisfyStyle () {
         var satisfyStyleList = []
-        if(this.currentTodo) {
+        if (this.currentTodo) {
           for (var i = 0; i < this.currentTodo.satisfiyDegree && i < 5; i++) {
             satisfyStyleList.push('star')
           }
@@ -98,7 +99,7 @@
         this.currentTodo.isFinished = 'T';
         // 优化spentClock计算规则
         this.currentTodo.score = 3.9 * this.currentTodo.priority
-        this.$store.dispatch('UPDATE_TODO', {item: this.currentTodo})
+        this.$store.dispatch('UPDATE_TODO', { item: this.currentTodo })
         this.closeModal();
       },
       // 打开满意度modal
@@ -123,73 +124,32 @@
   }
 </script>
 
-<style scoped>
-  .todo-view {
-    height: 100%;
-  }
-
-  .todo-view-header {
-    position: fixed;
-    top: 0;
-    font-size: 16px;
-    width: 100%;
-    height: 40px;
-    z-index: 5;
-  }
-
+<style scoped type="text/scss">
   .todo-tabs {
-    margin-top: 40px;
     width: auto;
-    margin-left: 15px;
-    margin-right: 15px;
-  }
+    margin: $common-header-height $common-space-LR 0;
 
-  .todo-tabs .tab a {
-    color: #000;
-  }
+    .indicator {
+      background-color: $common-green !important;
+    }
 
-  .todo-tabs .tab a.active, .todo-tabs .tab a:hover {
-    color: #2e9787;
-  }
-
-  .todo-view-content {
-    margin-top: 8px;
-  }
-
-  .modal {
-    width: 100%;
-    top: 20% !important;
-  }
-
-  .modal .panel-header {
-    display: flex;
-    flex-flow: row nowrap;
-    width: 100%;
-    height: 40px;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-size: 1rem;
-    background-color: #25776f;
+    .tab {
+      a {
+        color: $common-black;
+        {
+          &.active, &:hover {
+            color: $common-green;
+          }
+        }
+      }
+    }
   }
 
   .modal .panel-content {
-    text-align: center;
     padding: 68px 0px 60px 0px;
-  }
 
-  .modal .panel-content .material-icons {
-    font-size: 3.2rem;
-  }
-
-  .modal .panel-footer {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-    font-size: 1rem;
-  }
-
-  .modal .panel-footer .active {
-    color: #26a69a;
+    .material-icons {
+      font-size: 3.2rem;
+    }
   }
 </style>

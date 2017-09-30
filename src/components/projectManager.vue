@@ -33,7 +33,7 @@
       </ul>
       <div id="addItem" class="modal">
         <div class="modal-content">
-          <div class="panel-header">
+          <div class="modal-header">
             新建项目
           </div>
           <div class="row">
@@ -47,14 +47,14 @@
             </div>
           </div>
         </div>
-        <div class="panel-footer">
+        <div class="modal-footer">
           <a class="modal-action modal-close waves-effect active btn-flat">取消</a>
           <a class="modal-action modal-close waves-effect active btn-flat" v-on:click="saveItem('add')">保存</a>
         </div>
       </div>
       <div id="editItem" class="modal">
         <div class="modal-content">
-          <div class="panel-header">
+          <div class="modal-header">
             编辑项目
           </div>
           <div class="row">
@@ -68,7 +68,7 @@
             </div>
           </div>
         </div>
-        <div class="panel-footer">
+        <div class="modal-footer">
           <a class="modal-action modal-close waves-effect active btn-flat">取消</a>
           <a class="modal-action modal-close waves-effect active btn-flat" v-on:click="saveItem('update')">保存</a>
         </div>
@@ -80,7 +80,7 @@
 
 <script>
   // 引入公共CSS
-  require('../assets/css/common_back.css')
+//  require('../assets/css/common.scss')
   import $ from 'jquery'
 
   export default {
@@ -194,7 +194,7 @@
   }
 </script>
 
-<style scoped>
+<style scoped type="text/scss">
   .itemList {
     display: flex;
     flex-direction: column;

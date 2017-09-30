@@ -1,0 +1,178 @@
+// 公共页面样式
+.page-view {
+  height: 100%;
+
+  // 页面头部
+  .page-header {
+    position: fixed;
+    top: 0;
+    color: $common-white;
+    font-size: $common-font-size;
+    width: $common-full-width;
+    height: $common-header-height;
+    z-index: 2;
+    margin-bottom: $common-space-UD;
+    display: flex;
+    flex-flow: nowrap;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $common-blue !important;
+
+    .cancel {
+      padding-left: $common-space-LR;
+    }
+
+    .save {
+      padding-right: $common-space-LR;
+    }
+
+    .title {
+      color: $common-white;
+    }
+  }
+
+  // 页面内容
+  .page-content {
+    margin-top: $common-header-height;
+    padding: 0 $common-space-LR;
+
+    .input-field {
+      margin-top: 0px;
+      margin-bottom: 2*$common-space-UD;
+    }
+    input, textarea {
+      margin: 0px;
+    }
+
+    textarea {
+      padding: $common-space-UD 0 0 0;
+      min-height: 4rem;
+    }
+
+    .selector {
+      display: flex;
+      margin: 3*$common-space-UD 0;
+
+      .selectorItem {
+        min-width: 70%;
+      }
+
+      .date-picker {
+        flex: 0 0 50%;
+
+        div:first-child {
+          min-width: 70%;
+        }
+      }
+
+      .time-picker {
+        flex: 0 0 50%;
+
+        div:first-child {
+          min-width: 70%;
+        }
+      }
+    }
+
+    .chips .chip {
+      height: 24px;
+      line-height: 24px;
+      padding: 0 6px;
+
+      .material-icons {
+        height:24px;
+        line-height: 24px;
+      }
+    }
+
+    .itemList {
+      display: flex;
+      flex-direction: column;
+      width: 96%;
+      margin-left: 2%;
+      margin-top: $common-header-height;
+
+      .collapsible-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        background-color: $common-grey-bg;
+        span.badge {
+          border-radius: 60%;
+          color: white;
+        }
+      }
+
+      .collapsible-body {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1rem;
+
+        .body-tools {
+          display: flex;
+          align-items: center;
+
+          .disabled {
+            color: $common-grey;
+          }
+
+          .material-icons {
+            padding: 0 $common-space-LR;
+          }
+        }
+
+        .body-describe {
+          display: flex;
+          flex: 0 0 80%;
+          align-items: center;
+        }
+
+        div:nth-child(1) span {
+          margin: 0 4px;
+        }
+      }
+    }
+
+    .floatAddBtn {
+      position: fixed;
+      bottom: 10%;
+      right: 15%;
+    }
+  }
+}
+
+// 模态框公共样式
+.modal {
+  width: $common-modal-width !important;
+  top: $common-modal-top;
+
+  .modal-header{
+    display: flex;
+    flex-flow: row nowrap;
+    width: $common-modal-width;
+    height: $common-header-height;
+    justify-content: center;
+    align-items: center;
+    color: $common-white;
+    font-size: $common-font-size;
+    background-color: $common-green;
+  }
+
+  .modal-content {
+    text-align: center;
+    padding: 0px !important;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: $common-space-UD;
+    font-size: $common-font-size;
+
+    .active {
+      color: $common-green;
+    }
+  }
+}
