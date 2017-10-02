@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import login from '@/components/login'
 import todosView from '@/components/todosView'
 import addTodoView from '@/components/addTodoView'
 import editTodoView from '@/components/editTodoView'
@@ -15,11 +16,18 @@ export default new Router({
     {
       // 默认路由重定向
       path: '/',
-      redirect: '/todoView'
+      redirect: '/login'
+      // redirect: '/todoView'
+    },
+    {
+      // 用户登录/注册
+      path: '/login',
+      name: 'login',
+      component: login
     },
     {
       // todo任务展示列表
-      path: '/todoView',
+      path: '/todosView',
       name: 'todosView',
       component: todosView
     }, {

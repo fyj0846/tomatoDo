@@ -14,10 +14,10 @@
       <li><a class="waves-effect" href="#!">今日任务</a></li>
       <li><a class="waves-effect" href="#!">明日待办</a></li>
       <li><a class="waves-effect" href="#!">日程</a></li>
-      <li><div class="divider"></div></li>
-      <li><a class="waves-effect levelTop">成果</a></li>
-      <li><a class="waves-effect" href="#!">回顾</a></li>
-      <li><a class="waves-effect" href="#!">奖励</a></li>
+      <!--<li><div class="divider"></div></li>-->
+      <!--<li><a class="waves-effect levelTop">成果</a></li>-->
+      <!--<li><a class="waves-effect" href="#!">回顾</a></li>-->
+      <!--<li><a class="waves-effect" href="#!">奖励</a></li>-->
       <li><div class="divider"></div></li>
       <li><a class="waves-effect levelTop">管理</a></li>
       <li><a class="waves-effect" @click="jumpTo('projectManager')">项目</a></li>
@@ -27,6 +27,7 @@
       <!--<li><a class="waves-effect" href="#!">标签</a></li>-->
       <li><div class="divider"></div></li>
       <li><a class="waves-effect levelTop">设置</a></li>
+      <li><a class="waves-effect levelTop" @click="logout()">退出登录</a></li>
     </ul>
 </template>
 
@@ -36,6 +37,22 @@
       jumpTo (target) {
         console.log(target + ' manager touched')
         this.$router.push({name: target})
+      },
+      logout() {
+        console.log("user logout")
+        this.$store.dispatch('USER_LOGOUT')
+          .then(() => {
+            // 提示退出成功，自动跳转到login页
+            this.userStatus = '退出登录成功';
+            Materialize.toast(this.userStatus, 850)
+            // 跳转到登录页
+            this.jumpTo('login');
+          })
+          .catch(() => {
+            // 登录失败，展示modal信息
+            this.userStatus = '退出登录失败';
+            Materialize.toast(this.userStatus, 1250)
+          })
       }
     }
   }

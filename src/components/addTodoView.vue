@@ -30,10 +30,10 @@
           </div>
         </div>
         <div class="selector">
-          <DatePicker class="" title="选择日期" :propDate='newChooseDate'
+          <DatePicker class="selectorUnit" title="选择日期" :propDate='newChooseDate'
                       v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
           <!--  通过自定义事件，完成父子组件的通信 -->
-          <TimePicker class="" title="选择时间" :propDate='newChooseDate' :propTime='newChooseTime'
+          <TimePicker class="selectorUnit" title="选择时间" :propDate='newChooseDate' :propTime='newChooseTime'
                       v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
         </div>
         <div class="">
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-  // 引入公共CSS
+  // 引入公共
   import $ from 'jquery'
   import TimePicker from './common/time-picker'
   import DatePicker from './common/date-picker'
@@ -82,6 +82,8 @@
         newChoosePriority: '',
         newChooseProject: '',
         newChooseScene: '',
+        newChooseDate: this.getNowFormatDay(),
+        newChooseTime: this.getNowFormatTime(),
         tags: []
       }
     },
@@ -117,13 +119,7 @@
       // 已配置scenes对象
       activeScenes () {
         return this.$store.getters.activeScenes
-      },
-      newChooseDate() {
-        return this.getNowFormatDay();
-      },
-      newChooseTime() {
-        return this.getNowFormatTime();
-      },
+      }
     },
     created: function () {
       this.init();
@@ -195,7 +191,10 @@
       saveNewTodoHandler (event) {
         console.log('save the new todo task')
         // 触发新增任务
-        this.$store.dispatch('ADD_TODO', { 'item': this.newTODOItem }).then(() => {
+        this.$store.dispatch('ADD_TODO', {
+          'item': this.newTODOItem,
+          'addition': {'projectName': this.newChooseProject.projectName, 'sceneName': this.newChooseScene.sceneName}})
+          .then(() => {
           this.$router.back()
         })
       },

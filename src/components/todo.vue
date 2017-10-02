@@ -219,10 +219,6 @@
 </script>
 
 <style scoped>
-  /*自定义卡片样式*/
-  .card {
-    margin: 0.5rem;
-  }
 
   .card-active {
     /*后续可以考虑做成闪烁*/
@@ -245,7 +241,7 @@
 
   /*todo卡片体样式*/
   .todo-content {
-    padding: 12px 16px;
+    padding: 8px 12px;
     min-height: 120px;
     display: flex;
     justify-content: space-between;

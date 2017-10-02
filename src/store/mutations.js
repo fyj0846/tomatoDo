@@ -147,3 +147,9 @@ export function LOAD_PRIORITIES (state, priorities) {
 //     }
 //   }
 // }
+
+// 加载， 读取user配置
+export function USER_LOGIN (state, user) {
+  console.log('mutation: user login')
+  Vue.set(state, 'user', user)
+}

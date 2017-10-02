@@ -5,7 +5,7 @@
       <div class="title"></div>
       <div class="save"></div>
     </div>
-    <div class="page-content row">
+    <div class="page-content ">
       <ul class="collapsible  itemList" data-collapsible="accordion">
         <template v-for="scene in activeScenes">
           <li>
@@ -33,18 +33,16 @@
         </template>
       </ul>
       <div id="addItem" class="modal">
+        <div class="modal-header">新建场景</div>
         <div class="modal-content">
-          <div class="modal-header">新建场景</div>
-          <div class="row">
-            <div class="input-field col s12">
-              <input placeholder="输入场景名称" id="sceneName" type="text" class="validate" v-model="sceneName">
-              <label for="sceneName"></label>
-            </div>
-            <div class="input-field col s12">
+          <div class="input-field ">
+            <input placeholder="输入场景名称" id="sceneName" type="text" class="validate" v-model="sceneName">
+            <label for="sceneName"></label>
+          </div>
+          <div class="input-field ">
               <textarea id="sceneDesc" placeholder="输入场景描述" class="materialize-textarea"
                         v-model="sceneDescribe"></textarea>
-              <!--<label for="sceneDesc"></label>-->
-            </div>
+            <!--<label for="sceneDesc"></label>-->
           </div>
         </div>
         <div class="modal-footer">
@@ -55,12 +53,12 @@
       <div id="editItem" class="modal">
         <div class="modal-content">
           <div class="modal-header">编辑场景</div>
-          <div class="row">
-            <div class="input-field col s12">
+          <div class="">
+            <div class="input-field ">
               <input placeholder="输入场景名称" id="sceneName2" type="text" class="validate" v-model="sceneName">
               <!--<label for="sceneName2"></label>-->
             </div>
-            <div class="input-field col s12">
+            <div class="input-field ">
               <textarea id="sceneDesc2" placeholder="输入场景描述" class="materialize-textarea"
                         v-model="sceneDescribe"></textarea>
               <!--<label for="sceneDesc2"></label>-->
@@ -68,7 +66,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <a class="modal-action modal-close waves-effect active btn-flat">取消</a>
+          <a class="modal-action modal-close waves-effect btn-flat">取消</a>
           <a class="modal-action modal-close waves-effect active btn-flat" v-on:click="saveItem('update')">保存</a>
         </div>
       </div>
@@ -150,9 +148,9 @@
       saveItem (type) {
         console.log('save new item')
         if (type == 'add') {
-          this.$store.dispatch('ADD_SCENE', { item: this.newItem })
+          this.$store.dispatch('ADD_SCENE', {item: this.newItem})
         } else if (type == 'update') {
-          this.$store.dispatch('UPDATE_SCENE', { item: this.newItem })
+          this.$store.dispatch('UPDATE_SCENE', {item: this.newItem})
         }
       },
       editItem (scene) {
@@ -169,7 +167,7 @@
           return
         }
         scene.isDelete = 'T';
-        this.$store.dispatch('DELETE_SCENE', { item: scene })
+        this.$store.dispatch('DELETE_SCENE', {item: scene})
       },
       clearItem () {
         this.sceneName = ''
@@ -198,7 +196,5 @@
         right: 15%;
       }
     }
-
-
   }
 </style>

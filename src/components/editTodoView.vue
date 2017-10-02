@@ -5,28 +5,28 @@
       <div class="title"></div>
       <div class="save" @click="saveNewTodoHandler"> 保存</div>
     </div>
-    <div class="page-content row">
-      <form class="col s12">
-        <!--<div class="loading row"> &lt;!&ndash; v-if="loading" &ndash;&gt;-->
+    <div class="page-content">
+      <form class="">
+        <!--<div class="loading "> &lt;!&ndash; v-if="loading" &ndash;&gt;-->
         <!--Loading...-->
         <!--</div>-->
-        <div class="row">
-          <div class="input-field col s12">
-            <input placeholder="标题" id="todoTitle" type="text" class="validate" v-model="curEditTodo.todoTitle">
-            <label for="todoTitle">标题</label>
+        <div class="">
+          <div class="input-field">
+            <input placeholder="输入标题" id="todoTitle" type="text" class="validate" v-model="curEditTodo.todoTitle">
+            <!--<label for="todoTitle">标题</label>-->
           </div>
-          <div class="input-field col s12">
-            <textarea placeholder="请输入描述信息" id="describe" class="materialize-textarea" v-model="curEditTodo.todoDescribe"></textarea>
-            <label for="describe">描述</label>
+          <div class="input-field ">
+            <textarea placeholder="输入描述" id="describe" class="materialize-textarea" v-model="curEditTodo.todoDescribe"></textarea>
+            <!--<label for="describe">描述</label>-->
           </div>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
+        <div class="">
+          <div class="input-field">
             <input placeholder="所需番茄钟" id="expectClock" type="text" class="validate" v-model="curEditTodo.expectClock">
-            <label for="expectClock">时长</label>
+            <!--<label for="expectClock">时长</label>-->
           </div>
         </div>
-        <div class="row">
+        <div class="">
             <!--<select v-select="newChoosePriority">-->
             <!--<option value="" disabled>请选择优先级</option>-->
             <!--<template v-for="star in stars">-->
@@ -34,41 +34,35 @@
             <!--<option v-else :value="star"> {{ star }}星</option>-->
             <!--</template>-->
             <!--</select>-->
-          <div class="col s12">
+          <div class="input-field">
             <v-select v-model="newChoosePriority" :options="activePriorities" label="priorityName"></v-select>
             <!--<label>优先级</label>-->
           </div>
         </div>
-        <div class="row">
+        <div class="selector">
           <!--  通过自定义事件，完成父子组件的通信 -->
-          <DatePicker class="col s6" title="选择日期" :propDate='newChooseDate'
+          <DatePicker class="selectorUnit" title="选择日期" :propDate='newChooseDate'
                       v-on:updateSelectedDate="setExpectedFinishDate"></DatePicker>
           <!--  通过自定义事件，完成父子组件的通信 -->
-          <TimePicker class="col s6" title="选择时间" :propDate='newChooseDate' :propTime='newChooseTime'
+          <TimePicker class="selectorUnit" title="选择时间" :propDate='newChooseDate' :propTime='newChooseTime'
                       v-on:updateSelectedTime="setExpectFinishTime"></TimePicker>
         </div>
-        <div class="row">
-          <div class=" col s12">
+        <div class="">
+          <div class="input-field">
             <v-select v-model="newChooseProject" :options="activeProjects" label="projectName"></v-select>
             <!--<label>项目</label>-->
           </div>
         </div>
-        <div class="row">
-          <div class=" col s12">
+        <div class="">
+          <div class="input-field">
             <v-select v-model="newChooseScene" :options="activeScenes" label="sceneName"></v-select>
             <!--<label>场景</label>-->
           </div>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
+        <div class="">
+          <div class="input-field ">
             <div class="chips chips-initial">
-              <!--<template v-for="tag in tags">-->
-              <!--<div class="chip"> {{ tag.tagName }}-->
-              <!--<i class="material-icons close">close</i>-->
-              <!--</div>-->
-              <!--</template>-->
               <input id="tags" class="input" placeholder="回车添加标签">
-              <!--<label for="tags">标签</label>-->
             </div>
           </div>
         </div>

@@ -13,11 +13,15 @@ const store = new Vuex.Store({
     curEditTodo: {},
     projects: [],
     scenes: [],
-    users: {},
+    user: {},
     priorities: [],
     tags: []
   },
   getters: {
+    currentUser(state) {
+      var {user} = state
+      return user;
+    },
     allTodos (state) {
       const { todos } = state
       return todos.filter(function (todo) {

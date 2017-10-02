@@ -4,7 +4,7 @@
       <div class="cancel" @click="goBackHandler"> 返回</div>
       <!--<div class="save row-padding-10" @click=""> 保存</div>-->
     </div>
-    <div class="page-content row">
+    <div class="page-content">
       <ul class="collapsible  itemList" data-collapsible="accordion">
         <template v-for="project in activeProjects">
           <li>
@@ -14,7 +14,7 @@
                 {{ project.projectName }}
               </div>
               <div>
-                <span class="badge red"  v-text="project_todos_count(project_activeTodos_rel, project.projectId)"></span>
+                <span class="badge red" v-text="project_todos_count(project_activeTodos_rel, project.projectId)"></span>
                 <span class="badge grey" v-text="project_todos_count(project_allTodos_rel, project.projectId)"></span>
               </div>
             </div>
@@ -32,19 +32,18 @@
         </template>
       </ul>
       <div id="addItem" class="modal">
+        <div class="modal-header">
+          新建项目
+        </div>
         <div class="modal-content">
-          <div class="modal-header">
-            新建项目
+          <div class="input-field ">
+            <input placeholder="项目名称" id="projectName" type="text" class="validate" v-model="projectName">
+            <label for="projectName"></label>
           </div>
-          <div class="row">
-            <div class="input-field col s12">
-              <input placeholder="项目名称" id="projectName" type="text" class="validate" v-model="projectName">
-              <label for="projectName"></label>
-            </div>
-            <div class="input-field col s12">
-              <textarea id="projectDesc" placeholder="项目描述" class="materialize-textarea" v-model="projectDescribe"></textarea>
-              <label for="projectDesc"></label>
-            </div>
+          <div class="input-field ">
+            <textarea id="projectDesc" placeholder="项目描述" class="materialize-textarea"
+                      v-model="projectDescribe"></textarea>
+            <label for="projectDesc"></label>
           </div>
         </div>
         <div class="modal-footer">
@@ -53,34 +52,34 @@
         </div>
       </div>
       <div id="editItem" class="modal">
+        <div class="modal-header">
+          编辑项目
+        </div>
         <div class="modal-content">
-          <div class="modal-header">
-            编辑项目
+          <div class="input-field ">
+            <input placeholder="项目名称" id="projectName2" type="text" class="validate" v-model="projectName">
+            <label for="projectName2"></label>
           </div>
-          <div class="row">
-            <div class="input-field col s12">
-              <input placeholder="项目名称" id="projectName2" type="text" class="validate" v-model="projectName">
-              <label for="projectName2"></label>
-            </div>
-            <div class="input-field col s12">
-              <textarea id="projectDesc2" placeholder="项目描述" class="materialize-textarea" v-model="projectDescribe"></textarea>
-              <label for="projectDesc2"></label>
-            </div>
+          <div class="input-field ">
+            <textarea id="projectDesc2" placeholder="项目描述" class="materialize-textarea"
+                      v-model="projectDescribe"></textarea>
+            <label for="projectDesc2"></label>
           </div>
         </div>
         <div class="modal-footer">
-          <a class="modal-action modal-close waves-effect active btn-flat">取消</a>
+          <a class="modal-action modal-close waves-effect btn-flat">取消</a>
           <a class="modal-action modal-close waves-effect active btn-flat" v-on:click="saveItem('update')">保存</a>
         </div>
       </div>
-      <a class="btn-floating waves-effect waves-light floatAddBtn" href="#addItem" v-on:click="clearItem"><i class="material-icons">add</i></a>
+      <a class="btn-floating waves-effect waves-light floatAddBtn" href="#addItem" v-on:click="clearItem"><i
+        class="material-icons">add</i></a>
     </div>
   </div>
 </template>
 
 <script>
   // 引入公共CSS
-//  require('../assets/css/common.scss')
+  //  require('../assets/css/common.scss')
   import $ from 'jquery'
 
   export default {
@@ -195,68 +194,68 @@
 </script>
 
 <style scoped type="text/scss">
-  .itemList {
-    display: flex;
-    flex-direction: column;
-    width: 96%;
-    margin-left: 2%;
-    margin-top: 20%;
-  }
-
-  .collapsible-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background-color: #F5f5f5;
-  }
-
-  .collapsible-header span.badge {
-    /*min-width: auto;*/
-    border-radius: 60%;
-    color: white;
-  }
-
-  .collapsible-body {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 1rem;
-  }
-
-  .collapsible-body .body-tools {
-    display: flex;
-    align-items: center;
-  }
-
-  .collapsible-body .body-tools .material-icons {
-    padding: 0 6px;
-  }
-
-  .collapsible-body .body-describe {
-    display: flex;
-    flex: 0 0 80%;
-    align-items: center;
-  }
-
-  /*.collapsible-body div:nth-child(2) {*/
-    /*!*flex: 4;*!*/
+  /*.itemList {*/
+  /*display: flex;*/
+  /*flex-direction: column;*/
+  /*width: 96%;*/
+  /*margin-left: 2%;*/
+  /*margin-top: 20%;*/
   /*}*/
 
-  /*.collapsible-body div:nth-child(1) {*/
-    /*margin-left: 75%;*/
-    /*margin-bottom: 5px;*/
+  /*.collapsible-header {*/
+  /*display: flex;*/
+  /*flex-direction: row;*/
+  /*justify-content: space-between;*/
+  /*background-color: #F5f5f5;*/
   /*}*/
 
-  .collapsible-body div:nth-child(1) span {
-    margin: 0 3px;
-  }
+  /*.collapsible-header span.badge {*/
+  /*!*min-width: auto;*!*/
+  /*border-radius: 60%;*/
+  /*color: white;*/
+  /*}*/
 
-  .floatAddBtn {
-    position: fixed;
-    bottom: 10%;
-    right: 15%;
-  }
-  .disabled {
-    color: #ccc;
-  }
+  /*.collapsible-body {*/
+  /*display: flex;*/
+  /*flex-direction: row;*/
+  /*justify-content: space-between;*/
+  /*padding: 1rem;*/
+  /*}*/
+
+  /*.collapsible-body .body-tools {*/
+  /*display: flex;*/
+  /*align-items: center;*/
+  /*}*/
+
+  /*.collapsible-body .body-tools .material-icons {*/
+  /*padding: 0 6px;*/
+  /*}*/
+
+  /*.collapsible-body .body-describe {*/
+  /*display: flex;*/
+  /*flex: 0 0 80%;*/
+  /*align-items: center;*/
+  /*}*/
+
+  /*!*.collapsible-body div:nth-child(2) {*!*/
+  /*!*!*flex: 4;*!*!*/
+  /*!*}*!*/
+
+  /*!*.collapsible-body div:nth-child(1) {*!*/
+  /*!*margin-left: 75%;*!*/
+  /*!*margin-bottom: 5px;*!*/
+  /*!*}*!*/
+
+  /*.collapsible-body div:nth-child(1) span {*/
+  /*margin: 0 3px;*/
+  /*}*/
+
+  /*.floatAddBtn {*/
+  /*position: fixed;*/
+  /*bottom: 10%;*/
+  /*right: 15%;*/
+  /*}*/
+  /*.disabled {*/
+  /*color: #ccc;*/
+  /*}*/
 </style>

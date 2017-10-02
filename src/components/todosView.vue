@@ -2,38 +2,40 @@
   <div class="page-view" append="tree">
     <app-header class="todo-view-header"></app-header>
     <side-nav slot="sideNav"></side-nav>
-    <ul id="todoTab" class="todo-tabs tabs">
-      <li class="tab col s6"><a class="active " href="#activeTodos">正在进行</a></li>
-      <li class="tab col s6"><a href="#finishedTodos">已完成</a></li>
-      <!--<li class="tab col s3"><a href="#deleteTotos">已删除</a></li>-->
-    </ul>
-    <div id="finishedTodos" class="col s12">
-      <div class="row todo-view-content">
-        <div v-for="todo in finishedList" class="col s12 m6">
-          <todo :todoMetaProp="todo"></todo>
-        </div>
-      </div>
-    </div>
-    <div id="activeTodos" class="col s12">
-      <div class="row todo-view-content">
-        <div v-for="todo in todoList" class="col s12 m6">
-          <todo v-on:FINISHTODO="getCurrentTodo" :todoMetaProp="todo"></todo>
-        </div>
-      </div>
-    </div>
-    <!--<div id="deleteTotos" class="col s12">空</div>-->
-    <div id='modalSave' class="modal">
-      <div class="date-panel">
-        <div class="panel-header">任务满意度</div>
-        <div class="panel-content">
-          <div class="todo-satisfiyDegree red-text">
-            <i v-for="(style,index) in satisfyStyle" class="material-icons" @click="onSelectSatifyDegree(index)">{{
-              style }}</i>
+    <div class="page-content">
+      <ul id="todoTab" class="todo-tabs tabs">
+        <li class="tab s6"><a class="active " href="#activeTodos">正在进行</a></li>
+        <li class="tab s6"><a href="#finishedTodos">已完成</a></li>
+        <!--<li class="tab col s3"><a href="#deleteTotos">已删除</a></li>-->
+      </ul>
+      <div id="finishedTodos" class="">
+        <div class=" todo-view-content">
+          <div v-for="todo in finishedList" class=" ">
+            <todo :todoMetaProp="todo"></todo>
           </div>
         </div>
-        <div class="panel-footer">
-          <a class="waves-effect  btn-flat active" @click="closeModal">取消</a>
-          <a class="waves-effect  btn-flat active" @click="getTodoDone">保存</a>
+      </div>
+      <div id="activeTodos" class="">
+        <div class=" todo-view-content">
+          <div v-for="todo in todoList" class=" ">
+            <todo v-on:FINISHTODO="getCurrentTodo" :todoMetaProp="todo"></todo>
+          </div>
+        </div>
+      </div>
+      <!--<div id="deleteTotos" class="">空</div>-->
+      <div id='modalSave' class="modal">
+        <div class="date-modal">
+          <div class="modal-header">任务满意度</div>
+          <div class="modal-content">
+            <div class="todo-satisfiyDegree red-text">
+              <i v-for="(style,index) in satisfyStyle" class="material-icons" @click="onSelectSatifyDegree(index)">{{
+                style }}</i>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <a class="waves-effect  btn-flat active" @click="closeModal">取消</a>
+            <a class="waves-effect  btn-flat active" @click="getTodoDone">保存</a>
+          </div>
         </div>
       </div>
     </div>
@@ -54,17 +56,17 @@
     },
     computed: {
       todoList () {
-//        return this.$store.getters.activeTodos
-        return [{
-          todoTitle: "TEST001",
-          projectName: "测试项目",
-          tags: "测试,挑战",
-          expectFinishTime: "2017-09-28",
-          spentClock: "2",
-          priority: "3",
-          isFinished: "F",
-          satisfiyDegree: 0,
-        }]
+        return this.$store.getters.activeTodos
+//        return [{
+//          todoTitle: "TEST001",
+//          projectName: "测试项目",
+//          tags: "测试,挑战",
+//          expectFinishTime: "2017-09-28",
+//          spentClock: "2",
+//          priority: "3",
+//          isFinished: "F",
+//          satisfiyDegree: 0,
+//        }]
       },
       finishedList() {
         return this.$store.getters.finishedTodos
@@ -124,32 +126,12 @@
   }
 </script>
 
-<style scoped type="text/scss">
-  .todo-tabs {
-    width: auto;
-    margin: $common-header-height $common-space-LR 0;
-
-    .indicator {
-      background-color: $common-green !important;
-    }
-
-    .tab {
-      a {
-        color: $common-black;
-        {
-          &.active, &:hover {
-            color: $common-green;
-          }
-        }
-      }
-    }
+<style scoped type="text/css">
+  .modal .modal-content {
+    padding: 68px 0px 60px 0px;
   }
 
-  .modal .panel-content {
-    padding: 68px 0px 60px 0px;
-
-    .material-icons {
-      font-size: 3.2rem;
-    }
+  .modal .modal-content .material-icons {
+    font-size: 3.2rem;
   }
 </style>

@@ -23,8 +23,9 @@ var getLocalDateString = function (str) {
   var day = padDouble(date.getDate());
   var hour = padDouble(date.getHours());
   var minute = padDouble(date.getMinutes());
-  var second = padDouble(date.getSeconds());
-  return  year + s1 + month + s1 + day + " " + hour + s2 + minute + s2 + second;
+  // var second = padDouble(date.getSeconds());
+  // return  year + s1 + month + s1 + day + " " + hour + s2 + minute + s2 + second;
+  return  year + s1 + month + s1 + day + " " + hour + s2 + minute;
 }
 
 // 从response中获得新曾对象后台分配的Id
@@ -37,21 +38,40 @@ function getAssignIdFromResp(response) {
   }
 }
 
+// 从response中获得返回结果的对象
+function getResultFromResp(response) {
+  if(response && response.length > 0 && response[0].data) {
+    return response[0].data.resultSet;
+  } else {
+    console.log("unknown result");
+    return '';
+  }
+}
+
 // axios共享配置
 
 var instance = axios.create({
   // baseURL: 'http://192.168.43.194:8080/api/V1/',
-  baseURL: 'http://localhost:8080/api/V1/',
-  // baseURL: 'http://' + process.env.SERVER + ":" + process.env.PORT + "/api/V1",
-  timeout: 1000,
+  // baseURL: 'http://localhost:8080/api/V1/',
+  baseURL: 'http://' + process.env.SERVER + ":" + process.env.PORT + "/api/V1",
+  timeout: 2000,
   // headers: {'X-Custom-Header': 'foobar'}
 });
 
+// 返回当前登录用户的Id
+var getUserId = function (state) {
+  if(!state || !state.user || !state.user.userId) {
+    console.log("用户未登录，请先登录");
+    return -1;
+  }
+  return state && state.user && (state.user.userId || 'unknow')
+}
+
 // 组装请求
-var getAllObjs = function (obj, userId, todoId) {
+var getAllObjs = function (obj, userId, itemId) {
   var query = obj + '/' + userId;
-  if(todoId)
-    query += '/' + todoId;
+  if(itemId)
+    query += '/' + itemId;
   return instance.get(query);
 }
 
@@ -73,7 +93,12 @@ var createObjs = function (obj, userId, item) {
 export function LOAD_TODOS ({ commit, dispatch, state }) {
   console.log('action commit:: load_todos');
   return new Promise((resolve, reject) => {
-    axios.all([getAllObjs('todo', '1')])
+    var userId = getUserId(state);
+    if(userId < 0) {
+      reject();
+      return;
+    }
+    axios.all([getAllObjs('todo', userId)])
       .then(axios.spread(function (todos) {
         // All requests are now complete
         console.log(todos);
@@ -101,7 +126,12 @@ export function LOAD_TODOS ({ commit, dispatch, state }) {
 export function LOAD_TODO ({ commit, dispatch, state }, { id }) {
   console.log('action commit: load_todo')
   return new Promise((resolve, reject) => {
-    axios.all([getAllObjs('todo', '1', id), getAllObjs('project', '1'), getAllObjs('scene', '1')])
+    var userId = getUserId(state);
+    if(userId < 0) {
+      reject();
+      return;
+    }
+    axios.all([getAllObjs('todo', userId, id), getAllObjs('project', userId), getAllObjs('scene', userId)])
       .then(axios.spread(function (todos, projects, scenes) {
         // All requests are now complete
         // console.log(todos);
@@ -141,7 +171,12 @@ export function FINISH_TODO ({ commit, dispatch, state }, { item }) {
 export function UPDATE_TODO ({ commit, dispatch, state }, {item}) {
   console.log('action commit: update_todo')
   return new Promise((resolve, reject) => {
-    axios.all([updateObjs('todo', '1', item.todoId, item)])
+    var userId = getUserId(state);
+    if(userId < 0) {
+      reject();
+      return;
+    }
+    axios.all([updateObjs('todo', userId, item.todoId, item)])
       .then(function (response) {
         console.log('action commit:: update todo success');
         commit('UPDATE_TODO', { item });
@@ -154,14 +189,20 @@ export function UPDATE_TODO ({ commit, dispatch, state }, {item}) {
   })
 }
 
-export function ADD_TODO ({ commit, dispatch, state }, { item }) {
+export function ADD_TODO ({ commit, dispatch, state }, { item, addition }) {
   console.log('action commit: add_todo')
   return new Promise((resolve, reject) => {
-    axios.all([createObjs('todo', '1', item)])
+    var userId = getUserId(state);
+    if(userId < 0) {
+      reject();
+      return;
+    }
+    axios.all([createObjs('todo', userId, item)])
       .then(function (response) {
         console.log('action commit:: create todo success');
         // get item id from backend by response
         item.todoId = getAssignIdFromResp(response);
+        item = $.extend({}, item, addition);
         commit('ADD_TODO', { item });
         resolve();
       })
@@ -183,7 +224,12 @@ export function ADD_TODO ({ commit, dispatch, state }, { item }) {
 export function LOAD_PROJECTS ({ commit, dispatch, state }) {
   console.log("action commit: load projects");
   return new Promise((resolve, reject) => {
-    axios.all([getAllObjs('project', '1')])
+    var userId = getUserId(state);
+    if(userId < 0) {
+      reject();
+      return;
+    }
+    axios.all([getAllObjs('project', userId,)])
       .then(axios.spread(function (projects) {
         // All requests are now complete
         console.log(projects);
@@ -201,7 +247,12 @@ export function ADD_PROJECT ({ commit, dispatch, state }, { item }) {
   console.log('action commit: add_project')
   // 生成随机ID
   return new Promise((resolve, reject) => {
-    axios.all([createObjs('project', '1', item)])
+    var userId = getUserId(state);
+    if(userId < 0) {
+      reject();
+      return;
+    }
+    axios.all([createObjs('project', userId, item)])
       .then(function (response) {
         console.log('action commit:: add project success');
         // get item id from backend by response
@@ -220,7 +271,12 @@ export function UPDATE_PROJECT ({ commit, dispatch, state }, { item }) {
   console.log('action commit: update project');
 
   return new Promise((resolve, reject) => {
-    axios.all([updateObjs('project', '1', item.projectId, item)])
+    var userId = getUserId(state);
+    if(userId < 0) {
+      reject();
+      return;
+    }
+    axios.all([updateObjs('project', userId, item.projectId, item)])
       .then(function (response) {
         console.log('action commit:: update project success');
         commit('UPDATE_PROJECT', { item });
@@ -242,7 +298,12 @@ export function DELETE_PROJECT ({ commit, dispatch, state }, { item }) {
 export function LOAD_SCENES ({ commit, dispatch, state }) {
   console.log("action commit:: load_scenes");
   return new Promise((resolve, reject) => {
-    axios.all([getAllObjs('scene', '1')])
+    var userId = getUserId(state);
+    if(userId < 0) {
+      reject();
+      return;
+    }
+    axios.all([getAllObjs('scene', userId,)])
       .then(axios.spread(function (scenes) {
         // All requests are now complete
         console.log(scenes);
@@ -261,7 +322,12 @@ export function ADD_SCENE ({ commit, dispatch, state }, { item }) {
   console.log('action commit: add_scene')
   // 生成随机ID
   return new Promise((resolve, reject) => {
-    axios.all([createObjs('scene', '1', item)])
+    var userId = getUserId(state);
+    if(userId < 0) {
+      reject();
+      return;
+    }
+    axios.all([createObjs('scene', userId, item)])
       .then(function (response) {
         console.log('action commit: add scene success');
         // get item id from backend by response
@@ -278,9 +344,13 @@ export function ADD_SCENE ({ commit, dispatch, state }, { item }) {
 
 export function UPDATE_SCENE ({ commit, dispatch, state }, { item }) {
   console.log('action commit: update scene');
-
   return new Promise((resolve, reject) => {
-    axios.all([updateObjs('scene', '1', item.sceneId, item)])
+    var userId = getUserId(state);
+    if(userId < 0) {
+      reject();
+      return;
+    }
+    axios.all([updateObjs('scene', userId, item.sceneId, item)])
       .then(function (response) {
         console.log('action commit:: update scene success');
         commit('UPDATE_SCENE', { item });
@@ -302,4 +372,50 @@ export function LOAD_PRIORITIES ({ commit }) {
   console.log("action commit:: load_prioritys");
   var priorities = [{priority: '1', priorityName: '1星'}, {priority: '2', priorityName: '2星'}, {priority: '3', priorityName: '3星'},{priority: '4', priorityName: '4星'},{priority: '5', priorityName: '5星'}];
   commit('LOAD_PRIORITIES', priorities)
+}
+
+export function USER_LOGIN ({commit, dispatch, state}, {user}) {
+  console.log('action commit: user login')
+  return new Promise((resolve, reject) => {
+    axios.all([instance.post('user/login', user)])
+      .then(function (response) {
+        // 通过用户名称和密码，应该返回一条记录视为登陆成功
+        var results = getResultFromResp(response);
+        if(results && results.length == 1) {
+          console.log('action commit: user login success');
+          commit('USER_LOGIN', results[0]);
+          resolve();
+        }
+        else {
+          console.log('action commit: user login fail');
+          reject();
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+        reject();
+      });
+  })
+}
+
+export function USER_LOGOUT ({commit, dispatch, state}) {
+  console.log('action commit: user logout')
+  commit('USER_LOGIN', {});
+}
+
+
+export function USER_REGISTRY ({commit, dispatch, state}, {user}) {
+  console.log('action commit: user registry')
+  return new Promise((resolve, reject) => {
+    axios.all([instance.post('user/registry', user)])
+      .then(function (response) {
+        console.log('action commit: user registry success');
+        // commit('USER_REG', { response });
+        resolve();
+      })
+      .catch(function(error) {
+        console.log(error);
+        reject();
+      });
+  })
 }

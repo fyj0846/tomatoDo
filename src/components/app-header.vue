@@ -32,29 +32,13 @@
 </script>
 
 <style scoped>
-  .header {
-    font-size: 16px;
-    height: 40px;
-    margin-bottom: 3px;
-    display: flex;
-    flex-flow: nowrap;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    -webkit-align-items: center;
-    background-color: #2e9787;
-  }
+
   .header-title {
     flex: 0 0 72%;
     font-size: 1.2rem;
   }
 
-  .title {
-    font-family: Verdana, Geneva, sans-serif;
-  }
-
   .header-sidenav-btn {
-    /*flex: 0 0 15%;*/
     font-size: 1.4rem;
     padding-left: 8px;
   }

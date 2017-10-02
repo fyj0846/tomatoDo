@@ -1,43 +1,42 @@
 <template>
   <div class="date-picker">
-    <div class="col s12">
+    <div class="pickerEntry">
       <!--<input id="datePicker" type="text" @click="openModal" v-model="selectedDate">-->
       <!--<label for="datePicker">计划完成日期</label>-->
       <div class="pickerLabel">计划完成日期</div>
-      <div id="datePicker" tabindex="0" class="input" @click="openModal" v-model="selectedDate"> {{ selectedDate }}</div>
+      <div id="datePicker" tabindex="0" class="input" @click="openModal" v-model="selectedDate"> {{ selectedDate }}
+      </div>
     </div>
     <div id='modal2' class="modal">
-      <div class="date-panel">
-        <div class="panel-header">
-          {{ title }}
+      <div class="modal-header">
+        {{ title }}
+      </div>
+      <div class="modal-date">
+        <i class="material-icons" @click="moveToPreMonth()">chevron_left</i>
+        <span>{{selectedDate}}</span>
+        <i class="material-icons" @click="moveToNextMonth()">chevron_right</i>
+      </div>
+      <div class="modal-content">
+        <div class="week-header">
+          <ul class="day-view">
+            <li v-for="header in weekNames_CN">{{ header }}</li>
+          </ul>
         </div>
-        <div class="panel-date">
-          <i class="material-icons" @click="moveToPreMonth()">chevron_left</i>
-          <span>{{selectedDate}}</span>
-          <i class="material-icons" @click="moveToNextMonth()">chevron_right</i>
+        <div class="week-content">
+          <ul class="day-view">
+            <li v-for="item in dateList"
+                :class="{preMonth: item.preMonth, nextMonth: item.nextMonth} " @click="selectDate(item)">
+              <div class="message" :class="{selected: selectedDay==item.day && item.currentMonth}">
+                <span v-text="item.day"></span>
+              </div>
+            </li>
+          </ul>
         </div>
-        <div class="panel-content">
-          <div class="week-header">
-            <ul class="day-view">
-              <li v-for="header in weekNames_CN">{{ header }}</li>
-            </ul>
-          </div>
-          <div class="week-content">
-            <ul class="day-view">
-              <li v-for="item in dateList"
-                  :class="{preMonth: item.preMonth, nextMonth: item.nextMonth} " @click="selectDate(item)">
-                <div class="message" :class="{selected: selectedDay==item.day && item.currentMonth}">
-                  <span v-text="item.day"></span>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="panel-footer">
-          <a class="waves-effect  btn-flat active" @click="setToday">Today</a>
-          <a class="waves-effect  btn-flat active" @click="setWeekend">Weekend</a>
-          <a class="waves-effect  btn-flat active" @click="closeModal">CLOSE</a>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <a class="waves-effect  btn-flat active" @click="setToday">Today</a>
+        <a class="waves-effect  btn-flat active" @click="setWeekend">Weekend</a>
+        <a class="waves-effect  btn-flat active" @click="closeModal">CLOSE</a>
       </div>
     </div>
   </div>
@@ -75,7 +74,7 @@
 
       // 将分钟数转换为两位
       transTo2Digits (value) {
-        if(value != null  && (value + "").length == 1) {
+        if (value != null && (value + "").length == 1) {
           return '0' + value;
         }
         else {
@@ -93,7 +92,7 @@
       // 月份跳转
       moveToNextMonth () {
         var tmp = this.selectedMonth - 0 + 1  //处理跨年问题
-        if(tmp > 12) {
+        if (tmp > 12) {
           this.selectedMonth = this.transTo2Digits(1)
           this.selectedYear++
         } else {
@@ -104,7 +103,7 @@
       // 月份跳转
       moveToPreMonth () {
         var tmp = this.selectedMonth - 1  // 处理跨年问题
-        if(tmp < 1) {
+        if (tmp < 1) {
           this.selectedMonth = this.transTo2Digits(12)
           this.selectedYear--
         } else {
@@ -114,10 +113,10 @@
 
       // 用户选择日期
       selectDate (item) {
-        if(item.preMonth) {
+        if (item.preMonth) {
           this.moveToPreMonth()
         }
-        else if(item.nextMonth) {
+        else if (item.nextMonth) {
           this.moveToNextMonth()
         }
         this.selectedDay = this.transTo2Digits(item.day)
@@ -136,7 +135,7 @@
         var today = new Date()
         var dayInWeek = today.getDay()
         var weekend = new Date(today.getFullYear(), today.getMonth(), today.getDate() + (6 - dayInWeek));
-        this.selectedDay = this .transTo2Digits(weekend.getDate())   //推至当前日所在的周六
+        this.selectedDay = this.transTo2Digits(weekend.getDate())   //推至当前日所在的周六
         this.selectedMonth = this.transTo2Digits(weekend.getMonth() + 1)
         this.selectedYear = weekend.getFullYear()
       }
@@ -183,7 +182,7 @@
     },
     watch: {
       propDate (newValue) {
-        console.log("date-picker: init date " + this.propDate );
+        console.log("date-picker: init date " + this.propDate);
         var newDay = new Date(newValue)
         this.selectedDay = this.transTo2Digits(newDay.getDate())
         this.selectedMonth = this.transTo2Digits(newDay.getMonth() + 1)
@@ -191,7 +190,7 @@
       },
 
       selectedDate(newValue) {
-          this.$emit('updateSelectedDate', newValue)
+        this.$emit('updateSelectedDate', newValue)
       }
     },
     mounted () {
@@ -204,138 +203,5 @@
   }
 </script>
 
-<style scoped lang='less'>
-  .date-picker {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .pickerLabel {
-    font-size: 0.8rem;
-    left: 0.75rem;
-    color: #9e9e9e;
-  }
-
-  .date-picker .input {
-    background-color: transparent;
-    border: none;
-    border-bottom: 1px solid #9e9e9e;
-    height: 3rem;
-    line-height: 2.5rem;
-    width: 100%;
-  }
-
-  /* 为了使div拥有onfous效果，需要给div增加"tabindex"属性并且赋值 */
-  .date-picker .input:focus {
-    outline: none;
-    border-bottom:  2px solid #25776f;
-  }
-
-  .panel-header {
-    display: flex;
-    flex-flow: row nowrap;
-    width: 100%;
-    height: 40px;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-size: 1rem;
-    background-color: #25776f;
-  }
-
-  .panel-date {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-    width: 100%;
-    background-color: #2e9787;
-    color: white;
-    font-size: 1.6rem;
-    padding: 8% 0;
-  }
-
-  .panel-date i {
-    padding-top: 3px;
-    margin: 0 15px;
-  }
-
-  .panel-content {
-    background-color: white;
-    width: 100%;
-    padding: 2% 0 5%;
-  }
-
-  .week-header, .week-content {
-    display: flex;
-    justify-content: center;
-  }
-
-  .week-content .day-view li {
-    display: flex;
-    justify-content: center;
-  }
-
-  .week-content .day-view li .message {
-    width: 2.6rem;
-  }
-
-  .panel-content .day-view {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    width: 90%;
-    margin-top: 0px;
-    margin-bottom: 0px;
-  }
-
-  .panel-content .week-header li {
-    font-weight: bolder;
-  }
-
-  .panel-content .day-view li {
-    flex: 0 0 14.2%;
-    text-align: center;
-    height: 2.6rem;
-    font-family: Roboto, sans-serif;
-    line-height: 2.6rem;
-  }
-
-  .panel-content .day-view li .message{
-    height: 2.6rem;
-    /*margin: 1px 10.5px;*/
-    border-radius: 100%;
-  }
-
-  .panel-content .day-view li .message:hover {
-    background-color: #2e9787;
-    opacity: 0.6;
-    color: white;
-    transition: all .65s cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-  }
-
-  .panel-content .day-view .preMonth, .panel-content .day-view .nextMonth {
-    color: #ccc;
-  }
-
-  .panel-content .day-view .selected {
-    background-color: #25776f;
-    color: white;
-  }
-
-  .panel-footer {
-    display: flex;
-    justify-content: space-between;
-    background-color: white;
-    margin-bottom: 5px;
-    font-size: 1rem;
-  }
-
-  .panel-footer .active {
-    color: #26a69a;
-  }
-
-  .date-picker .modal {
-    width: 100%;
-  }
+<style scoped type="text/scss">
 </style>

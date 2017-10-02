@@ -1,4 +1,8 @@
 // 公共页面样式
+body {
+  font-family: Verdana, Geneva, sans-serif !important;
+}
+
 .page-view {
   height: 100%;
 
@@ -37,6 +41,26 @@
     margin-top: $common-header-height;
     padding: 0 $common-space-LR;
 
+    .todo-tabs {
+      width: auto;
+      margin: $common-header-height $common-space-LR 0;
+
+      .indicator {
+        background-color: $common-green !important;
+      }
+
+      .tab {
+        a {
+          color: $common-black;
+
+          &.active, &:hover {
+            color: $common-green;
+          }
+
+        }
+      }
+    }
+
     .input-field {
       margin-top: 0px;
       margin-bottom: 2*$common-space-UD;
@@ -58,19 +82,184 @@
         min-width: 70%;
       }
 
+      .selectorUnit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 0 0 50%;
+        //min-width: 70%;
+
+        .pickerLabel {
+          font-size: 0.8rem;
+          left: 0.75rem;
+          color: $common-grey;
+        }
+
+        .input {
+          background-color: transparent;
+          border: none;
+          border-bottom: 1px solid $common-grey;
+          height: 3rem;
+          line-height: 2.5rem;
+          width: $common-full-width;
+
+          //为了使div拥有onfous效果，需要给div增加"tabindex"属性并且赋值
+          &:focus {
+            outline: none;
+            border-bottom: 2px solid $common-green;
+          }
+        }
+
+        .pickerEntry {
+          min-width: 70%;
+        }
+
+        .modal-content {
+          background-color: $common-white;
+          display: flex;
+          flex-flow: row wrap;
+          justify-content: center;
+          align-items: center;
+          width: $common-full-width;
+          margin-top: 0px;
+          margin-bottom: 0px;
+          padding: $common-space-UD 0;
+
+          .input-field {
+            margin-bottom: 0px;
+          }
+
+        }
+
+        .modal-date {
+          display: flex;
+          flex-flow: row nowrap;
+          justify-content: center;
+          width: $common-full-width;
+          background-color: #6bd2c2;
+          color: $common-white;
+          font-size: 1.6rem;
+          padding: 2 * $common-space-UD 0;
+
+          i {
+            padding-top: 3px;
+            margin: 0 $common-space-LR;
+          }
+        }
+      }
+
       .date-picker {
         flex: 0 0 50%;
+        .modal-content {
+          .week-header, .week-content {
+            display: flex;
+            justify-content: center;
+          }
 
-        div:first-child {
-          min-width: 70%;
+          .day-view {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: center;
+            width: 100%;
+            margin-top: 0px;
+            margin-bottom: 0px;
+
+            li {
+              width: 3.4rem;
+              text-align: center;
+              height: 2.6rem;
+              font-family: Roboto, sans-serif;
+              line-height: 2.6rem;
+            }
+          }
+
+          .week-header {
+
+            li {
+              width: 3.4rem;
+              text-align: center;
+              font-weight: bolder;
+            }
+          }
+          .week-content .day-view {
+            li {
+              //flex: 0 0 14.2%;
+              //text-align: center;
+              //height: 2.6rem;
+              //line-height: 2.6rem;
+              display: flex;
+              justify-content: center;
+            }
+
+            .message {
+              width: 2.6rem;
+              height: 2.6rem;
+              border-radius: 100%;
+
+              //&:hover {
+              //  background-color: $common-green;
+              //  opacity: 0.6;
+              //  color: $common-white;
+              //  transition: all .65s cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+              //}
+            }
+          }
+
+          .preMonth, .nextMonth {
+            color: $common-grey;
+          }
+
+          .selected {
+            background-color: $common-green;
+            color: $common-white;
+          }
         }
       }
 
       .time-picker {
-        flex: 0 0 50%;
+        .modal-content {
+          width: 100%;
 
-        div:first-child {
-          min-width: 70%;
+          div {
+            font-size: 3rem;
+            width: 4.9rem;
+            color: black;
+            text-align: center;
+          }
+
+          input[type=number] {
+            flex: 0 0 20%;
+            font-size: inherit;
+            text-align: center;
+          }
+
+          .time-picker-quick {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex: 0 0 25%;
+
+            span {
+              font-size: 0.7rem;
+            }
+
+            button {
+              padding: 0px 8px;
+              line-height: 28px;
+              height: 28px;
+              margin: 4px 0 4px 5px;
+            }
+
+          }
+
+          .timeDivider {
+            width: 1.5rem;
+          }
+
+          .seperator {
+            width: 2.5rem;
+          }
+
         }
       }
     }
@@ -81,7 +270,7 @@
       padding: 0 6px;
 
       .material-icons {
-        height:24px;
+        height: 24px;
         line-height: 24px;
       }
     }
@@ -139,6 +328,7 @@
       position: fixed;
       bottom: 10%;
       right: 15%;
+      z-index: 999;
     }
   }
 }
@@ -147,8 +337,9 @@
 .modal {
   width: $common-modal-width !important;
   top: $common-modal-top;
+  background-color: $common-white;
 
-  .modal-header{
+  .modal-header {
     display: flex;
     flex-flow: row nowrap;
     width: $common-modal-width;
@@ -161,18 +352,28 @@
   }
 
   .modal-content {
+    background-color: $common-white;
     text-align: center;
-    padding: 0px !important;
+    padding: 0px $common-space-LR;
   }
 
   .modal-footer {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: $common-space-UD;
+    justify-content: space-around;
     font-size: $common-font-size;
+    background-color: $common-white;
 
     .active {
       color: $common-green;
     }
+  }
+}
+
+#toast-container {
+  bottom: unset;
+  top: $common-header-height;
+
+  .toast {
+    margin-top: 0px !important;
   }
 }
