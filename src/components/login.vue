@@ -1,23 +1,23 @@
 <template>
   <div class="page-view" append="tree">
     <div class="page-header">
-      <div class="cancel"></div>
+      <div class="cancel" @click="cancelHandler()">返回</div>
       <div class="title">{{ pageTitle }}</div>
-      <div class=""></div>
+      <div class="save"></div>
     </div>
     <div v-if="userView == 'LOGIN'" class="page-content">
       <form class="login">
         <div class="input-field">
-          <input placeholder="用户账号" id="userName" type="text" class="validate" v-model="userName">
+          <input placeholder="用户账号" id="userName" type="text" class="validate" required="required" v-model="userName">
           <!--<label for="todoTitle">标题</label>-->
         </div>
         <div class="input-field">
-          <input placeholder="密码" id="userPwd" type="password" class="validate" v-model="userPwd">
+          <input placeholder="密码" id="userPwd" type="password" class="validate" required="required" v-model="userPwd">
           <!--<label for="describe">描述</label>-->
         </div>
         <div class="loginCtrl">
-          <a class="waves-effect  btn-flat active" @click="changeView('REG')">注册新用户</a>
-          <a class="waves-effect  btn-flat active" @click="userLogin">登录</a>
+          <a class="waves-effect  btn" @click="changeView('REG')">注册新用户</a>
+          <a class="waves-effect  btn" @click="userLogin">登录</a>
         </div>
       </form>
       <div id='userAlert' class="modal">
@@ -54,7 +54,7 @@
           <!--<label for="describe">描述</label>-->
         </div>
         <div class="input-field">
-          <input placeholder="邮箱地址" id="userMail" type="text" class="validate" v-model="userMail">
+          <input placeholder="邮箱地址" id="userMail" type="email" class="validate" v-model="userMail">
           <!--<label for="describe">描述</label>-->
         </div>
         <div class="input-field">
@@ -62,8 +62,8 @@
           <!--<label>优先级</label>-->
         </div>
         <div class="loginCtrl">
-          <a class="waves-effect  btn-flat active" @click="changeView('LOGIN')">已有账号登录</a>
-          <a class="waves-effect  btn-flat active" @click="userRegistry">注册新用户</a>
+          <a class="waves-effect  btn" @click="changeView('LOGIN')">已有账号登录</a>
+          <a class="waves-effect  btn" @click="userRegistry">注册新用户</a>
         </div>
       </form>
       <div id='userAlert' class="modal">
@@ -133,6 +133,9 @@
         this.userGental = { 'type': "U", 'desc': '请选择性别' };
       },
 
+      cancelHandler: function () {
+        this.$router.back()
+      },
       changeView: function (newView) {
         this.reset();
         if(newView == "REG") {
@@ -195,5 +198,9 @@
   .loginCtrl {
     display: flex;
     justify-content: space-around;
+  }
+
+  .loginCtrl a {
+    font-size: 1.1rem;
   }
 </style>

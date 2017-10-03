@@ -192,8 +192,8 @@
 
       // 重置  todo 定时器
       resetTimer () {
-        this.timerShow = '00:10'
-        this.timer = 10
+        this.timerShow = '25:00'
+        this.timer = 25*60;
         this.timerHandle = 0
         this.resetTimerController();
       },
@@ -231,8 +231,8 @@
 
   /*todo卡片头部样式*/
   .todo-header {
-    font-size: 1.3rem;
-    padding: 5px 15px  5px 8px;
+    font-size: 1.2rem;
+    padding: 2px 15px  2px 8px;
   }
 
   .todo-header a:nth-child(1) {
@@ -241,8 +241,8 @@
 
   /*todo卡片体样式*/
   .todo-content {
-    padding: 8px 12px;
-    min-height: 120px;
+    padding: 4px 12px;
+    min-height: 96px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -256,7 +256,7 @@
   }
 
   .todo-content-left div {
-    line-height: 30px;
+    /*line-height: 30px;*/
   }
   .todo-content-right {
     display: flex;
@@ -266,12 +266,12 @@
   }
 
   .todo-content-right .todo-inTask {
-    font-size: 2.6rem;
+    font-size: 2.2rem;
   }
 
   .todo-action {
-    height: 41px;
-    padding: 10px 10px;
+    /*height: 41px;*/
+    padding: 4px 10px !important;
   }
 
   .todo-header i, .todo-action i {

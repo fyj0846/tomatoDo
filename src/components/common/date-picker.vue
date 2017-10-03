@@ -8,9 +8,9 @@
       </div>
     </div>
     <div id='modal2' class="modal">
-      <div class="modal-header">
-        {{ title }}
-      </div>
+      <!--<div class="modal-header">-->
+        <!--{{ title }}-->
+      <!--</div>-->
       <div class="modal-date">
         <i class="material-icons" @click="moveToPreMonth()">chevron_left</i>
         <span>{{selectedDate}}</span>

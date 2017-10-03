@@ -8,9 +8,9 @@
     </div>
     <div id='modal1' class="modal">
       <!--<div class="date-modal">-->
-      <div class="modal-header">
-        {{ title }}
-      </div>
+      <!--<div class="modal-header">-->
+        <!--{{ title }}-->
+      <!--</div>-->
       <div class="modal-date">
         {{ propDate }}
       </div>

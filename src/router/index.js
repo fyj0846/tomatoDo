@@ -16,8 +16,8 @@ export default new Router({
     {
       // 默认路由重定向
       path: '/',
-      redirect: '/login'
-      // redirect: '/todoView'
+      // redirect: '/login'
+      redirect: '/todosView'
     },
     {
       // 用户登录/注册

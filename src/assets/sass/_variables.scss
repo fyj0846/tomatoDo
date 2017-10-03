@@ -1,11 +1,12 @@
 // 公共尺寸
-$common-header-height: 48px !default;
-$common-font-size: 14px !default;
+$common-header-height: 36px !default;
+$common-font-size: 1.1rem !default;
+$common-em-font-size: 1.2rem !default;
 $common-full-width: 100% !default;
 $common-space-UD: 8px !default;
 $common-space-LR: 8px !default;
 $common-modal-width: 100% !default;
-$common-modal-top: 48px !default;
+$common-modal-top: $common-header-height !default;
 
 // 配色方案
 $common-white: #FFF !default;
