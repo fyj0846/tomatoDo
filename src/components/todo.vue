@@ -12,10 +12,10 @@
           <span class=" padding_left_right">{{ todoMeta.projectName }}</span>
         </div>
         <!--场景需求不明确，暂不提供-->
-        <!--<div class="todo-scene left-center">-->
-          <!--<i class="material-icons">place</i>-->
-          <!--<span class=" padding_left_right">{{ todoMeta.sceneName }}</span>-->
-        <!--</div>-->
+        <div class="todo-scene left-center">
+          <i class="material-icons">place</i>
+          <span class=" padding_left_right">{{ todoMeta.sceneName }}</span>
+        </div>
         <div class="todo-tags left-center">
           <i class="material-icons">label_outline</i>
           <!--v-for="tag in todoMeta.tags"-->
@@ -55,7 +55,7 @@
     data: function () {
       return {
         timerHandle: 0,
-        timer: '',
+//        timer: '',
         timerShow: '',
         timerController: '',
         continueFlag: false,
@@ -66,6 +66,10 @@
       // todoView 传递的参数
       todoMetaProp: {
         type: Object,
+        required: true
+      },
+      statusProp: {
+        type: String,
         required: true
       }
     },
@@ -86,15 +90,26 @@
       this.resetTimer()
     },
     methods: {
-      finishTodo () {
+      // 执行各类动作：暂停|删除|编辑
+      todoAction (action) {
+        // FINISH, EDIT, ADD
         this.clearTimer()
         this.resetTimerController()
-        this.$emit("FINISHTODO", {todo: this.todoMetaProp});
+        this.$emit("TODOACTION", {action: action, todo: this.todoMeta });
       },
 
-      // todo 删除
+      // 将当前活动的todo传递至todosView管控
+      // 只有该方法会触发活动todo的切换
+      updateTodoStatus (status) {
+        // NULL, PROCESSING, PAUSE
+        this.$emit("TODOSTATUS", {status: status, todo: this.todoMeta });
+      },
+      // todo完成
+      finishTodo() {
+        this.todoAction('FINISH');
+      },
+      // todo删除
       getTodoDelete () {
-        console.log('todo delete!')
         this.clearTimer()
         this.resetTimerController()
         this.todoMeta.isDelete = "T";
@@ -102,7 +117,7 @@
         this.$store.dispatch('UPDATE_TODO', {item: this.todoMeta})
       },
 
-      // todo 开始或启动，根据timerHandler来判断
+      // todo开始或启动根据timerHandler来判断
       toggleTodo () {
         if (this.timerHandle > 0) {
           // 启动状态 -> 暂停
@@ -113,20 +128,22 @@
         }
       },
 
-      // todo 启动
+      // todo启动
       startTodo () {
         console.log('start todo task')
         // 计时器逻辑
         var THAT = this
+        // 判断当前是否有任务进行，如果有任务进行，则不允许重复或者更多任务启动
+        if(this.statusProp == "PROCESSING") {
+          Materialize.toast("当前已有任务进行中，请勿同时启动多个任务", 1250);
+          return;
+        }
         clearInterval(this.timerHandle)
         this.timerHandle = setInterval(function () {
-          var minute = 0
-          var second = 0  // 时间默认值
-          if (THAT.timer >= 1) {
-            THAT.timer--
-            minute = Math.floor(THAT.timer / 60)
-            second = Math.floor(THAT.timer) - (minute * 60)
-          } else if (THAT.timer === 0) {
+          if (THAT.todoMeta.clockElapse >= 1) {
+            THAT.todoMeta.clockElapse--
+            THAT.timerShow = THAT.convertTimeToShow(THAT.todoMeta.clockElapse)
+          } else if (THAT.todoMeta.clockElapse === 0) {
             THAT.stopTodo()
             // 持续进行
             if (THAT.continueFlag) {
@@ -134,31 +151,31 @@
             }
             return
           }
-          if (minute <= 9) minute = '0' + minute
-          if (second <= 9) second = '0' + second
-          THAT.timerShow = minute + ':' + second
         }, 1000)
+        this.updateTodoStatus("PROCESSING");
         this.toggleTimerController()
       },
 
-      // todo 暂停
+      // todo暂停
       pauseTodo () {
         console.log('pause todo task!')
         this.clearTimer()
+        this.updateTodoStatus("PAUSE")
         // 中途遭受干扰，任务暂停
         // 统计中断次数
+        this.todoAction('UPDATE')
       },
 
-      // todo 停止
+      // todo停止，直接调用后台数据服务
       stopTodo () {
         this.clearTimer()
         // update spent clock
-        if (this.timer === 0) {
+        this.updateTodoStatus("NULL");
+        if (this.todoMeta.clockElapse === 0) {
           // 完整完成一个 clock
           // 更新统计信息
           console.log("timeout expired");
           this.todoMeta.spentClock = this.todoMeta.spentClock - 0 + 1;
-          this.$store.dispatch('UPDATE_TODO', {item: this.todoMeta})
         } else {
           // 中途干扰，任务停止
           // 统计中断次数
@@ -166,10 +183,11 @@
 //          this.todoMeta.interupt = this.todoMeta.interupt - 0 + 1;
 //          this.$store.dispatch('UPDATE_TODO', {item: this.todoMeta})
         }
-        this.resetTimer()
+        this.resetTimer(true)
+        this.$store.dispatch('UPDATE_TODO', {item: this.todoMeta})
       },
 
-      // 刷新 todo 启动/暂停按钮
+      // 刷新todo 启动/暂停按钮
       toggleTimerController () {
         if (this.timerController === 'play_arrow') {
           this.timerController = 'pause'
@@ -178,6 +196,13 @@
         }
       },
 
+      convertTimeToShow (time) {
+        var minute = Math.floor(time / 60)
+        var second = Math.floor(time) - (minute * 60)
+        if (minute <= 9) minute = '0' + minute
+        if (second <= 9) second = '0' + second
+        return minute + ':' + second
+      },
       // 重置 todo 恢复到准备启动状态
       resetTimerController () {
         this.timerController = 'play_arrow'
@@ -190,23 +215,28 @@
         this.toggleTimerController()
       },
 
+      initTimer () {
+
+      },
       // 重置  todo 定时器
-      resetTimer () {
-        this.timerShow = '25:00'
-        this.timer = 25*60;
+      resetTimer (foreUpdate) {
+        if(!this.todoMeta.clockElapse || this.todoMeta.clockElapse == 0 || foreUpdate) {
+          this.todoMeta.clockElapse = 60;
+        }
+        this.timerShow =  this.convertTimeToShow(this.todoMeta.clockElapse)
         this.timerHandle = 0
         this.resetTimerController();
       },
 
       // todo 编辑
-      editTodoHandler (todoId) {
-        console.log('message', 'edit todo touched')
-        this.$router.push({name: 'editTodoView', params: { todoId: todoId }})
-      },
-
-      // todo 查看
-      viewTodo () {
-        console.log('view todo task')
+      editTodoHandler () {
+        // 当前进行的任务不可编辑
+        if(this.timerHandle > 0) {
+          Materialize.toast("当前任务正在进行，编辑前请先暂停该任务", 850)
+          return;
+        }
+        // 页面跳转前，完成状态保存
+        this.todoAction('EDIT');
       },
 
       // todo 告警

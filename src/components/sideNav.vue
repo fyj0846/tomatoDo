@@ -130,6 +130,9 @@
     justify-content: center;
   }
 
+  .btn:focus, .btn:hover {
+    background-color: #03a9f4;
+  }
   .levelTop {
     padding-left: 16px;
     line-height:  30px;

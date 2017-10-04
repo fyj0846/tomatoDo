@@ -8,78 +8,77 @@
     <div v-if="userView == 'LOGIN'" class="page-content">
       <form class="login">
         <div class="input-field">
-          <input placeholder="用户账号" id="userName" type="text" class="validate" required="required" v-model="userName">
+          <input placeholder="用户账号" id="userNameLogin" type="text" v-model="userNameLogin"
+                 name="nameLogin" :class="{'input': true, 'is-danger': errors.has('nameLogin') }"
+                 v-validate="'required|max:12'">
+          <span v-show="errors.has('nameLogin')" class="help is-danger">{{ errors.first('nameLogin') }}</span>
           <!--<label for="todoTitle">标题</label>-->
         </div>
         <div class="input-field">
-          <input placeholder="密码" id="userPwd" type="password" class="validate" required="required" v-model="userPwd">
+          <input placeholder="密码" id="userPwdLogin" type="password" required="required" v-model="userPwdLogin"
+                 name="passwordLogin" :class="{'input': true, 'is-danger': errors.has('passwordLogin') }"
+                 v-validate="'required|max:12|min:6|regex:^[a-zA-Z0-9]+$'">
           <!--<label for="describe">描述</label>-->
+          <span v-show="errors.has('passwordLogin')" class="help is-danger">{{ errors.first('passwordLogin') }}</span>
         </div>
         <div class="loginCtrl">
           <a class="waves-effect  btn" @click="changeView('REG')">注册新用户</a>
-          <a class="waves-effect  btn" @click="userLogin">登录</a>
+          <a class="waves-effect  btn"  :class="{'disabled': errors.any()}"
+             @click="userLogin">登录</a>
         </div>
       </form>
-      <div id='userAlert' class="modal">
-        <div class="">
-          <div class="modal-header"></div>
-          <div class="modal-content">
-            <div class=" red-text">
-              {{ userStatus }}
-            </div>
-          </div>
-          <!--<div class="modal-footer">-->
-          <!--<a class="waves-effect  btn-flat active" @click="">取消</a>-->
-          <!--<a class="waves-effect  btn-flat active" @click="">保存</a>-->
-          <!--</div>-->
-        </div>
-      </div>
     </div>
-    <div v-if="userView == 'REG'" class="page-content">
-      <form class="login">
+    <div v-show="userView == 'REG'" class="page-content">
+      <form class="reg">
         <div class="input-field">
-          <input placeholder="用户账号" id="userName" type="text" class="validate" v-model="userName">
+          <input placeholder="用户账号" id="userNameReg" type="text" v-model="userNameReg"
+                 name="name" :class="{'input': true, 'is-danger': errors.has('name') }"
+                 v-validate="'required|max:12'">
+          <span v-show="errors.has('name')" class="help is-danger">{{ errors.first('name') }}</span>
           <!--<label for="todoTitle">标题</label>-->
         </div>
         <div class="input-field">
-          <input placeholder="用户昵称" id="userName" type="text" class="validate" v-model="userNick">
+          <input placeholder="用户昵称" id="userNickName" type="text" v-model="userNick"
+                 name="nickName" :class="{'input': true, 'is-danger': errors.has('nickName') }"
+                 v-validate="'required|max:6'">
           <!--<label for="todoTitle">标题</label>-->
+          <span v-show="errors.has('nickName')" class="help is-danger">{{ errors.first('nickName') }}</span>
         </div>
         <div class="input-field">
-          <input placeholder="密码" id="userPwd" type="password" class="validate" v-model="userPwd">
+          <input placeholder="密码" id="userPwdReg" type="password"
+                 name="password" :class="{'input': true, 'is-danger': errors.has('password') }"
+                 v-validate="'required|max:12|min:6|regex:^[a-zA-Z0-9]+$'"
+                 v-model="userPwdReg">
+          <span v-show="errors.has('password')" class="help is-danger">{{ errors.first('password') }}</span>
           <!--<label for="describe">描述</label>-->
         </div>
         <div class="input-field">
-          <input placeholder="再次输入密码" id="userPwd" type="password" class="validate" v-model="userPwdConfirm">
+          <input placeholder="再次输入密码" id="userConfirmPwd" type="password" v-model="userPwdRegConfirm"
+                 name="passwordCheck" :class="{'input': true, 'is-danger': errors.has('passwordCheck') }"
+                 v-validate="'required|max:12|regex:^([0-9]+)$|confirmed:password'">
           <!--<label for="describe">描述</label>-->
+          <span v-show="errors.has('passwordCheck')" class="help is-danger">{{ errors.first('passwordCheck') }}</span>
         </div>
         <div class="input-field">
-          <input placeholder="邮箱地址" id="userMail" type="email" class="validate" v-model="userMail">
+          <input placeholder="邮箱地址" id="userMail" name="email"
+                 :class="{'input': true, 'is-danger': errors.has('email') }"
+                 type="text"  v-validate="'required|email'"
+                 v-model="userMail">
           <!--<label for="describe">描述</label>-->
+          <span v-show="errors.has('email')" class="help is-danger">{{ errors.first('email') }}</span>
         </div>
         <div class="input-field">
-          <v-select v-model="userGental" :options="gentalList" label="desc"></v-select>
+          <v-select v-model="userGental" :options="gentalList" label="desc"
+                    type="text" ></v-select>
           <!--<label>优先级</label>-->
+          <!--<span v-show="errors.has('gentle')" class="help is-danger">{{ errors.first('gentle') }}</span>-->
         </div>
         <div class="loginCtrl">
           <a class="waves-effect  btn" @click="changeView('LOGIN')">已有账号登录</a>
-          <a class="waves-effect  btn" @click="userRegistry">注册新用户</a>
+          <a class="waves-effect  btn" :class="{'disabled': errors.any()}"
+           @click="userRegistry">注册新用户</a>
         </div>
       </form>
-      <div id='userAlert' class="modal">
-        <div class="">
-          <div class="modal-header"></div>
-          <div class="modal-content">
-            <div class=" red-text">
-              {{ userStatus }}
-            </div>
-          </div>
-          <!--<div class="modal-footer">-->
-          <!--<a class="waves-effect  btn-flat active" @click="">取消</a>-->
-          <!--<a class="waves-effect  btn-flat active" @click="">保存</a>-->
-          <!--</div>-->
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -89,9 +88,11 @@
   export default {
     data: function () {
       return {
-        userName: '',
-        userPwd: '',
-        userPwdConfirm: '',
+        userNameLogin: '',
+        userNameReg: '',
+        userPwdLogin: '',
+        userPwdReg: '',
+        userPwdRegConfirm: '',
         userNick: '',
         userMail: '',
         userGental: { 'type': "U", 'desc': '请选择性别' },
@@ -99,7 +100,7 @@
         userView: 'LOGIN', //REG
         pageTitle: '用户登录',
 
-        gentalList: {},
+        gentalList: [],
         alert: {
           loginSuccess: "登录成功，正在跳转",
           loginFail: "登录失败，请重试",
@@ -111,14 +112,14 @@
     computed: {
       userLoginInfo: function () {
         return {
-          userName: this.userName,
-          userPassword: this.userPwd,
+          userName: this.userNameLogin,
+          userPassword: this.userPwdLogin,
         }
       },
       userRegInfo: function () {
         return {
-          userName: this.userName,
-          userPassword: this.userPwd,
+          userName: this.userNameReg,
+          userPassword: this.userPwdReg,
           userNickName: this.userNick,
           userMail: this.userMail,
           userGental: this.userGental.type,
@@ -128,7 +129,8 @@
     methods: {
       reset: function () {
         this.userPwd = "";
-        this.userPwdConfirm = "";
+        this.userPwdReg = "";
+        this.userPwdRegConfirm = "";
         this.userMail = "";
         this.userGental = { 'type': "U", 'desc': '请选择性别' };
       },

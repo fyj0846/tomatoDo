@@ -1,6 +1,20 @@
 <template>
   <div class="page-view" append="tree">
-    <app-header class="todo-view-header"></app-header>
+    <!--<app-header class="todo-view-header"></app-header>-->
+    <slot name="sideNav"></slot>
+    <div class="page-header">
+      <div class="header-sidenav-btn">
+        <a href="#" data-activates="slide-out" class="button-collapse white-text">
+          <i class="material-icons ">&#xE8EE;</i>
+        </a>
+      </div>
+      <div class="header-title white-text">
+        <span class="title">tomatoDo</span>
+      </div>
+      <div class="header-add-btn white-text">
+        <i class="material-icons" @click="addTodoHandler">&#xE145;</i>
+      </div>
+    </div>
     <side-nav slot="sideNav"></side-nav>
     <div class="page-content">
       <ul id="todoTab" class="todo-tabs tabs">
@@ -11,14 +25,16 @@
       <div id="finishedTodos" class="">
         <div class=" todo-view-content">
           <div v-for="todo in finishedList" class=" ">
-            <todo :todoMetaProp="todo"></todo>
+            <todo v-on:TODOACTION="execTodoAction" v-on:TODOSTATUS="updateTodoStatus"
+                  :todoMetaProp="todo" :statusProp="status"></todo>
           </div>
         </div>
       </div>
       <div id="activeTodos" class="">
         <div class=" todo-view-content">
           <div v-for="todo in todoList" class=" ">
-            <todo v-on:FINISHTODO="getCurrentTodo" :todoMetaProp="todo"></todo>
+            <todo v-on:TODOACTION="execTodoAction" v-on:TODOSTATUS="updateTodoStatus"
+                  :todoMetaProp="todo" :statusProp="status"></todo>
           </div>
         </div>
       </div>
@@ -51,7 +67,9 @@
     components: { AppHeader, Todo, SideNav },
     data: function () {
       return {
-        currentTodo: null,
+        targetTodo: null,  // 当前action处理的todo对象
+        elapsingTodo: null,  // 当前活跃的todo对象
+        status: "NULL",
       }
     },
     computed: {
@@ -74,11 +92,11 @@
       // 满意度转换为星星样式数组（icon）
       satisfyStyle () {
         var satisfyStyleList = []
-        if (this.currentTodo) {
-          for (var i = 0; i < this.currentTodo.satisfiyDegree && i < 5; i++) {
+        if (this.targetTodo) {
+          for (var i = 0; i < this.targetTodo.satisfiyDegree && i < 5; i++) {
             satisfyStyleList.push('star')
           }
-          for (var j = this.currentTodo.satisfiyDegree; j < 5; j++) {
+          for (var j = this.targetTodo.satisfiyDegree; j < 5; j++) {
             satisfyStyleList.push('star_border')
           }
         }
@@ -86,23 +104,70 @@
       },
     },
     methods: {
-      // 从todo卡片获取当前处理的todo
-      getCurrentTodo(opt) {
-        this.currentTodo = opt.todo;
-        this.openModal();
+      // 获取动作
+      execTodoAction(opt) {
+        // 参数中的todo为触发动作的todo
+        // elapsingTodo为当前进行的todo，两者意义不同
+        this.targetTodo = opt.todo || {};
+        if(this.status != 'NULL') {
+          // 保存再执行
+          console.log("有正在执行的todo");
+          // 需要探针获取最新clockElapse状态
+
+          this.$store.dispatch('UPDATE_TODO', { item: {todoId: this.elapsingTodo.todoId, clockElapse: this.elapsingTodo.clockElapse || 0} })
+            .then(()=>{
+              if(opt && opt.action == 'EDIT') {
+                this.$router.push({name: 'editTodoView', params: { todoId: this.targetTodo.todoId }})
+              }
+              else if(opt && opt.action == 'ADD') {
+                this.$router.push({ path: 'addTodoView' })
+              }
+              else if(opt && opt.action == 'FINISH'){
+                this.openModal()
+              }
+              this.status = "NULL"
+            })
+        } else {
+          // 直接执行
+          console.log("无正在执行的todo")
+          if(opt && opt.action == 'EDIT') {
+            this.$router.push({name: 'editTodoView', params: { todoId: this.targetTodo.todoId }})
+          }
+          else if(opt && opt.action == 'ADD') {
+            this.$router.push({ path: 'addTodoView' })
+          }
+          else if(opt && opt.action == 'FINISH'){
+            this.openModal()
+          }
+          this.status = "NULL"
+        }
       },
+
+      // 从todo卡片获取当前是否有进行的任务
+      updateTodoStatus(opt) {
+        // 状态更新时，设置新状态
+        if(this.status != opt.status)
+          this.status = opt.status;
+        this.elapsingTodo = opt.todo;
+      },
+
       // 选择满意度星星
       onSelectSatifyDegree(index) {
         console.log("set todo satisfiyDegree");
-        this.currentTodo.satisfiyDegree = index + 1;
+        this.targetTodo.satisfiyDegree = index + 1;
+      },
+      // 新增
+      addTodoHandler (event) {
+        this.execTodoAction({'action': 'ADD'});
       },
       // 保存
       getTodoDone () {
-        this.currentTodo.isFinished = 'T';
+        this.targetTodo.isFinished = 'T';
         // 优化spentClock计算规则
-        this.currentTodo.score = 3.9 * this.currentTodo.priority
-        this.$store.dispatch('UPDATE_TODO', { item: this.currentTodo })
-        this.closeModal();
+        this.targetTodo.score = 3.9 * this.targetTodo.priority
+        this.$store.dispatch('UPDATE_TODO', { item: this.targetTodo }).then(()=>{
+          this.closeModal();
+        })
       },
       // 打开满意度modal
       openModal () {
@@ -133,5 +198,22 @@
 
   .modal .modal-content .material-icons {
     font-size: 3.2rem;
+  }
+
+  .header-title {
+    flex: 0 0 88%;
+    font-size: 1.4rem;
+  }
+
+  .header-sidenav-btn {
+    /*font-size: 1.4rem;*/
+    padding-left: 8px;
+  }
+
+  .header-sidenav-btn i, .header-add-btn  i {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: bolder;
+    padding-right: 8px;
   }
 </style>

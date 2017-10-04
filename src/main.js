@@ -6,6 +6,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import vSelect from 'vue-select'
+import VeeValidate from 'vee-validate';
 import '../static/js/materialize.min.js'
 import '../static/css/materialize.min.css'
 import '../static/css/material-icons.css'
@@ -13,8 +14,7 @@ import '../src/assets/css/common.scss'
 
 Vue.config.productionTip = false
 
-/* eslint-disable no-new */
-
+Vue.use(VeeValidate);
 Vue.component('v-select', vSelect)
 /* 手工指定select原语， 用于处理因materialize-css中对select优化(option->ul/li)，选择事件无法通过v-model绑定到属性的问题 */
 /* 需要将select中的v-model替换为此处的v-select */

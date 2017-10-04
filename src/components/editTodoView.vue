@@ -12,17 +12,27 @@
         <!--</div>-->
         <div class="">
           <div class="input-field">
-            <input placeholder="输入标题" id="todoTitle" type="text" class="validate" v-model="curEditTodo.todoTitle">
+            <input placeholder="输入标题" id="todoTitle" type="text"  v-model="curEditTodo.todoTitle"
+                   name="todoTitle" :class="{'input': true, 'is-danger': errors.has('todoTitle') }"
+                   v-validate="'required|max:18'">
+            <span v-show="errors.has('todoTitle')" class="help is-danger">{{ errors.first('todoTitle') }}</span>
             <!--<label for="todoTitle">标题</label>-->
           </div>
           <div class="input-field ">
-            <textarea placeholder="输入描述" id="describe" class="materialize-textarea" v-model="curEditTodo.todoDescribe"></textarea>
+            <textarea placeholder="输入描述" id="describe" class="materialize-textarea" v-model="curEditTodo.todoDescribe"
+                      name="describe" :class="{'input': true, 'is-danger': errors.has('describe') }"
+                      v-validate="'required|max:60'">
+            </textarea>
+            <span v-show="errors.has('describe')" class="help is-danger">{{ errors.first('describe') }}</span>
             <!--<label for="describe">描述</label>-->
           </div>
         </div>
         <div class="">
           <div class="input-field">
-            <input placeholder="所需番茄钟" id="expectClock" type="text" class="validate" v-model="curEditTodo.expectClock">
+            <input placeholder="所需番茄钟" id="expectClock" type="text" class="validate" v-model="curEditTodo.expectClock"
+              name="expectClock" :class="{'input': true, 'is-danger': errors.has('expectClock') }"
+              v-validate="'required|numeric'">
+            <span v-show="errors.has('expectClock')" class="help is-danger">{{ errors.first('expectClock') }}</span>
             <!--<label for="expectClock">时长</label>-->
           </div>
         </div>

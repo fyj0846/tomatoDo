@@ -24,13 +24,13 @@ body {
     background-color: $common-blue !important;
 
     .cancel {
-      min-width: 4rem;
+      min-width: 2rem;
       font-size: $common-font-size;
       padding-left: $common-space-LR;
     }
 
     .save {
-      min-width: 4rem;
+      min-width: 2rem;
       font-size: $common-font-size;
       padding-right: $common-space-LR;
     }
@@ -282,51 +282,55 @@ body {
       }
     }
 
-    .itemList {
-      display: flex;
-      flex-direction: column;
-      width: 96%;
-      margin-left: 2%;
-      margin-top: $common-header-height;
+    .managerList {
+      padding-top: $common-space-UD;
 
-      .collapsible-header {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        background-color: $common-grey-bg;
-        span.badge {
-          border-radius: 60%;
-          color: white;
-        }
-      }
+      .itemList {
+        //display: flex;
+        //flex-direction: column;
+        //width: 96%;
+        //margin-left: 2%;
+        //margin-top: $common-header-height;
 
-      .collapsible-body {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 1rem;
-
-        .body-tools {
+        .collapsible-header {
           display: flex;
-          align-items: center;
-
-          .disabled {
-            color: $common-grey;
-          }
-
-          .material-icons {
-            padding: 0 $common-space-LR;
+          flex-direction: row;
+          justify-content: space-between;
+          background-color: $common-grey-bg;
+          span.badge {
+            border-radius: 60%;
+            color: white;
           }
         }
 
-        .body-describe {
+        .collapsible-body {
           display: flex;
-          flex: 0 0 80%;
-          align-items: center;
-        }
+          flex-direction: row;
+          justify-content: space-between;
+          padding: 1rem;
 
-        div:nth-child(1) span {
-          margin: 0 4px;
+          .body-tools {
+            display: flex;
+            align-items: center;
+
+            .disabled {
+              color: $common-grey;
+            }
+
+            .material-icons {
+              padding: 0 $common-space-LR;
+            }
+          }
+
+          .body-describe {
+            display: flex;
+            flex: 0 0 80%;
+            align-items: center;
+          }
+
+          div:nth-child(1) span {
+            margin: 0 4px;
+          }
         }
       }
     }
@@ -387,5 +391,24 @@ body {
 
   .toast {
     margin-top: 0px !important;
+    position: relative;
+    width: 100%;
+    height: $common-header-height !important;
+    line-height: $common-header-height !important;
+    min-height: unset;
+    font-size: 1rem;
+    word-break: break-all;
+    background-color: #323232;
+    padding: $common-space-UD;
+  }
+}
+
+.input-field {
+  input.is-danger, .textarea.is-danger {
+    border-color: #ff3860;
+
+  }
+  span.is-danger {
+    color: #ff3860;
   }
 }

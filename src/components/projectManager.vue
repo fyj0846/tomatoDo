@@ -5,50 +5,59 @@
       <!--<div class="save row-padding-10" @click=""> 保存</div>-->
     </div>
     <div class="page-content">
-      <ul class="collapsible  itemList" data-collapsible="accordion">
-        <template v-for="project in activeProjects">
-          <li>
-            <div class="collapsible-header">
-              <div>
-                <i class="material-icons">place</i>
-                {{ project.projectName }}
+      <div class="managerList">
+        <ul class="collapsible  itemList" data-collapsible="accordion">
+          <template v-for="project in activeProjects">
+            <li>
+              <div class="collapsible-header">
+                <div>
+                  <i class="material-icons">folder</i>
+                  {{ project.projectName }}
+                </div>
+                <div>
+                  <span class="badge red" v-text="project_todos_count(project_activeTodos_rel, project.projectId)"></span>
+                  <span class="badge grey" v-text="project_todos_count(project_allTodos_rel, project.projectId)"></span>
+                </div>
               </div>
-              <div>
-                <span class="badge red" v-text="project_todos_count(project_activeTodos_rel, project.projectId)"></span>
-                <span class="badge grey" v-text="project_todos_count(project_allTodos_rel, project.projectId)"></span>
-              </div>
-            </div>
-            <div class="collapsible-body">
-              <div class="body-describe"><span> {{ project.projectDescribe }}</span></div>
-              <div class="body-tools">
-                <span class="material-icons delete" v-on:click.stop="editItem(project)">edit</span>
-                <span class="material-icons delete"
-                      v-bind:class='{disabled: project_todos_count(project_activeTodos_rel, project.projectId)}'
-                      v-on:click.stop="deleteItem(project)">delete
+              <div class="collapsible-body">
+                <div class="body-describe"><span> {{ project.projectDescribe }}</span></div>
+                <div class="body-tools">
+                  <span class="material-icons delete" v-on:click.stop="editItem(project)">edit</span>
+                  <span class="material-icons delete"
+                        v-bind:class='{disabled: project_todos_count(project_activeTodos_rel, project.projectId)}'
+                        v-on:click.stop="deleteItem(project)">delete
                 </span>
+                </div>
               </div>
-            </div>
-          </li>
-        </template>
-      </ul>
+            </li>
+          </template>
+        </ul>
+      </div>
       <div id="addItem" class="modal">
         <div class="modal-header">
           新建项目
         </div>
         <div class="modal-content">
           <div class="input-field ">
-            <input placeholder="项目名称" id="projectName" type="text" class="validate" v-model="projectName">
-            <label for="projectName"></label>
+            <input placeholder="项目名称" id="projectName" type="text"  v-model="projectName"
+                   name="projectName" :class="{'input': true, 'is-danger': errors.has('projectName') }"
+                   v-validate="'required|max:12'">
+            <span v-show="errors.has('projectName')" class="help is-danger">{{ errors.first('projectName') }}</span>
           </div>
           <div class="input-field ">
             <textarea id="projectDesc" placeholder="项目描述" class="materialize-textarea"
-                      v-model="projectDescribe"></textarea>
-            <label for="projectDesc"></label>
+                      v-model="projectDescribe"
+                      name="projectDesc" :class="{'input': true, 'is-danger': errors.has('projectDesc') }"
+                      v-validate="'required|max:60'"
+            ></textarea>
+            <span v-show="errors.has('projectDesc')" class="help is-danger">{{ errors.first('projectDesc') }}</span>
           </div>
         </div>
         <div class="modal-footer">
           <a class="modal-action modal-close waves-effect active btn-flat">取消</a>
-          <a class="modal-action modal-close waves-effect active btn-flat" v-on:click="saveItem('add')">保存</a>
+          <a class="modal-action modal-close waves-effect active btn-flat"
+             :class="{'disabled': errors.any()}"
+             v-on:click="saveItem('add')">保存</a>
         </div>
       </div>
       <div id="editItem" class="modal">
@@ -57,18 +66,26 @@
         </div>
         <div class="modal-content">
           <div class="input-field ">
-            <input placeholder="项目名称" id="projectName2" type="text" class="validate" v-model="projectName">
-            <label for="projectName2"></label>
+            <input placeholder="项目名称" id="projectNameEdit" type="text" class="validate" v-model="projectName"
+                   name="projectNameEdit" :class="{'input': true, 'is-danger': errors.has('projectNameEdit') }"
+                   v-validate="'required|max:12'"
+            >
+            <span v-show="errors.has('projectNameEdit')" class="help is-danger">{{ errors.first('projectNameEdit') }}</span>
           </div>
           <div class="input-field ">
-            <textarea id="projectDesc2" placeholder="项目描述" class="materialize-textarea"
-                      v-model="projectDescribe"></textarea>
-            <label for="projectDesc2"></label>
+            <textarea id="projectDescEdit" placeholder="项目描述" class="materialize-textarea"
+                      v-model="projectDescribe"
+                      name="projectDescEdit" :class="{'input': true, 'is-danger': errors.has('projectDescEdit') }"
+                      v-validate="'required|max:60'"
+            ></textarea>
+            <span v-show="errors.has('projectDescEdit')" class="help is-danger">{{ errors.first('projectDescEdit') }}</span>
           </div>
         </div>
         <div class="modal-footer">
-          <a class="modal-action modal-close waves-effect btn-flat">取消</a>
-          <a class="modal-action modal-close waves-effect active btn-flat" v-on:click="saveItem('update')">保存</a>
+          <a class="modal-action modal-close waves-effect active btn-flat">取消</a>
+          <a class="modal-action modal-close waves-effect active btn-flat"
+             :class="{'disabled': errors.any()}"
+             v-on:click="saveItem('update')">保存</a>
         </div>
       </div>
       <a class="btn-floating waves-effect waves-light floatAddBtn" href="#addItem" v-on:click="clearItem"><i

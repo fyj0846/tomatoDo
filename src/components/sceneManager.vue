@@ -6,48 +6,59 @@
       <div class="save"></div>
     </div>
     <div class="page-content ">
-      <ul class="collapsible  itemList" data-collapsible="accordion">
-        <template v-for="scene in activeScenes">
-          <li>
-            <div class="collapsible-header">
-              <div>
-                <i class="material-icons">place</i>
-                {{ scene.sceneName }}
+      <div class="managerList">
+        <ul class="collapsible  itemList" data-collapsible="accordion">
+          <template v-for="scene in activeScenes">
+            <li>
+              <div class="collapsible-header">
+                <div>
+                  <i class="material-icons">place</i>
+                  {{ scene.sceneName }}
+                </div>
+                <div>
+                  <span class="badge red" v-text="scene_todos_count(scene_activeTodos_rel, scene.sceneId)"></span>
+                  <span class="badge grey" v-text="scene_todos_count(scene_allTodos_rel, scene.sceneId)"></span>
+                </div>
               </div>
-              <div>
-                <span class="badge red" v-text="scene_todos_count(scene_activeTodos_rel, scene.sceneId)"></span>
-                <span class="badge grey" v-text="scene_todos_count(scene_allTodos_rel, scene.sceneId)"></span>
-              </div>
-            </div>
-            <div class="collapsible-body">
-              <div class="body-describe"><span> {{ scene.sceneDescribe }}</span></div>
-              <div class="body-tools">
-                <span class="material-icons delete" v-on:click.stop="editItem(scene)">edit</span>
-                <span class="material-icons delete"
-                      v-bind:class='{disabled: scene_todos_count(scene_activeTodos_rel, scene.sceneId)}'
-                      v-on:click.stop="deleteItem(scene)">delete
+              <div class="collapsible-body">
+                <div class="body-describe"><span> {{ scene.sceneDescribe }}</span></div>
+                <div class="body-tools">
+                  <span class="material-icons delete" v-on:click.stop="editItem(scene)">edit</span>
+                  <span class="material-icons delete"
+                        v-bind:class='{disabled: scene_todos_count(scene_activeTodos_rel, scene.sceneId)}'
+                        v-on:click.stop="deleteItem(scene)">delete
                 </span>
+                </div>
               </div>
-            </div>
-          </li>
-        </template>
-      </ul>
+            </li>
+          </template>
+        </ul>
+      </div>
       <div id="addItem" class="modal">
         <div class="modal-header">新建场景</div>
         <div class="modal-content">
           <div class="input-field ">
-            <input placeholder="输入场景名称" id="sceneName" type="text" class="validate" v-model="sceneName">
-            <label for="sceneName"></label>
+            <input placeholder="输入场景名称" id="sceneName" type="text" class="validate" v-model="sceneName"
+                   name="sceneName" :class="{'input': true, 'is-danger': errors.has('sceneName') }"
+                   v-validate="'required|max:12'">
+            <span v-show="errors.has('sceneName')" class="help is-danger">{{ errors.first('sceneName') }}</span>
+            <!--<label for="sceneName"></label>-->
           </div>
           <div class="input-field ">
               <textarea id="sceneDesc" placeholder="输入场景描述" class="materialize-textarea"
-                        v-model="sceneDescribe"></textarea>
+                        v-model="sceneDescribe"
+                        name="sceneDescribe" :class="{'input': true, 'is-danger': errors.has('sceneDescribe') }"
+                        v-validate="'required|max:60'"
+              ></textarea>
+            <span v-show="errors.has('sceneDescribe')" class="help is-danger">{{ errors.first('sceneDescribe') }}</span>
             <!--<label for="sceneDesc"></label>-->
           </div>
         </div>
         <div class="modal-footer">
           <a class="modal-action modal-close waves-effect active btn-flat">取消</a>
-          <a class="modal-action modal-close waves-effect active btn-flat" v-on:click="saveItem('add')">保存</a>
+          <a class="modal-action modal-close waves-effect active btn-flat"
+             :class="{'disabled': errors.any()}"
+             v-on:click="saveItem('add')">保存</a>
         </div>
       </div>
       <div id="editItem" class="modal">
@@ -55,19 +66,28 @@
           <div class="modal-header">编辑场景</div>
           <div class="">
             <div class="input-field ">
-              <input placeholder="输入场景名称" id="sceneName2" type="text" class="validate" v-model="sceneName">
+              <input placeholder="输入场景名称" id="sceneName2" type="text" class="validate" v-model="sceneName"
+                     name="sceneNameEdit" :class="{'input': true, 'is-danger': errors.has('sceneNameEdit') }"
+                     v-validate="'required|max:12'">
+              <span v-show="errors.has('sceneNameEdit')" class="help is-danger">{{ errors.first('sceneNameEdit') }}</span>
               <!--<label for="sceneName2"></label>-->
             </div>
             <div class="input-field ">
               <textarea id="sceneDesc2" placeholder="输入场景描述" class="materialize-textarea"
-                        v-model="sceneDescribe"></textarea>
-              <!--<label for="sceneDesc2"></label>-->
+                        v-model="sceneDescribe"
+                        name="sceneDescribeEdit" :class="{'input': true, 'is-danger': errors.has('sceneDescribeEdit') }"
+                        v-validate="'required|max:60'"
+              ></textarea>
+              <span v-show="errors.has('sceneDescribeEdit')" class="help is-danger">{{ errors.first('sceneDescribeEdit') }}</span>
+
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <a class="modal-action modal-close waves-effect btn-flat">取消</a>
-          <a class="modal-action modal-close waves-effect active btn-flat" v-on:click="saveItem('update')">保存</a>
+          <a class="modal-action modal-close waves-effect active btn-flat"
+             :class="{'disabled': errors.any()}"
+             v-on:click="saveItem('update')">保存</a>
         </div>
       </div>
       <a class="btn-floating waves-effect waves-light floatAddBtn" href="#addItem" v-on:click="clearItem"><i
@@ -176,9 +196,9 @@
       }
     },
     mounted () {
+      $('.collapsible').collapsible()
       $('#sidenav-overlay').remove()
       $('.modal').modal()
-      $('.collapsible').collapsible()
     },
     created () {
       this.$store.dispatch('LOAD_SCENES')
