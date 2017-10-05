@@ -221,7 +221,7 @@
       // 重置  todo 定时器
       resetTimer (foreUpdate) {
         if(!this.todoMeta.clockElapse || this.todoMeta.clockElapse == 0 || foreUpdate) {
-          this.todoMeta.clockElapse = 60;
+          this.todoMeta.clockElapse = 25*60;
         }
         this.timerShow =  this.convertTimeToShow(this.todoMeta.clockElapse)
         this.timerHandle = 0

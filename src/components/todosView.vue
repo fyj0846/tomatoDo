@@ -201,7 +201,7 @@
   }
 
   .header-title {
-    flex: 0 0 88%;
+    flex: 0 0 80%;
     font-size: 1.4rem;
   }
 

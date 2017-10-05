@@ -62,25 +62,23 @@
         </div>
       </div>
       <div id="editItem" class="modal">
+        <div class="modal-header">编辑场景</div>
         <div class="modal-content">
-          <div class="modal-header">编辑场景</div>
-          <div class="">
-            <div class="input-field ">
-              <input placeholder="输入场景名称" id="sceneName2" type="text" class="validate" v-model="sceneName"
-                     name="sceneNameEdit" :class="{'input': true, 'is-danger': errors.has('sceneNameEdit') }"
-                     v-validate="'required|max:12'">
-              <span v-show="errors.has('sceneNameEdit')" class="help is-danger">{{ errors.first('sceneNameEdit') }}</span>
-              <!--<label for="sceneName2"></label>-->
-            </div>
-            <div class="input-field ">
+          <div class="input-field ">
+            <input placeholder="输入场景名称" id="sceneName2" type="text" class="validate" v-model="sceneName"
+                   name="sceneNameEdit" :class="{'input': true, 'is-danger': errors.has('sceneNameEdit') }"
+                   v-validate="'required|max:12'">
+            <span v-show="errors.has('sceneNameEdit')" class="help is-danger">{{ errors.first('sceneNameEdit') }}</span>
+            <!--<label for="sceneName2"></label>-->
+          </div>
+          <div class="input-field ">
               <textarea id="sceneDesc2" placeholder="输入场景描述" class="materialize-textarea"
                         v-model="sceneDescribe"
                         name="sceneDescribeEdit" :class="{'input': true, 'is-danger': errors.has('sceneDescribeEdit') }"
                         v-validate="'required|max:60'"
               ></textarea>
-              <span v-show="errors.has('sceneDescribeEdit')" class="help is-danger">{{ errors.first('sceneDescribeEdit') }}</span>
+            <span v-show="errors.has('sceneDescribeEdit')" class="help is-danger">{{ errors.first('sceneDescribeEdit') }}</span>
 
-            </div>
           </div>
         </div>
         <div class="modal-footer">
