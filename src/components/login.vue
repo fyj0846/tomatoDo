@@ -55,7 +55,7 @@
         <div class="input-field">
           <input placeholder="再次输入密码" id="userConfirmPwd" type="password" v-model="userPwdRegConfirm"
                  name="passwordCheck" :class="{'input': true, 'is-danger': errors.has('passwordCheck') }"
-                 v-validate="'required|max:12|regex:^([0-9]+)$|confirmed:password'">
+                 v-validate="'required|max:12|regex:^[a-zA-Z0-9]+$|confirmed:password'">
           <!--<label for="describe">描述</label>-->
           <span v-show="errors.has('passwordCheck')" class="help is-danger">{{ errors.first('passwordCheck') }}</span>
         </div>
@@ -128,9 +128,10 @@
     },
     methods: {
       reset: function () {
-        this.userPwd = "";
+        this.userPwdLogin = "";
         this.userPwdReg = "";
         this.userPwdRegConfirm = "";
+        this.userNick = ""
         this.userMail = "";
         this.userGental = { 'type': "U", 'desc': '请选择性别' };
       },
@@ -146,6 +147,9 @@
           this.pageTitle = '用户登录'
         }
         this.userView = newView;
+
+        // 清理验证器的error
+        this.errors.clear();
       },
 
       userRegistry: function () {

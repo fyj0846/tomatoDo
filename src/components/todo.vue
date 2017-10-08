@@ -59,7 +59,8 @@
         timerShow: '',
         timerController: '',
         continueFlag: false,
-        todoMeta: $.extend({}, this.todoMetaProp)
+        todoMeta: $.extend({}, this.todoMetaProp),
+        preTimeMark: '',
       }
     },
     props: {
@@ -129,27 +130,38 @@
       },
 
       // todo启动
-      startTodo () {
+      startTodo (force) {
         console.log('start todo task')
         // 计时器逻辑
         var THAT = this
+        THAT.preTimeMark = new Date();
         // 判断当前是否有任务进行，如果有任务进行，则不允许重复或者更多任务启动
-        if(this.statusProp == "PROCESSING") {
+        if(!force && this.statusProp == "PROCESSING") {
           Materialize.toast("当前已有任务进行中，请勿同时启动多个任务", 1250);
           return;
         }
         clearInterval(this.timerHandle)
         this.timerHandle = setInterval(function () {
+          var now = new Date();
           if (THAT.todoMeta.clockElapse >= 1) {
-            THAT.todoMeta.clockElapse--
-            THAT.timerShow = THAT.convertTimeToShow(THAT.todoMeta.clockElapse)
-          } else if (THAT.todoMeta.clockElapse === 0) {
-            THAT.stopTodo()
+//            THAT.todoMeta.clockElapse -= 1
+            //避免app因后台运行/锁屏等原因导致时钟差异的问题
+            var gap = Math.ceil((now - THAT.preTimeMark) / 1000);
+            if(gap < 10) {
+              // 两次调度之间小于10秒，忽略该差异(仍然按1s流逝计算)
+              // 超过10s的，按实际的流逝时差计算
+              gap = 1;
+            }
+            THAT.todoMeta.clockElapse -= gap;
+            THAT.timerShow = THAT.convertTimeToShow(THAT.todoMeta.clockElapse);
+            THAT.preTimeMark = now;
+          } else if (THAT.todoMeta.clockElapse <= 0) {
+            THAT.stopTodo()  //异步方法，不能及时取到新的状态
             // 持续进行
             if (THAT.continueFlag) {
-              THAT.startTodo()
+              THAT.startTodo(true)
             }
-            return
+            return;
           }
         }, 1000)
         this.updateTodoStatus("PROCESSING");
@@ -170,7 +182,7 @@
       stopTodo () {
         this.clearTimer()
         // update spent clock
-        this.updateTodoStatus("NULL");
+        this.updateTodoStatus("NULL"); //异步方法
         if (this.todoMeta.clockElapse === 0) {
           // 完整完成一个 clock
           // 更新统计信息
