@@ -2591,7 +2591,7 @@ if (jQuery) {
                   }
 
                   $overlay.velocity({opacity: 1 }, {duration: 50, queue: false, easing: 'easeOutQuad'});
-                  $dragTarget.css({width: '50%', right: 0, left: ''});
+                  $dragTarget.css({width: '10px', right: 0, left: ''});
                   menuOut = true;
                 }
                 else if (!menuOut || velocityX > 0.3) {
@@ -2606,7 +2606,7 @@ if (jQuery) {
                     complete: function () {
                       $(this).remove();
                     }});
-                  $dragTarget.css({width: '10px', right: '', left: 0});
+                  $dragTarget.css({width: '3px', right: '', left: 0});
                 }
               }
               else {
@@ -2617,7 +2617,7 @@ if (jQuery) {
                   }
 
                   $overlay.velocity({opacity: 1 }, {duration: 50, queue: false, easing: 'easeOutQuad'});
-                  $dragTarget.css({width: '50%', right: '', left: 0});
+                  $dragTarget.css({width: '3px', right: '', left: 0});
                   menuOut = true;
                 }
                 else if (!menuOut || velocityX < -0.3) {
@@ -2633,7 +2633,7 @@ if (jQuery) {
                     complete: function () {
                       $(this).remove();
                     }});
-                  $dragTarget.css({width: '10px', right: 0, left: ''});
+                  $dragTarget.css({width: '3px', right: 0, left: ''});
                 }
               }
 
@@ -2660,11 +2660,11 @@ if (jQuery) {
             $('body').append($dragTarget);
 
             if (options.edge === 'left') {
-              $dragTarget.css({width: '50%', right: 0, left: ''});
+              $dragTarget.css({width: '3px', right: 0, left: ''});
               menu.velocity({'translateX': [0, -1 * options.menuWidth]}, {duration: 300, queue: false, easing: 'easeOutQuad'});
             }
             else {
-              $dragTarget.css({width: '50%', right: '', left: 0});
+              $dragTarget.css({width: '3px', right: '', left: 0});
               menu.velocity({'translateX': [0, options.menuWidth]}, {duration: 300, queue: false, easing: 'easeOutQuad'});
             }
 
