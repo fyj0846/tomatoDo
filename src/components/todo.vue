@@ -1,7 +1,7 @@
 <template>
   <div class="card"  v-bind:class="{ 'card-active': timerHandle }">
     <div class="todo-header grey lighten-1">
-      <span>{{ todoMeta.todoTitle }}</span>
+      <span>{{ todoMetaProp.todoTitle }}</span>
       <i @click="finishTodo" class="material-icons right">done</i>
       <i @click="getTodoDelete" class="material-icons right">delete</i>
     </div>
@@ -9,27 +9,27 @@
       <div class="todo-content-left">
         <div class="todo-project left-center">
           <i class="material-icons">folder</i>
-          <span class=" padding_left_right">{{ todoMeta.projectName }}</span>
+          <span class=" padding_left_right">{{ todoMetaProp.projectName }}</span>
         </div>
         <!--场景需求不明确，暂不提供-->
         <div class="todo-scene left-center">
           <i class="material-icons">place</i>
-          <span class=" padding_left_right">{{ todoMeta.sceneName }}</span>
+          <span class=" padding_left_right">{{ todoMetaProp.sceneName }}</span>
         </div>
         <div class="todo-tags left-center">
           <i class="material-icons">label_outline</i>
-          <!--v-for="tag in todoMeta.tags"-->
+          <!--v-for="tag in todoMetaProp.tags"-->
           <span class="todo-flag padding_left_right" >
-            {{ todoMeta.tags }}
+            {{ todoMetaProp.tags }}
           </span>
         </div>
         <div class="todo-timing left-center">
           <i class="material-icons">schedule</i>
-          <span class="todo-timeLeft padding_left_right">{{ todoMeta.expectFinishTime }}</span>
+          <span class="todo-timeLeft padding_left_right">{{ todoMetaProp.expectFinishTime }}</span>
         </div>
         <div class="todo-statis left-center">
           <i class="material-icons">done</i>
-          <span class="todo-spent padding_left_right">{{ todoMeta.spentClock }}</span>
+          <span class="todo-spent padding_left_right">{{ todoMetaProp.spentClock }}</span>
         </div>
       </div>
       <div class="todo-content-right">
@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="card-action todo-action right-center">
-      <i @click="editTodoHandler(todoMeta.todoId)" class="material-icons right">edit</i>
+      <i @click="editTodoHandler(todoMetaProp.todoId)" class="material-icons right">edit</i>
       <i @click="continueTodo" v-bind:class="[{ active: this.continueFlag }, 'material-icons', 'right']">repeat_one</i>
       <i @click="toggleTodo" class="material-icons right"> {{ timerController }}</i>
       <i @click="stopTodo" class="material-icons right">stop</i>
@@ -59,7 +59,7 @@
         timerShow: '',
         timerController: '',
         continueFlag: false,
-        todoMeta: $.extend({}, this.todoMetaProp),
+//        todoMeta: '',
         preTimeMark: '',
       }
     },
@@ -78,16 +78,17 @@
       // 优先级转换为星星样式数组（icon）
       priorityStyle () {
         var styleList = []
-        for (var i = 0; i < this.todoMeta.priority && i < 5; i++) {
+        for (var i = 0; i < this.todoMetaProp.priority && i < 5; i++) {
           styleList.push('star')
         }
-        for (var j = this.todoMeta.priority; j < 5; j++) {
+        for (var j = this.todoMetaProp.priority; j < 5; j++) {
           styleList.push('star_border')
         }
         return styleList
       },
     },
     mounted () {
+//      this.todoMetaProp = $.extend({}, this.todoMetaProp),
       this.resetTimer()
     },
     methods: {
@@ -96,14 +97,14 @@
         // FINISH, EDIT, ADD
         this.clearTimer()
         this.resetTimerController()
-        this.$emit("TODOACTION", {action: action, todo: this.todoMeta });
+        this.$emit("TODOACTION", {action: action, todo: this.todoMetaProp });
       },
 
       // 将当前活动的todo传递至todosView管控
       // 只有该方法会触发活动todo的切换
       updateTodoStatus (status) {
         // NULL, PROCESSING, PAUSE
-        this.$emit("TODOSTATUS", {status: status, todo: this.todoMeta });
+        this.$emit("TODOSTATUS", {status: status, todo: this.todoMetaProp });
       },
       // todo完成
       finishTodo() {
@@ -113,9 +114,9 @@
       getTodoDelete () {
         this.clearTimer()
         this.resetTimerController()
-        this.todoMeta.isDelete = "T";
+        this.todoMetaProp.isDelete = "T";
         // 优化spentClock计算规则
-        this.$store.dispatch('UPDATE_TODO', {item: this.todoMeta})
+        this.$store.dispatch('UPDATE_TODO', {item: this.todoMetaProp})
       },
 
       // todo开始或启动根据timerHandler来判断
@@ -143,19 +144,19 @@
         clearInterval(this.timerHandle)
         this.timerHandle = setInterval(function () {
           var now = new Date();
-          if (THAT.todoMeta.clockElapse >= 1) {
-//            THAT.todoMeta.clockElapse -= 1
+          if (THAT.todoMetaProp.clockElapse >= 1) {
+//            THAT.todoMetaProp.clockElapse -= 1
             //避免app因后台运行/锁屏等原因导致时钟差异的问题
             var gap = Math.ceil((now - THAT.preTimeMark) / 1000);
-            if(gap < 10) {
-              // 两次调度之间小于10秒，忽略该差异(仍然按1s流逝计算)
+            if(gap < 5) {
+              // 两次调度之间小于5秒，忽略该差异(仍然按1s流逝计算)
               // 超过10s的，按实际的流逝时差计算
               gap = 1;
             }
-            THAT.todoMeta.clockElapse -= gap;
-            THAT.timerShow = THAT.convertTimeToShow(THAT.todoMeta.clockElapse);
+            THAT.todoMetaProp.clockElapse = Math.max(0, THAT.todoMetaProp.clockElapse - gap);
+            THAT.timerShow = THAT.convertTimeToShow(THAT.todoMetaProp.clockElapse);
             THAT.preTimeMark = now;
-          } else if (THAT.todoMeta.clockElapse <= 0) {
+          } else if (THAT.todoMetaProp.clockElapse <= 0) {
             THAT.stopTodo()  //异步方法，不能及时取到新的状态
             // 持续进行
             if (THAT.continueFlag) {
@@ -183,20 +184,20 @@
         this.clearTimer()
         // update spent clock
         this.updateTodoStatus("NULL"); //异步方法
-        if (this.todoMeta.clockElapse === 0) {
+        if (this.todoMetaProp.clockElapse <= 0) {
           // 完整完成一个 clock
           // 更新统计信息
           console.log("timeout expired");
-          this.todoMeta.spentClock = this.todoMeta.spentClock - 0 + 1;
+          this.todoMetaProp.spentClock = this.todoMetaProp.spentClock - 0 + 1;
         } else {
           // 中途干扰，任务停止
           // 统计中断次数
           console.log("interrupt occur")
-//          this.todoMeta.interupt = this.todoMeta.interupt - 0 + 1;
-//          this.$store.dispatch('UPDATE_TODO', {item: this.todoMeta})
+//          this.todoMetaProp.interupt = this.todoMetaProp.interupt - 0 + 1;
+//          this.$store.dispatch('UPDATE_TODO', {item: this.todoMetaProp})
         }
         this.resetTimer(true)
-        this.$store.dispatch('UPDATE_TODO', {item: this.todoMeta})
+        this.$store.dispatch('UPDATE_TODO', {item: this.todoMetaProp})
       },
 
       // 刷新todo 启动/暂停按钮
@@ -232,10 +233,10 @@
       },
       // 重置  todo 定时器
       resetTimer (foreUpdate) {
-        if(!this.todoMeta.clockElapse || this.todoMeta.clockElapse == 0 || foreUpdate) {
-          this.todoMeta.clockElapse = 25*60;
+        if(!this.todoMetaProp.clockElapse || this.todoMetaProp.clockElapse == 0 || foreUpdate) {
+          this.todoMetaProp.clockElapse = 2*60;
         }
-        this.timerShow =  this.convertTimeToShow(this.todoMeta.clockElapse)
+        this.timerShow =  this.convertTimeToShow(this.todoMetaProp.clockElapse)
         this.timerHandle = 0
         this.resetTimerController();
       },

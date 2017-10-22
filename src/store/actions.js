@@ -112,6 +112,10 @@ export function LOAD_TODOS ({ commit, dispatch, state }) {
             console.log("createTime: " + item.cTime);
             item.cTime = getLocalDateString(item.cTime);
           }
+          if(item.finishTime) {
+            console.log("finishTime: " + item.finishTime);
+            item.finishTime = getLocalDateString(item.finishTime);
+          }
           return item;
         }));
         resolve();
@@ -147,6 +151,10 @@ export function LOAD_TODO ({ commit, dispatch, state }, { id }) {
             if(item.cTime) {
               console.log("createTime: " + item.cTime);
               item.cTime = getLocalDateString(item.cTime);
+            }
+            if(item.finishTime) {
+              console.log("finishTime: " + item.finishTime);
+              item.finishTime = getLocalDateString(item.finishTime);
             }
             return item;
           })[0] || {});

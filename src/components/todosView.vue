@@ -25,8 +25,8 @@
       <div id="finishedTodos" class="">
         <div class=" todo-view-content">
           <div v-for="todo in finishedList" class=" ">
-            <todo v-on:TODOACTION="execTodoAction" v-on:TODOSTATUS="updateTodoStatus"
-                  :todoMetaProp="todo" :statusProp="status"></todo>
+            <todoFinished v-on:TODOACTION="execTodoAction" v-on:TODOSTATUS="updateTodoStatus"
+                  :todoMetaProp="todo" :statusProp="status"></todoFinished>
           </div>
         </div>
       </div>
@@ -61,10 +61,11 @@
 <script>
   import AppHeader from '../components/app-header.vue'
   import Todo from '../components/todo.vue'
+  import TodoFinished from '../components/todoFinished.vue'
   import SideNav from '../components/sideNav.vue'
   import $ from 'jquery'
   export default {
-    components: { AppHeader, Todo, SideNav },
+    components: { AppHeader, Todo, TodoFinished, SideNav },
     data: function () {
       return {
         targetTodo: null,  // 当前action处理的todo对象
@@ -87,7 +88,7 @@
 //        }]
       },
       finishedList() {
-        return this.$store.getters.finishedTodos
+        return this.$store.getters.finishedTodos;
       },
       // 满意度转换为星星样式数组（icon）
       satisfyStyle () {
@@ -100,8 +101,8 @@
             satisfyStyleList.push('star_border')
           }
         }
-        return satisfyStyleList
-      },
+        return satisfyStyleList;
+      }
     },
     methods: {
       // 获取动作
