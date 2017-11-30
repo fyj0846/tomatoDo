@@ -12,10 +12,10 @@
           <span class=" padding_left_right">{{ todoMetaProp.projectName }}</span>
         </div>
         <!--场景需求不明确，暂不提供-->
-        <div class="todo-scene left-center">
-          <i class="material-icons">place</i>
-          <span class=" padding_left_right">{{ todoMetaProp.sceneName }}</span>
-        </div>
+        <!--<div class="todo-scene left-center">-->
+          <!--<i class="material-icons">place</i>-->
+          <!--<span class=" padding_left_right">{{ todoMetaProp.sceneName }}</span>-->
+        <!--</div>-->
         <div class="todo-tags left-center">
           <i class="material-icons">label_outline</i>
           <!--v-for="tag in todoMetaProp.tags"-->
@@ -234,7 +234,7 @@
       // 重置  todo 定时器
       resetTimer (foreUpdate) {
         if(!this.todoMetaProp.clockElapse || this.todoMetaProp.clockElapse == 0 || foreUpdate) {
-          this.todoMetaProp.clockElapse = 2*60;
+          this.todoMetaProp.clockElapse = process.env.SPC * 60;
         }
         this.timerShow =  this.convertTimeToShow(this.todoMetaProp.clockElapse)
         this.timerHandle = 0

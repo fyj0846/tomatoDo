@@ -48,7 +48,7 @@ body {
     .todo-tabs {
       width: auto;
       margin: $common-header-height $common-space-LR 0;
-      height: $common-header-height;
+      height: 36px;
 
       .indicator {
         background-color: $common-green !important;
@@ -57,8 +57,8 @@ body {
       .tab {
         a {
           color: $common-black;
-          height: $common-header-height;
-          line-height: $common-header-height;
+          height: 36px;
+          line-height: 36px;
 
           &.active, &:hover {
             color: $common-green;
@@ -381,6 +381,7 @@ body {
     .btn, .btn-large, .btn-flat {
       height: 24px;
       line-height: 24px;
+      font-size: 1.1rem;
     }
   }
 }
